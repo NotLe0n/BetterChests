@@ -1,0 +1,82 @@
+﻿using MonoMod.Cil;
+using System.Reflection;
+using Terraria.UI;
+
+namespace BetterChests.src
+{
+    public class ILEdits
+    {
+        public static void Load()
+        {
+            IL.Terraria.UI.ChestUI.DrawButton += EditButton;
+        }
+
+        private static void EditButton(ILContext il)
+        {
+            var c = new ILCursor(il);
+
+            if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("LootAll")))
+                return;
+
+            c.Prev.Operand = typeof(ILEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+
+            // IL_0362: br.s      IL_038C
+            // IL_0364: call      void Terraria.UI.ChestUI::DepositAll()
+            //      <=== here
+
+            if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("DepositAll")))
+                return;
+
+            c.Prev.Operand = typeof(ILEdits).GetMethod("OpenDepositConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+
+            // The goal of this IL edit is to replace SortChest() with code to open my UI
+            // IL_0385: br.s      IL_038C
+            // IL_0387: call      void Terraria.UI.ItemSorting::SortChest()
+            //      <=== here
+
+            if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ItemSorting>("SortChest")))
+                return;
+
+            c.Prev.Operand = typeof(ILEdits).GetMethod("ToggleSortUI", BindingFlags.NonPublic | BindingFlags.Static);
+        }
+
+        private static void ToggleSortUI()
+        {
+            SortOptionsUI.visible = !SortOptionsUI.visible;
+        }
+
+        private static void OpenDepositConfirmation()
+        {
+            var ui = new ConfirmationUI
+            {
+                buttonID = ChestUI.ButtonID.DepositAll,
+                topOffset = 55,
+                onclick = (evt, elm) =>
+                {
+                    ChestUI.DepositAll();
+                    ConfirmationUI.visible = false;
+                }
+            };
+
+            BetterChests.instance.ConfirmationUserInterface.SetState(ui);
+            ConfirmationUI.visible = true;
+        }
+
+        private static void OpenLootConfirmation()
+        {
+            var ui = new ConfirmationUI
+            {
+                buttonID = ChestUI.ButtonID.LootAll,
+                topOffset = 30,
+                onclick = (evt, elm) =>
+                {
+                    ChestUI.LootAll();
+                    ConfirmationUI.visible = false;
+                }
+            };
+
+            BetterChests.instance.ConfirmationUserInterface.SetState(ui);
+            ConfirmationUI.visible = true;
+        }
+    }
+}

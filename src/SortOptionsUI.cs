@@ -1,16 +1,15 @@
-﻿using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
-using Terraria;
-using System.Linq;
-using Terraria.ID;
+﻿using Microsoft.Xna.Framework;
 using System;
-using Microsoft.Xna.Framework;
-using Terraria.ModLoader;
-using Terraria.UI.Chat;
+using System.Linq;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
+using Terraria.Graphics;
+using Terraria.ID;
+using Terraria.UI;
 
-namespace BetterChests
+namespace BetterChests.src
 {
-    class BetterChestsUI : UIState
+    internal class SortOptionsUI : UIState
     {
         public static bool visible = false;
         private bool _reversed = false;
@@ -26,25 +25,45 @@ namespace BetterChests
             list = new UIList();
             list.Top.Set(Main.instance.invBottom + 30, 0);
             list.Left.Set(506 + 100, 0);
-            list.Width.Set(300, 0);
+            list.Width.Set(200, 0);
             list.Height.Set(400, 0);
             list.ListPadding = 14;
             Append(list);
 
             AddSortOption("Default sort", (evt, elm) => ItemSorting.SortChest());
-            AddSortOption("Sort by ID", (evt, elm) => Sort(x => x.netID, _reversed));
-            AddSortOption("Sort by name", (evt, elm) => Sort(x => x.Name, _reversed));
+            AddSortOption("Sort by ID", (evt, elm) => Sort(x => x.type, _reversed));
+            AddSortOption("Sort Alphabetically", (evt, elm) => Sort(x => x.Name, _reversed));
             AddSortOption("Sort by rarity", (evt, elm) => Sort(x => x.rare, !_reversed));
             AddSortOption("Sort by stack size", (evt, elm) => Sort(x => x.stack, !_reversed));
             AddSortOption("Sort by value", (evt, elm) => Sort(x => x.value, !_reversed));
             AddSortOption("Sort by damage", (evt, elm) => Sort(x => x.damage, !_reversed));
             AddSortOption("Sort by defense", (evt, elm) => Sort(x => x.defense, !_reversed));
+            AddSortOption("Sort randomly", (evt, elm) => Sort(x => Main.rand.NextFloat(), _reversed));
 
+            var option = new UITextOption("Reversed: No");
+            option.MarginTop = 2f;
+            option.MarginLeft = 2f;
+            option.OnClick += (evt, elm) => 
+            { 
+                _reversed = !_reversed; 
+                option.SetText(_reversed ? "Reversed: Yes" : "Reversed: No");
+            };
+            list.Add(option);
+
+            var searchbox = new UIBetterTextBox("search item", Color.White);
+            searchbox.Top.Set(Main.instance.invBottom + 170, 0);
+            searchbox.Left.Set(71, 0);
+            searchbox.Width.Set(209, 0);
+            searchbox.Height.Set(30, 0);
+            searchbox.OnTextChanged += () => Sort(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
+            Append(searchbox);
         }
 
         private void AddSortOption(string title, MouseEvent onclick)
         {
             var option = new UITextOption(title);
+            option.MarginTop = 2f;
+            option.MarginLeft = 2f;
             option.OnClick += onclick;
             list.Add(option);
         }
@@ -55,7 +74,7 @@ namespace BetterChests
             ref var items = ref Main.chest[Main.LocalPlayer.chest].item;
 
             // order the items according to the function.
-            var sortedItems = items.OrderBy(func).ToArray();
+            var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ToArray();
 
             if (reversed)
             {
@@ -66,15 +85,15 @@ namespace BetterChests
             // Air always goes last
             sortedItems = sortedItems.OrderBy(x => x.IsAir).ToArray();
 
-            // Change color of changed slots
             for (int i = 0; i < items.Length; i++)
             {
-                if (!items[i].IsAir && items[i] != sortedItems[i])
-                {
+                if (!sortedItems[i].IsAir && items[i] != sortedItems[i])
+                {   
+                    // Change color of changed slots
                     ItemSlot.SetGlow(i, Main.rand.NextFloat(), true);
                 }
             }
-
+            
             // Apply changes
             items = sortedItems;
 
@@ -85,16 +104,6 @@ namespace BetterChests
                 {
                     NetMessage.SendData(MessageID.SyncChestItem, number: Main.LocalPlayer.chest, number2: i);
                 }
-            }
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if (ContainsPoint(Main.MouseScreen))
-            {
-                Main.LocalPlayer.mouseInterface = true;
             }
         }
     }

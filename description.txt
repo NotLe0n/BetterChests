@@ -1,8 +1,20 @@
-[c/FFE900:This mod adds more options to sort your chests]
+[c/FFE900:This mod improves some aspects of vanilla chests]
 
 For a Changlog and more information visit my homepage!
 
 Contact [c/66EEFF:NotLe0n#7696] on discord if you have any problems.
+
+Special Thanks to:
+[c/66EEFF:direwolf420, darthmorf and jopojelly for a UIElement]
+
+_________________________
+
+[c/FFE900: Changes]
+_________________________
+
+- "Deposit All" and "Loot all" have a confirmation button now.
+- Clicking on "Sort Items" will open a menu with more sort options to the right and a search bar below the chest UI.
+
 _________________________
 
 [c/FFE900: How to use]
@@ -10,3 +22,5 @@ _________________________
 
 [c/C4C4C4: Simply open a chest and click on "Sort Items".]
 [c/C4C4C4: This will open another menu to the right.]
+
+[c/C4C4C4: Use the search bar to search for items]

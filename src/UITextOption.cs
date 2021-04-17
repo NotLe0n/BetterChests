@@ -1,15 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace BetterChests
+namespace BetterChests.src
 {
     public class UITextOption : UIText
     {
@@ -17,7 +13,7 @@ namespace BetterChests
         public bool isLarge;
         private float _firstTextScale;
 
-        public UITextOption(string text, float textScale = 0.85f, bool large = false) : base(text, textScale, large)
+        public UITextOption(string text, float textScale = 0.75f, bool large = false) : base(text, textScale, large)
         {
             _firstTextScale = textScale;
             TextScale = textScale;
@@ -34,7 +30,7 @@ namespace BetterChests
         {
             base.Draw(spriteBatch);
 
-            if (IsMouseHovering) 
+            if (IsMouseHovering)
             {
                 if (TextScale <= 1)
                 {
@@ -50,6 +46,16 @@ namespace BetterChests
             }
 
             SetText(Text, TextScale, isLarge);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
         }
     }
 }
