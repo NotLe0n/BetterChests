@@ -19,26 +19,26 @@ namespace BetterChests
         public override void OnInitialize()
         {
             var header = new UIText("Sorting Options");
-            header.Top.Set(0, 0.255f);
-            header.Left.Set(0, 0.32f);
+            header.Top.Set(Main.instance.invBottom, 0);
+            header.Left.Set(506 + 100, 0); // magic number because vanilla does it the same way lmao
             Append(header);
 
             list = new UIList();
-            list.Top.Set(0, 0.28f);
-            list.Left.Set(0, 0.32f);
+            list.Top.Set(Main.instance.invBottom + 30, 0);
+            list.Left.Set(506 + 100, 0);
             list.Width.Set(300, 0);
             list.Height.Set(400, 0);
             list.ListPadding = 14;
             Append(list);
 
-            AddSortOption("Default Sort", (evt, elm) => ItemSorting.SortChest());
+            AddSortOption("Default sort", (evt, elm) => ItemSorting.SortChest());
             AddSortOption("Sort by ID", (evt, elm) => Sort(x => x.netID, _reversed));
             AddSortOption("Sort by name", (evt, elm) => Sort(x => x.Name, _reversed));
             AddSortOption("Sort by rarity", (evt, elm) => Sort(x => x.rare, !_reversed));
             AddSortOption("Sort by stack size", (evt, elm) => Sort(x => x.stack, !_reversed));
             AddSortOption("Sort by value", (evt, elm) => Sort(x => x.value, !_reversed));
-            AddSortOption("Sort by Damage", (evt, elm) => Sort(x => x.damage, !_reversed));
-            AddSortOption("Sort by Defense", (evt, elm) => Sort(x => x.defense, !_reversed));
+            AddSortOption("Sort by damage", (evt, elm) => Sort(x => x.damage, !_reversed));
+            AddSortOption("Sort by defense", (evt, elm) => Sort(x => x.defense, !_reversed));
 
         }
 
