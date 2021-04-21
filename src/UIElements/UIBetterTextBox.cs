@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace BetterChests.src
+namespace BetterChests.src.UIElements
 {
 	//ty jopojelly and darthmorf
 	internal class UIBetterTextBox : UIPanel

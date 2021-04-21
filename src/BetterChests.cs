@@ -1,3 +1,4 @@
+using BetterChests.src.UIStates;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
@@ -10,6 +11,7 @@ namespace BetterChests.src
     {
         internal UserInterface SortUserInterface;
         internal UserInterface ConfirmationUserInterface;
+        internal UserInterface ChestHoverUserInterface;
         public static BetterChests instance;
 
         public override void Load()
@@ -23,6 +25,9 @@ namespace BetterChests.src
 
                 ConfirmationUserInterface = new UserInterface();
                 ConfirmationUserInterface.SetState(new ConfirmationUI());
+
+                ChestHoverUserInterface = new UserInterface();
+                ChestHoverUserInterface.SetState(new ChestHoverUI());
             }
 
             ILEdits.Load();
@@ -34,6 +39,8 @@ namespace BetterChests.src
 
             SortUserInterface = null;
             ConfirmationUserInterface = null;
+            ChestHoverUserInterface = null;
+            ChestHoverUI.chest = null;
 
             base.Unload();
         }
@@ -58,6 +65,11 @@ namespace BetterChests.src
             {
                 ConfirmationUI.visible = false;
             }
+
+            if (ChestHoverUI.visible)
+            {
+                ChestHoverUserInterface.Update(gameTime);
+            }
         }
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -75,11 +87,18 @@ namespace BetterChests.src
                             {
                                 SortUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                             }
+
                             if (ConfirmationUI.visible)
                             {
                                 ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                             }
                         }
+
+                        if (ChestHoverUI.visible)
+                        {
+                            ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+                        }
+
                         return true;
                     }, InterfaceScaleType.UI));
             }

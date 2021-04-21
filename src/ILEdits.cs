@@ -1,6 +1,11 @@
 ﻿using MonoMod.Cil;
 using System.Reflection;
+using Terraria;
 using Terraria.UI;
+using Terraria.ID;
+using BetterChests.src.UIStates;
+using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace BetterChests.src
 {
@@ -9,6 +14,26 @@ namespace BetterChests.src
         public static void Load()
         {
             IL.Terraria.UI.ChestUI.DrawButton += EditButton;
+            On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;      
+        }
+
+        private static void Player_TileInteractionsMouseOver_Containers(On.Terraria.Player.orig_TileInteractionsMouseOver_Containers orig, Player self, int myX, int myY)
+        {
+            orig(self, myX, myY);
+            Tile tile = Main.tile[myX, myY];
+            int chestX = myX;
+            int chestY = myY;
+            if (tile.frameX % 36 != 0)
+            {
+                chestX--;
+            }
+            if (tile.frameY % 36 != 0)
+            {
+                chestY--;
+            }
+            Chest chest = Main.chest[Chest.FindChest(chestX, chestY)];
+            ChestHoverUI.chest = chest;
+            ChestHoverUI.visible = true;
         }
 
         private static void EditButton(ILContext il)
