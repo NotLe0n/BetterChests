@@ -21,7 +21,7 @@ namespace BetterChests.src.UIStates
             if (chest == null)
                 return;
 
-            Item[] items = chest.item.Where(x => x.type != ItemID.None).ToArray();
+            Item[] items = chest.item.Where(x => x != null && x.type != ItemID.None).ToArray();
 
             int collumn = 0;
             int row = 20;

@@ -1,11 +1,10 @@
 ﻿using BetterChests.src.UIElements;
 using Microsoft.Xna.Framework;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Graphics;
-using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace BetterChests.src.UIStates
@@ -20,30 +19,30 @@ namespace BetterChests.src.UIStates
         {
             var header = new UIText("Sorting Options");
             header.Top.Set(Main.instance.invBottom, 0);
-            header.Left.Set(506 + 100, 0); // magic number because vanilla does it the same way lmao
+            header.Left.Set(506 + 130, 0); // magic number because vanilla does it the same way lmao
             Append(header);
 
             list = new UIList();
             list.Top.Set(Main.instance.invBottom + 30, 0);
-            list.Left.Set(506 + 100, 0);
-            list.Width.Set(200, 0);
+            list.Left.Set(506 + 130, 0);
+            list.Width.Set(400, 0);
             list.Height.Set(400, 0);
             list.ListPadding = 14;
+            list.SetPadding(2);
             Append(list);
 
             AddSortOption("Default sort", (evt, elm) => ItemSorting.SortChest());
-            AddSortOption("Sort by ID", (evt, elm) => Sort(x => x.type, _reversed));
-            AddSortOption("Sort Alphabetically", (evt, elm) => Sort(x => x.Name, _reversed));
-            AddSortOption("Sort by rarity", (evt, elm) => Sort(x => x.rare, !_reversed));
-            AddSortOption("Sort by stack size", (evt, elm) => Sort(x => x.stack, !_reversed));
-            AddSortOption("Sort by value", (evt, elm) => Sort(x => x.value, !_reversed));
-            AddSortOption("Sort by damage", (evt, elm) => Sort(x => x.damage, !_reversed));
-            AddSortOption("Sort by defense", (evt, elm) => Sort(x => x.defense, !_reversed));
-            AddSortOption("Sort randomly", (evt, elm) => Sort(x => Main.rand.NextFloat(), _reversed));
+            AddSortOption("Sort by ID", (evt, elm) => NewItemSorting.Sort(x => x.type, _reversed));
+            AddSortOption("Sort Alphabetically", (evt, elm) => NewItemSorting.Sort(x => x.Name, _reversed));
+            AddSortOption("Sort by rarity", (evt, elm) => NewItemSorting.Sort(x => x.rare, !_reversed));
+            AddSortOption("Sort by stack size", (evt, elm) => NewItemSorting.Sort(x => x.stack, !_reversed));
+            AddSortOption("Sort by value", (evt, elm) => NewItemSorting.Sort(x => x.value, !_reversed));
+            AddSortOption("Sort by damage", (evt, elm) => NewItemSorting.Sort(x => x.damage, !_reversed));
+            AddSortOption("Sort by defense", (evt, elm) => NewItemSorting.Sort(x => x.defense, !_reversed));
+            AddSortOption("Sort by Mod", new MouseEvent(ModCarusel));
+            AddSortOption("Sort randomly", (evt, elm) => NewItemSorting.Sort(x => Main.rand.NextFloat(), _reversed));
 
             var option = new UITextOption("Reversed: No");
-            option.MarginTop = 2f;
-            option.MarginLeft = 2f;
             option.OnClick += (evt, elm) => 
             { 
                 _reversed = !_reversed; 
@@ -56,56 +55,38 @@ namespace BetterChests.src.UIStates
             searchbox.Left.Set(71, 0);
             searchbox.Width.Set(209, 0);
             searchbox.Height.Set(30, 0);
-            searchbox.OnTextChanged += () => Sort(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
+            searchbox.OnTextChanged += () => NewItemSorting.Sort(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
             Append(searchbox);
         }
 
         private void AddSortOption(string title, MouseEvent onclick)
         {
             var option = new UITextOption(title);
-            option.MarginTop = 2f;
-            option.MarginLeft = 2f;
             option.OnClick += onclick;
             list.Add(option);
         }
 
-        private void Sort<T>(Func<Item, T> func, bool reversed)
+        private int caruselIndex = 0;
+        private void ModCarusel(UIMouseEvent evt, UIElement elm)
         {
-            // all items in the chest
-            ref var items = ref Main.chest[Main.LocalPlayer.chest].item;
-
-            // order the items according to the function.
-            var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ToArray();
-
-            if (reversed)
+            // get list of all mods with items
+            List<Mod> modsWithItems = new List<Mod>();
+            for (int i = 0; i < ItemLoader.ItemCount; i++)
             {
-                // reverse the order
-                sortedItems = sortedItems.Reverse().ToArray();
-            }
-
-            // Air always goes last
-            sortedItems = sortedItems.OrderBy(x => x.IsAir).ToArray();
-
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (!sortedItems[i].IsAir && items[i] != sortedItems[i])
-                {   
-                    // Change color of changed slots
-                    ItemSlot.SetGlow(i, Main.rand.NextFloat(), true);
-                }
-            }
-            
-            // Apply changes
-            items = sortedItems;
-
-            // sync chest contents with all clients
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                for (int i = 0; i < items.Length; i++)
+                var item = ItemLoader.GetItem(i);
+                if (item != null && !modsWithItems.Contains(item.mod))
                 {
-                    NetMessage.SendData(MessageID.SyncChestItem, number: Main.LocalPlayer.chest, number2: i);
+                    modsWithItems.Add(item.mod);
                 }
             }
+
+            // increase index and reset it if limit is reached
+            caruselIndex = caruselIndex < modsWithItems.Count - 1 ? caruselIndex + 1 : 0;
+
+            // set text to mod name
+            (elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);
+            // sort items
+            NewItemSorting.Sort(x => x.modItem != null && x.modItem.mod.Name == modsWithItems[caruselIndex].Name, !_reversed);
         }
     }
 }
