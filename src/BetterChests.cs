@@ -17,6 +17,12 @@ namespace BetterChests.src
         public override void Load()
         {
             instance = this;
+            // Hotkeys
+            Hotkeys.DepositAll = RegisterHotKey("Deposit All", "");
+            Hotkeys.LootAll = RegisterHotKey("Loot All", "");
+            Hotkeys.QuickStack = RegisterHotKey("Quick Stack", "");
+            Hotkeys.SortChest = RegisterHotKey("Sort Chest", "");
+            Hotkeys.SortInventory = RegisterHotKey("Sort Inventory", "");
 
             if (!Main.dedServ)
             {
@@ -41,6 +47,13 @@ namespace BetterChests.src
             ConfirmationUserInterface = null;
             ChestHoverUserInterface = null;
             ChestHoverUI.chest = null;
+
+            // Hotkeys
+            Hotkeys.DepositAll = null;
+            Hotkeys.LootAll = null;
+            Hotkeys.QuickStack = null;
+            Hotkeys.SortChest = null;
+            Hotkeys.SortInventory = null;
 
             base.Unload();
         }
