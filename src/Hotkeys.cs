@@ -10,7 +10,7 @@ namespace BetterChests.src
 {
     class Hotkeys : ModPlayer
     {
-        public static ModHotKey DepositAll, LootAll, QuickStack, SortChest, SortInventory;
+        public static ModHotKey DepositAll, LootAll, QuickStack, Restock, SortChest, SortInventory;
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -28,6 +28,10 @@ namespace BetterChests.src
             {
                 player.QuickStackAllChests();
                 ChestUI.QuickStack();
+            }
+            if (Restock.JustPressed)
+            {
+                ChestUI.Restock();
             }
             if (SortChest.JustPressed)
             {

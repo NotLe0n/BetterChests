@@ -21,6 +21,7 @@ namespace BetterChests.src
             Hotkeys.DepositAll = RegisterHotKey("Deposit All", "");
             Hotkeys.LootAll = RegisterHotKey("Loot All", "");
             Hotkeys.QuickStack = RegisterHotKey("Quick Stack", "");
+            Hotkeys.Restock = RegisterHotKey("Restock", "");
             Hotkeys.SortChest = RegisterHotKey("Sort Chest", "");
             Hotkeys.SortInventory = RegisterHotKey("Sort Inventory", "");
 
@@ -52,6 +53,7 @@ namespace BetterChests.src
             Hotkeys.DepositAll = null;
             Hotkeys.LootAll = null;
             Hotkeys.QuickStack = null;
+            Hotkeys.Restock = null;
             Hotkeys.SortChest = null;
             Hotkeys.SortInventory = null;
 
