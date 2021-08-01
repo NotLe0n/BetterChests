@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.UI;
 
@@ -36,7 +35,7 @@ namespace BetterChests.src.UIStates
                 }
 
                 // draw item
-                Texture2D itemTexture = Main.itemTexture[items[i].type];
+                Texture2D itemTexture = TextureAssets.Item[items[i].type].Value;
                 float drawScale = 1f;
                 int frameCount = 1;
                 Rectangle? rect = null;
@@ -49,7 +48,7 @@ namespace BetterChests.src.UIStates
                 }
 
                 if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > 18)
-                    drawScale = (float)maxSize / (float)Main.itemTexture[items[i].type].Width;
+                    drawScale = maxSize / (float)TextureAssets.Item[items[i].type].Width();
 
                 spriteBatch.Draw(itemTexture, drawPos, rect, Color.White, 0, Vector2.Zero, drawScale, SpriteEffects.None, 0f);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
@@ -23,7 +24,7 @@ namespace BetterChests.src.UIElements
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            Main.PlaySound(SoundID.MenuTick);
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

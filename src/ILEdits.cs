@@ -1,11 +1,8 @@
-﻿using MonoMod.Cil;
+﻿using BetterChests.src.UIStates;
+using MonoMod.Cil;
 using System.Reflection;
 using Terraria;
 using Terraria.UI;
-using Terraria.ID;
-using BetterChests.src.UIStates;
-using Microsoft.Xna.Framework;
-using System.Linq;
 
 namespace BetterChests.src
 {
@@ -14,7 +11,7 @@ namespace BetterChests.src
         public static void Load()
         {
             IL.Terraria.UI.ChestUI.DrawButton += EditButton;
-            On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;      
+            On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;
         }
 
         private static void Player_TileInteractionsMouseOver_Containers(On.Terraria.Player.orig_TileInteractionsMouseOver_Containers orig, Player self, int myX, int myY)
@@ -34,6 +31,7 @@ namespace BetterChests.src
             Chest chest = Main.chest[Chest.FindChest(chestX, chestY)];
             ChestHoverUI.chest = chest;
             ChestHoverUI.visible = true;
+            clicked = false;
         }
 
         private static void EditButton(ILContext il)
@@ -70,8 +68,12 @@ namespace BetterChests.src
             SortOptionsUI.visible = !SortOptionsUI.visible;
         }
 
+        private static bool clicked = false;
         private static void OpenDepositConfirmation()
         {
+            if (clicked) return;
+
+            clicked = true;
             var ui = new ConfirmationUI
             {
                 buttonID = ChestUI.ButtonID.DepositAll,
@@ -80,15 +82,19 @@ namespace BetterChests.src
                 {
                     ChestUI.DepositAll();
                     ConfirmationUI.visible = false;
+                    clicked = false;
                 }
             };
 
-            BetterChests.instance.ConfirmationUserInterface.SetState(ui);
+            UISystem.instance.ConfirmationUserInterface.SetState(ui);
             ConfirmationUI.visible = true;
         }
 
         private static void OpenLootConfirmation()
         {
+            if (clicked) return;
+
+            clicked = true;
             var ui = new ConfirmationUI
             {
                 buttonID = ChestUI.ButtonID.LootAll,
@@ -97,10 +103,11 @@ namespace BetterChests.src
                 {
                     ChestUI.LootAll();
                     ConfirmationUI.visible = false;
+                    clicked = false;
                 }
             };
 
-            BetterChests.instance.ConfirmationUserInterface.SetState(ui);
+            UISystem.instance.ConfirmationUserInterface.SetState(ui);
             ConfirmationUI.visible = true;
         }
     }

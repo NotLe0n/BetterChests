@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terraria.UI;
+﻿using Microsoft.Xna.Framework.Input;
 using Terraria.GameInput;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace BetterChests.src
 {
     class Hotkeys : ModPlayer
     {
-        public static ModHotKey DepositAll, LootAll, QuickStack, Restock, SortChest, SortInventory;
+        public static ModKeybind DepositAll, LootAll, QuickStack, Restock, SortChest, SortInventory;
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -26,7 +23,7 @@ namespace BetterChests.src
             }
             if (QuickStack.JustPressed)
             {
-                player.QuickStackAllChests();
+                Player.QuickStackAllChests();
                 ChestUI.QuickStack();
             }
             if (Restock.JustPressed)
@@ -41,6 +38,33 @@ namespace BetterChests.src
             {
                 ItemSorting.SortInventory();
             }
+        }
+    }
+
+    class HotkeyLoader : ModSystem
+    {
+        public override void Load()
+        {
+            Hotkeys.DepositAll = KeybindLoader.RegisterKeybind(Mod, "Deposit All", Keys.None);
+            Hotkeys.LootAll = KeybindLoader.RegisterKeybind(Mod, "Loot All", Keys.None);
+            Hotkeys.QuickStack = KeybindLoader.RegisterKeybind(Mod, "Quick Stack", Keys.None);
+            Hotkeys.Restock = KeybindLoader.RegisterKeybind(Mod, "Restock", Keys.None);
+            Hotkeys.SortChest = KeybindLoader.RegisterKeybind(Mod, "Sort Chest", Keys.None);
+            Hotkeys.SortInventory = KeybindLoader.RegisterKeybind(Mod, "Sort Inventory", Keys.None);
+
+            base.Load();
+        }
+
+        public override void Unload()
+        {
+            Hotkeys.DepositAll = null;
+            Hotkeys.LootAll = null;
+            Hotkeys.QuickStack = null;
+            Hotkeys.Restock = null;
+            Hotkeys.SortChest = null;
+            Hotkeys.SortInventory = null;
+
+            base.Unload();
         }
     }
 }

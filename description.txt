@@ -2,8 +2,6 @@
 
 For a Changlog and more information visit my homepage!
 
-Contact [c/66EEFF:NotLe0n#7696] on discord if you have any problems.
-
 Special Thanks to:
 [c/66EEFF:direwolf420, darthmorf and jopojelly for a UIElement]
 [c/66EEFF:Trivaxy] for providing his item drawing code

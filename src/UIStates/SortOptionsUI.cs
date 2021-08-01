@@ -1,7 +1,6 @@
 ﻿using BetterChests.src.UIElements;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -43,9 +42,9 @@ namespace BetterChests.src.UIStates
             AddSortOption("Sort randomly", (evt, elm) => NewItemSorting.Sort(x => Main.rand.NextFloat(), _reversed));
 
             var option = new UITextOption("Reversed: No");
-            option.OnClick += (evt, elm) => 
-            { 
-                _reversed = !_reversed; 
+            option.OnClick += (evt, elm) =>
+            {
+                _reversed = !_reversed;
                 option.SetText(_reversed ? "Reversed: Yes" : "Reversed: No");
             };
             list.Add(option);
@@ -74,9 +73,9 @@ namespace BetterChests.src.UIStates
             for (int i = 0; i < ItemLoader.ItemCount; i++)
             {
                 var item = ItemLoader.GetItem(i);
-                if (item != null && !modsWithItems.Contains(item.mod))
+                if (item != null && !modsWithItems.Contains(item.Mod))
                 {
-                    modsWithItems.Add(item.mod);
+                    modsWithItems.Add(item.Mod);
                 }
             }
 
@@ -86,7 +85,7 @@ namespace BetterChests.src.UIStates
             // set text to mod name
             (elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);
             // sort items
-            NewItemSorting.Sort(x => x.modItem != null && x.modItem.mod.Name == modsWithItems[caruselIndex].Name, !_reversed);
+            NewItemSorting.Sort(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed);
         }
     }
 }
