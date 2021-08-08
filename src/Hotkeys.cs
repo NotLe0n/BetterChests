@@ -13,11 +13,11 @@ namespace BetterChests.src
         {
             base.ProcessTriggers(triggersSet);
 
-            if (DepositAll.JustPressed)
+            if (DepositAll.JustPressed && Player.chest != -1)
             {
                 ChestUI.DepositAll();
             }
-            if (LootAll.JustPressed)
+            if (LootAll.JustPressed && Player.chest != -1)
             {
                 ChestUI.LootAll();
             }
