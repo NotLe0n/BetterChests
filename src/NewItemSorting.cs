@@ -11,7 +11,7 @@ public class NewItemSorting
 	public static void Sort<T>(Func<Item, T> func, bool reversed)
 	{
 		// all items in the chest
-		ref var items = ref Main.chest[Main.LocalPlayer.chest].item;
+		ref var items = ref GetChestItems();
 
 		// order the items according to the function.
 		var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ToArray();
@@ -44,6 +44,23 @@ public class NewItemSorting
 			{
 				NetMessage.SendData(MessageID.SyncChestItem, number: Main.LocalPlayer.chest, number2: i);
 			}
+		}
+	}
+
+	private static ref Item[] GetChestItems()
+	{
+		switch (Main.LocalPlayer.chest)
+		{
+			case -2:
+				return ref Main.LocalPlayer.bank.item;
+			case -3:
+				return ref Main.LocalPlayer.bank2.item;
+			case -4:
+				return ref Main.LocalPlayer.bank3.item;
+			case -5:
+				return ref Main.LocalPlayer.bank4.item;
+			default:
+				return ref Main.chest[Main.LocalPlayer.chest].item;
 		}
 	}
 }
