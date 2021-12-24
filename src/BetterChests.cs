@@ -1,12 +1,11 @@
 using Terraria.ModLoader;
 
-namespace BetterChests.src
+namespace BetterChests.src;
+
+public class BetterChests : Mod
 {
-    public class BetterChests : Mod
-    {
-        public override void Load()
-        {
-            ILEdits.Load();
-        }
-    }
+	public override void Load()
+	{
+		ILEdits.Load();
+	}
 }

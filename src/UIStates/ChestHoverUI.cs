@@ -8,62 +8,62 @@ using Terraria.UI;
 
 namespace BetterChests.src.UIStates
 {
-    class ChestHoverUI : UIState
-    {
-        public static Chest chest;
-        public static bool visible;
+	class ChestHoverUI : UIState
+	{
+		public static Chest chest;
+		public static bool visible;
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			base.Draw(spriteBatch);
 
-            if (chest == null)
-                return;
+			if (chest == null)
+				return;
 
-            Item[] items = chest.item.Where(x => x != null && x.type != ItemID.None).ToArray();
+			Item[] items = chest.item.Where(x => x != null && x.type != ItemID.None).ToArray();
 
-            int collumn = 0;
-            int row = 20;
-            int padding = 10;
-            int maxSize = 20;
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (i % 10 == 0)
-                {
-                    row += maxSize + padding;
-                    collumn = maxSize;
-                }
+			int collumn = 0;
+			int row = 20;
+			int padding = 10;
+			int maxSize = 20;
+			for (int i = 0; i < items.Length; i++)
+			{
+				if (i % 10 == 0)
+				{
+					row += maxSize + padding;
+					collumn = maxSize;
+				}
 
-                // draw item
-                Texture2D itemTexture = TextureAssets.Item[items[i].type].Value;
-                float drawScale = 1f;
-                int frameCount = 1;
-                Rectangle? rect = null;
-                Vector2 drawPos = new Vector2((int)Main.MouseScreen.X + collumn, (int)Main.MouseScreen.Y + row);
+				// draw item
+				Texture2D itemTexture = TextureAssets.Item[items[i].type].Value;
+				float drawScale = 1f;
+				int frameCount = 1;
+				Rectangle? rect = null;
+				Vector2 drawPos = new Vector2((int)Main.MouseScreen.X + collumn, (int)Main.MouseScreen.Y + row);
 
-                if (Main.itemAnimations[items[i].type] != null)
-                {
-                    rect = Main.itemAnimations[items[i].type].GetFrame(itemTexture);
-                    frameCount = Main.itemAnimations[items[i].type].FrameCount;
-                }
+				if (Main.itemAnimations[items[i].type] != null)
+				{
+					rect = Main.itemAnimations[items[i].type].GetFrame(itemTexture);
+					frameCount = Main.itemAnimations[items[i].type].FrameCount;
+				}
 
-                if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > 18)
-                    drawScale = maxSize / (float)TextureAssets.Item[items[i].type].Width();
+				if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > 18)
+					drawScale = maxSize / (float)TextureAssets.Item[items[i].type].Width();
 
-                spriteBatch.Draw(itemTexture, drawPos, rect, Color.White, 0, Vector2.Zero, drawScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(itemTexture, drawPos, rect, Color.White, 0, Vector2.Zero, drawScale, SpriteEffects.None, 0f);
 
-                // draw stack text
-                if (items[i].stack != 1)
-                {
-                    string text = items[i].stack.ToString();
-                    Vector2 pos = drawPos + new Vector2(0, itemTexture.Height / frameCount / 2);
-                    Utils.DrawBorderString(spriteBatch, text, pos, Color.White, 0.75f);
-                }
+				// draw stack text
+				if (items[i].stack != 1)
+				{
+					string text = items[i].stack.ToString();
+					Vector2 pos = drawPos + new Vector2(0, itemTexture.Height / frameCount / 2);
+					Utils.DrawBorderString(spriteBatch, text, pos, Color.White, 0.75f);
+				}
 
-                collumn += maxSize + padding;
-            }
+				collumn += maxSize + padding;
+			}
 
-            visible = false;
-        }
-    }
+			visible = false;
+		}
+	}
 }
