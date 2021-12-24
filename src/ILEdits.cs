@@ -6,6 +6,8 @@ using Terraria.UI;
 
 namespace BetterChests.src;
 
+#pragma warning disable IDE0051 // Remove unused private members
+
 public class ILEdits
 {
 	public static void Load()
