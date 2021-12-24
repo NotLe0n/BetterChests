@@ -10,6 +10,8 @@ namespace BetterChests.src;
 
 public class ILEdits
 {
+	public static bool disableConfirmationButton;
+
 	public static void Load()
 	{
 		IL.Terraria.UI.ChestUI.DrawButton += EditButton;
@@ -43,8 +45,9 @@ public class ILEdits
 		var c = new ILCursor(il);
 
 		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("LootAll")))
-			return;
+				return;
 
+		// call own method instead of LootAll()
 		c.Prev.Operand = typeof(ILEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
 
 		// IL_0362: br.s      IL_038C
@@ -54,6 +57,7 @@ public class ILEdits
 		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("DepositAll")))
 			return;
 
+		// call own method instead of DepositAll()
 		c.Prev.Operand = typeof(ILEdits).GetMethod("OpenDepositConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
 
 		// The goal of this IL edit is to replace SortChest() with code to open my UI
@@ -64,6 +68,7 @@ public class ILEdits
 		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ItemSorting>("SortChest")))
 			return;
 
+		// call own method instead of SortChest()
 		c.Prev.Operand = typeof(ILEdits).GetMethod("ToggleSortUI", BindingFlags.NonPublic | BindingFlags.Static);
 	}
 
@@ -72,9 +77,15 @@ public class ILEdits
 		SortOptionsUI.visible = !SortOptionsUI.visible;
 	}
 
-	private static bool clicked = false;
+	private static bool clicked = false; // to prevent repeatidly clicking the button when held
 	private static void OpenDepositConfirmation()
 	{
+		if (disableConfirmationButton)
+		{
+			ChestUI.DepositAll();
+			return;
+		}
+
 		if (clicked) return;
 
 		clicked = true;
@@ -96,6 +107,12 @@ public class ILEdits
 
 	private static void OpenLootConfirmation()
 	{
+		if (disableConfirmationButton)
+		{
+			ChestUI.LootAll();
+			return;
+		}
+
 		if (clicked) return;
 
 		clicked = true;
