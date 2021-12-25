@@ -7,13 +7,13 @@ using Terraria.UI;
 
 namespace BetterChests.src;
 
-class UISystem : ModSystem
+internal class UISystem : ModSystem
 {
+	public static UISystem instance;
+
 	internal UserInterface SortUserInterface;
 	internal UserInterface ConfirmationUserInterface;
 	internal UserInterface ChestHoverUserInterface;
-
-	public static UISystem instance;
 
 	public override void Load()
 	{

@@ -11,12 +11,11 @@ internal class BetterChestsConfig : ModConfig
 
 	[Label("Disable Deposit All/Loot All Confirmation message")]
 	[DefaultValue(false)]
-
 	public bool disableConfirmationButton;
 
 	public override void OnChanged()
 	{
-		ILEdits.disableConfirmationButton = disableConfirmationButton;
+		ILEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
 	}
 }

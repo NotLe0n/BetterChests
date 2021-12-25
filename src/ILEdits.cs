@@ -10,7 +10,7 @@ namespace BetterChests.src;
 
 public class ILEdits
 {
-	public static bool disableConfirmationButton;
+	public static bool DisableConfirmationButton { get; set; }
 
 	public static void Load()
 	{
@@ -80,7 +80,7 @@ public class ILEdits
 	private static bool clicked = false; // to prevent repeatidly clicking the button when held
 	private static void OpenDepositConfirmation()
 	{
-		if (disableConfirmationButton)
+		if (DisableConfirmationButton)
 		{
 			ChestUI.DepositAll();
 			return;
@@ -107,7 +107,7 @@ public class ILEdits
 
 	private static void OpenLootConfirmation()
 	{
-		if (disableConfirmationButton)
+		if (DisableConfirmationButton)
 		{
 			ChestUI.LootAll();
 			return;

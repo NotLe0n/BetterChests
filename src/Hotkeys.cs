@@ -5,7 +5,7 @@ using Terraria.UI;
 
 namespace BetterChests.src;
 
-class Hotkeys : ModPlayer
+internal class Hotkeys : ModPlayer
 {
 	public static ModKeybind DepositAll, LootAll, QuickStack, Restock, SortChest, SortInventory;
 
