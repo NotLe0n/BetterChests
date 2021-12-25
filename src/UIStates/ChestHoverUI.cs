@@ -20,6 +20,7 @@ namespace BetterChests.src.UIStates
 			if (chest == null)
 				return;
 
+			// all items in the chest
 			Item[] items = chest.item.Where(x => x != null && x.type != ItemID.None).ToArray();
 
 			int collumn = 0;
@@ -28,6 +29,7 @@ namespace BetterChests.src.UIStates
 			int maxSize = 20;
 			for (int i = 0; i < items.Length; i++)
 			{
+				// set positions (10 items per row)
 				if (i % 10 == 0)
 				{
 					row += maxSize + padding;
@@ -35,12 +37,14 @@ namespace BetterChests.src.UIStates
 				}
 
 				// draw item
-				Texture2D itemTexture = TextureAssets.Item[items[i].type].Value;
+				Main.instance.LoadItem(items[i].type); // load item before trying to get its texture (Item only gets loaded once)
+				Texture2D itemTexture = TextureAssets.Item[items[i].type].Value; // get item texture
 				float drawScale = 1f;
 				int frameCount = 1;
 				Rectangle? rect = null;
 				Vector2 drawPos = new Vector2((int)Main.MouseScreen.X + collumn, (int)Main.MouseScreen.Y + row);
 
+				// handle animation frames
 				if (Main.itemAnimations[items[i].type] != null)
 				{
 					rect = Main.itemAnimations[items[i].type].GetFrame(itemTexture);
@@ -50,6 +54,7 @@ namespace BetterChests.src.UIStates
 				if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > 18)
 					drawScale = maxSize / (float)TextureAssets.Item[items[i].type].Width();
 
+				// draw texture
 				spriteBatch.Draw(itemTexture, drawPos, rect, Color.White, 0, Vector2.Zero, drawScale, SpriteEffects.None, 0f);
 
 				// draw stack text
