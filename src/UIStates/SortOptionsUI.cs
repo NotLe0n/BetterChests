@@ -48,14 +48,6 @@ internal class SortOptionsUI : UIState
 			option.SetText(_reversed ? "Reversed: Yes" : "Reversed: No");
 		};
 		list.Add(option);
-
-		var searchbox = new UIBetterTextBox("search item", Color.White);
-		searchbox.Top.Set(Main.instance.invBottom + 170, 0);
-		searchbox.Left.Set(71, 0);
-		searchbox.Width.Set(209, 0);
-		searchbox.Height.Set(30, 0);
-		searchbox.OnTextChanged += () => NewItemSorting.Sort(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
-		Append(searchbox);
 	}
 
 	private void AddSortOption(string title, MouseEvent onclick)

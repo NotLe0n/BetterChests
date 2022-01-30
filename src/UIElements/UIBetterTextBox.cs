@@ -28,6 +28,7 @@ internal class UIBetterTextBox : UIPanel
 	public event Action OnTextChanged;
 	public event Action OnTabPressed;
 	public event Action OnEnterPressed;
+	public event Action<Keys> OnKeyPressed;
 
 	internal bool unfocusOnEnter = true;
 	internal bool unfocusOnTab = true;
@@ -113,6 +114,7 @@ internal class UIBetterTextBox : UIPanel
 		{
 			Terraria.GameInput.PlayerInput.WritingText = true;
 			Main.instance.HandleIME();
+
 			string newString = Main.GetInputText(currentString);
 			if (!newString.Equals(currentString))
 			{
@@ -124,29 +126,39 @@ internal class UIBetterTextBox : UIPanel
 				currentString = newString;
 			}
 
+			if (Main.inputText.GetPressedKeys().Length > 0)
+			{
+				OnKeyPressed?.Invoke(Main.inputText.GetPressedKeys()[0]);
+			}
+
 			if (JustPressed(Keys.Tab))
 			{
 				if (unfocusOnTab) Unfocus();
 				OnTabPressed?.Invoke();
 			}
+
 			if (JustPressed(Keys.Enter))
 			{
 				Main.drawingPlayerChat = false;
 				if (unfocusOnEnter) Unfocus();
 				OnEnterPressed?.Invoke();
 			}
+
 			if (++textBlinkerCount >= 20)
 			{
 				textBlinkerState = (textBlinkerState + 1) % 2;
 				textBlinkerCount = 0;
 			}
+
 			Main.instance.DrawWindowsIMEPanel(new Vector2(98f, Main.screenHeight - 36), 0f);
 		}
+
 		string displayString = currentString;
 		if (textBlinkerState == 1 && focused)
 		{
 			displayString += "|";
 		}
+
 		CalculatedStyle space = GetDimensions();
 		Color color = TextColor;
 		Vector2 drawPos = space.Position() + new Vector2(4, 2);

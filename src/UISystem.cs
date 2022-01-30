@@ -14,6 +14,7 @@ internal class UISystem : ModSystem
 	internal UserInterface SortUserInterface;
 	internal UserInterface ConfirmationUserInterface;
 	internal UserInterface ChestHoverUserInterface;
+	internal UserInterface SearchbarUserInterface;
 
 	public override void Load()
 	{
@@ -29,6 +30,9 @@ internal class UISystem : ModSystem
 
 			ChestHoverUserInterface = new UserInterface();
 			ChestHoverUserInterface.SetState(new ChestHoverUI());
+
+			SearchbarUserInterface = new UserInterface();
+			SearchbarUserInterface.SetState(new SearchbarUI());
 		}
 
 		base.Load();
@@ -61,6 +65,9 @@ internal class UISystem : ModSystem
 			{
 				ConfirmationUserInterface.Update(gameTime);
 			}
+
+			SearchbarUserInterface.Update(gameTime);
+
 		}
 		else
 		{
@@ -93,6 +100,8 @@ internal class UISystem : ModSystem
 						{
 							ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 						}
+
+						SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
 
 					if (ChestHoverUI.visible)
