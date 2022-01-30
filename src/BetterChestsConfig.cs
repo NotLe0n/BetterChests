@@ -16,6 +16,7 @@ internal class BetterChestsConfig : ModConfig
 	public bool disableConfirmationButton;
 
 	[Label("Default sort option")]
+	[Tooltip("Changes the functionality of the \"Sort Items\" button")]
 	[JsonDefaultValue(
 @"{
 'selection': 'Default sort',

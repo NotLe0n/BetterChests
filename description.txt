@@ -12,16 +12,21 @@ _________________________
 _________________________
 
 - "Deposit All" and "Loot all" have a confirmation button now. (toggleable in the config)
-- Clicking on "Sort Items" will open a menu with more sort options to the right and a search bar below the chest UI.
-- Hovering over a chest shows its contents
-- Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory
+- Added a search bar!
+- Right clicking on "Sort Items" will open a menu with more sort options.
+- Hovering over a chest shows its contents.
+- Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
+- Added a Config option to change the functionality of the "Sort Items" button.
 
 _________________________
 
 [c/FFE900: How to use]
 _________________________
 
-[c/C4C4C4: Simply open a chest and click on "Sort Items".]
+[c/C4C4C4: Simply open a chest and right click on "Sort Items".]
 [c/C4C4C4: This will open another menu to the right.]
+
+[c/C4C4C4: Open the Mod Config to change the "Sort Items" button]
+[c/C4C4C4: You can also disable the confirmation messages there]
 
 [c/C4C4C4: Use the search bar to search for items]
