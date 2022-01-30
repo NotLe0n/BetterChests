@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using BetterChests.src.UIElements;
+using System;
+using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
 namespace BetterChests.src;
@@ -13,9 +15,50 @@ internal class BetterChestsConfig : ModConfig
 	[DefaultValue(false)]
 	public bool disableConfirmationButton;
 
+	[Label("Default sort option")]
+	[JsonDefaultValue(
+@"{
+'selection': 'Default sort',
+'options': [
+    'Default sort',
+    'Sort by ID',
+    'Sort alphabetically',
+    'Sort by rarity',
+    'Sort by stack size',
+    'Sort by value',
+    'Sort by damage',
+    'Sort by defense',
+    'Sort randomly'
+    ]
+}"
+	)]
+	[CustomModConfigItem(typeof(DropDownMenu<string>))]
+	public OptionSelectionPair<string> options;
+
 	public override void OnChanged()
 	{
+		ILEdits.CurrentSortFunction = options == null ? "Default sort" : options.selection;
 		ILEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
+	}
+}
+
+internal class OptionSelectionPair<T>
+{
+	public T selection;
+	public T[] options;
+
+	public override bool Equals(object obj)
+	{
+		if (obj is OptionSelectionPair<T> otherPair)
+		{
+			return otherPair.selection.Equals(selection) && otherPair.options.Equals(options);
+		}
+		return false;
+	}
+
+	public override int GetHashCode()
+	{
+		return new { selection, options }.GetHashCode();
 	}
 }

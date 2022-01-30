@@ -30,9 +30,9 @@ internal class SortOptionsUI : UIState
 		list.SetPadding(2);
 		Append(list);
 
-		AddSortOption("Default sort", (evt, elm) => ItemSorting.SortChest());
+		AddSortOption("Default sort", (evt, elm) => NewItemSorting.DefaultSort(_reversed));
 		AddSortOption("Sort by ID", (evt, elm) => NewItemSorting.Sort(x => x.type, _reversed));
-		AddSortOption("Sort Alphabetically", (evt, elm) => NewItemSorting.Sort(x => x.Name, _reversed));
+		AddSortOption("Sort alphabetically", (evt, elm) => NewItemSorting.Sort(x => x.Name, _reversed));
 		AddSortOption("Sort by rarity", (evt, elm) => NewItemSorting.Sort(x => x.rare, !_reversed));
 		AddSortOption("Sort by stack size", (evt, elm) => NewItemSorting.Sort(x => x.stack, !_reversed));
 		AddSortOption("Sort by value", (evt, elm) => NewItemSorting.Sort(x => x.value, !_reversed));

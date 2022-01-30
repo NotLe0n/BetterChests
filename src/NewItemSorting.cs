@@ -3,11 +3,37 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.UI;
+using System.Collections.Generic;
 
 namespace BetterChests.src;
 
 public class NewItemSorting
 {
+	// TODO: Add InventorySort
+
+	public static void DefaultSort(bool reversed)
+	{
+		ItemSorting.SortChest();
+
+		if (reversed)
+		{
+			// all items in the chest
+			ref var items = ref GetChestItems();
+			IEnumerable<Item> reversedItems = items.Where(x => !x.IsAir);
+
+			reversedItems = reversedItems.Reverse(); // reverse order
+
+			// add air back
+			int padLength = items.Length - reversedItems.Count();
+			for (int i = 0; i < padLength; i++)
+			{
+				reversedItems = reversedItems.Append(new Item(0));
+			}
+
+			items = reversedItems.ToArray();
+		}
+	}
+
 	public static void Sort<T>(Func<Item, T> func, bool reversed)
 	{
 		// all items in the chest

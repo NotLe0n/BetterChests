@@ -11,13 +11,16 @@ namespace BetterChests.src;
 public class ILEdits
 {
 	public static bool DisableConfirmationButton { get; set; }
+	public static string CurrentSortFunction { get; set; }
 
 	public static void Load()
 	{
 		IL.Terraria.UI.ChestUI.DrawButton += EditButton;
+		On.Terraria.UI.ChestUI.Draw += ChestUI_Draw;
 		On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;
 	}
 
+	// TODO: Find method which allows piggy bank to also be hoverable
 	private static void Player_TileInteractionsMouseOver_Containers(On.Terraria.Player.orig_TileInteractionsMouseOver_Containers orig, Player self, int myX, int myY)
 	{
 		orig(self, myX, myY);
@@ -37,7 +40,7 @@ public class ILEdits
 
 		ChestHoverUI.chest = Main.chest[Chest.FindChest(chestX, chestY)];
 		ChestHoverUI.visible = true;
-		clicked = false;
+		alreadyClicked = false;
 	}
 
 	private static void EditButton(ILContext il)
@@ -45,7 +48,7 @@ public class ILEdits
 		var c = new ILCursor(il);
 
 		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("LootAll")))
-				return;
+			return;
 
 		// call own method instead of LootAll()
 		c.Prev.Operand = typeof(ILEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
@@ -69,26 +72,74 @@ public class ILEdits
 			return;
 
 		// call own method instead of SortChest()
-		c.Prev.Operand = typeof(ILEdits).GetMethod("ToggleSortUI", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ILEdits).GetMethod("CallSortFunction", BindingFlags.NonPublic | BindingFlags.Static);
 	}
 
-	private static void ToggleSortUI()
+	// Draw method because that calls every tick
+	private static void ChestUI_Draw(On.Terraria.UI.ChestUI.orig_Draw orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
 	{
-		SortOptionsUI.visible = !SortOptionsUI.visible;
+		orig(spritebatch);
+		// if the "Sort" Button has been clicked once: toggle the Sort option UI
+		if (Main.mouseRight && Main.mouseRightRelease && ChestUI.ButtonHovered[ChestUI.ButtonID.Sort])
+		{
+			// toggle Sort option UI
+			SortOptionsUI.visible = !SortOptionsUI.visible;
+		}
 	}
 
-	private static bool clicked = false; // to prevent repeatidly clicking the button when held
+	private static void CallSortFunction()
+	{
+		switch (CurrentSortFunction)
+		{
+			case "Default sort":
+				NewItemSorting.DefaultSort(false);
+				break;
+			case "Sort by ID":
+				NewItemSorting.Sort(x => x.type, false);
+				break;
+			case "Sort alphabetically":
+				NewItemSorting.Sort(x => x.Name, false);
+				break;
+			case "Sort by rarity":
+				NewItemSorting.Sort(x => x.rare, true);
+				break;
+			case "Sort by stack size":
+				NewItemSorting.Sort(x => x.stack, true);
+				break;
+			case "Sort by value":
+				NewItemSorting.Sort(x => x.value, true);
+				break;
+			case "Sort by damage":
+				NewItemSorting.Sort(x => x.defense, true);
+				break;
+			case "Sort by defense":
+				NewItemSorting.Sort(x => x.defense, true);
+				break;
+			case "Sort randomly":
+				NewItemSorting.Sort(x => Main.rand.NextFloat(), false);
+				break;
+			default:
+				break;
+		}
+	}
+
+	// to prevent repeatidly clicking the button when held
+	private static bool alreadyClicked;
+
+	// this is called when the player clicks on "Deposit All" in the Chest UI
 	private static void OpenDepositConfirmation()
 	{
+		// if confirmations are disabled call DepositAll normally
 		if (DisableConfirmationButton)
 		{
 			ChestUI.DepositAll();
 			return;
 		}
 
-		if (clicked) return;
+		// if the button was already clicked last call: skip
+		if (alreadyClicked) return;
 
-		clicked = true;
+		alreadyClicked = true;
 		var ui = new ConfirmationUI
 		{
 			buttonID = ChestUI.ButtonID.DepositAll,
@@ -97,7 +148,7 @@ public class ILEdits
 			{
 				ChestUI.DepositAll();
 				ConfirmationUI.visible = false;
-				clicked = false;
+				alreadyClicked = false;
 			}
 		};
 
@@ -105,17 +156,20 @@ public class ILEdits
 		ConfirmationUI.visible = true;
 	}
 
+	// this is called when the player clicks on "Loot All" in the Chest UI
 	private static void OpenLootConfirmation()
 	{
+		// if confirmations are disabled call LootAll normally
 		if (DisableConfirmationButton)
 		{
 			ChestUI.LootAll();
 			return;
 		}
 
-		if (clicked) return;
+		// if the button was already clicked last call: skip
+		if (alreadyClicked) return;
 
-		clicked = true;
+		alreadyClicked = true;
 		var ui = new ConfirmationUI
 		{
 			buttonID = ChestUI.ButtonID.LootAll,
@@ -124,7 +178,7 @@ public class ILEdits
 			{
 				ChestUI.LootAll();
 				ConfirmationUI.visible = false;
-				clicked = false;
+				alreadyClicked = false;
 			}
 		};
 
