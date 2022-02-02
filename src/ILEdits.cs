@@ -2,6 +2,7 @@
 using MonoMod.Cil;
 using System.Reflection;
 using Terraria;
+using Terraria.GameInput;
 using Terraria.UI;
 
 namespace BetterChests.src;
@@ -15,9 +16,32 @@ public class ILEdits
 
 	public static void Load()
 	{
-		IL.Terraria.UI.ChestUI.DrawButton += EditButton;
-		On.Terraria.UI.ChestUI.Draw += ChestUI_Draw;
+		IL.Terraria.UI.ChestUI.DrawButton += EditChestButtons;
+		On.Terraria.Main.DrawInventory += OpenSortInventoryOptionsLogic;
+		On.Terraria.UI.ChestUI.Draw += OpenSortChestOptionsLogic;
 		On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;
+	}
+
+	private static void OpenSortInventoryOptionsLogic(On.Terraria.Main.orig_DrawInventory orig, Main self)
+	{
+		orig(self);
+		const int buttonX = 534;
+		const int buttonY = 244;
+		const int buttonWidth = 30;
+		const int buttonHeight = 30;
+
+		// true if the mouse is hovering over the sort inventory button
+		if (Main.mouseX >= buttonX && Main.mouseX <= buttonX + buttonWidth && Main.mouseY >= buttonY && Main.mouseY <= buttonY + buttonHeight && !PlayerInput.IgnoreMouseInterface)
+		{
+			// true if the user right clicked
+			if (Main.mouseRight && Main.mouseRightRelease)
+			{
+				Main.mouseRightRelease = false;
+
+				// toggle Sort option UI
+				UISystem.ToggleSortOptionsUI(new SortOptionsUI(SortOptionsMode.Inventory));
+			}
+		}
 	}
 
 	// TODO: Find method which allows piggy bank to also be hoverable
@@ -43,7 +67,7 @@ public class ILEdits
 		alreadyClicked = false;
 	}
 
-	private static void EditButton(ILContext il)
+	private static void EditChestButtons(ILContext il)
 	{
 		var c = new ILCursor(il);
 
@@ -76,14 +100,16 @@ public class ILEdits
 	}
 
 	// Draw method because that calls every tick
-	private static void ChestUI_Draw(On.Terraria.UI.ChestUI.orig_Draw orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
+	private static void OpenSortChestOptionsLogic(On.Terraria.UI.ChestUI.orig_Draw orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
 	{
 		orig(spritebatch);
 		// if the "Sort" Button has been clicked once: toggle the Sort option UI
 		if (Main.mouseRight && Main.mouseRightRelease && ChestUI.ButtonHovered[ChestUI.ButtonID.Sort])
 		{
+			Main.mouseRightRelease = false;
+
 			// toggle Sort option UI
-			SortOptionsUI.visible = !SortOptionsUI.visible;
+			UISystem.ToggleSortOptionsUI(new SortOptionsUI(SortOptionsMode.Chest));
 		}
 	}
 
@@ -92,31 +118,31 @@ public class ILEdits
 		switch (CurrentSortFunction)
 		{
 			case "Default sort":
-				NewItemSorting.DefaultSort(false);
+				NewItemSorting.DefaultChestSort(false);
 				break;
 			case "Sort by ID":
-				NewItemSorting.Sort(x => x.type, false);
+				NewItemSorting.SortChest(x => x.type, false);
 				break;
 			case "Sort alphabetically":
-				NewItemSorting.Sort(x => x.Name, false);
+				NewItemSorting.SortChest(x => x.Name, false);
 				break;
 			case "Sort by rarity":
-				NewItemSorting.Sort(x => x.rare, true);
+				NewItemSorting.SortChest(x => x.rare, true);
 				break;
 			case "Sort by stack size":
-				NewItemSorting.Sort(x => x.stack, true);
+				NewItemSorting.SortChest(x => x.stack, true);
 				break;
 			case "Sort by value":
-				NewItemSorting.Sort(x => x.value, true);
+				NewItemSorting.SortChest(x => x.value, true);
 				break;
 			case "Sort by damage":
-				NewItemSorting.Sort(x => x.defense, true);
+				NewItemSorting.SortChest(x => x.defense, true);
 				break;
 			case "Sort by defense":
-				NewItemSorting.Sort(x => x.defense, true);
+				NewItemSorting.SortChest(x => x.defense, true);
 				break;
 			case "Sort randomly":
-				NewItemSorting.Sort(x => Main.rand.NextFloat(), false);
+				NewItemSorting.SortChest(x => Main.rand.NextFloat(), false);
 				break;
 			default:
 				break;

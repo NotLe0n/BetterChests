@@ -13,7 +13,7 @@ _________________________
 
 - "Deposit All" and "Loot all" have a confirmation button now. (toggleable in the config)
 - Added a search bar!
-- Right clicking on "Sort Items" will open a menu with more sort options.
+- Right clicking on "Sort Items" in a chest or right clicking "Sort Inventory" will open a menu with more sort options.
 - Hovering over a chest shows its contents.
 - Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
 - Added a Config option to change the functionality of the "Sort Items" button.

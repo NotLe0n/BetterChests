@@ -34,11 +34,11 @@ internal class BetterChestsConfig : ModConfig
 }"
 	)]
 	[CustomModConfigItem(typeof(DropDownMenu<string>))]
-	public OptionSelectionPair<string> options;
+	public OptionSelectionPair<string> defaultChestSortOptions;
 
 	public override void OnChanged()
 	{
-		ILEdits.CurrentSortFunction = options == null ? "Default sort" : options.selection;
+		ILEdits.CurrentSortFunction = defaultChestSortOptions == null ? "Default sort" : defaultChestSortOptions.selection;
 		ILEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
 	}

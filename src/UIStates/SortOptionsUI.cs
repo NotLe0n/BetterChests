@@ -10,36 +10,41 @@ namespace BetterChests.src.UIStates;
 
 internal class SortOptionsUI : UIState
 {
-	public static bool visible = false;
+	public SortOptionsMode mode;
 	private bool _reversed = false;
-	private UIList list;
+	private readonly UIList list;
 
-	public override void OnInitialize()
+	public SortOptionsUI(SortOptionsMode mode)
 	{
+		this.mode = mode;
+
+		int x = mode == SortOptionsMode.Chest ? 506 + 130 : 534 + 50;
+		int y = mode == SortOptionsMode.Chest ? Main.instance.invBottom : 244;
+
 		var header = new UIText("Sorting Options");
-		header.Top.Set(Main.instance.invBottom, 0);
-		header.Left.Set(506 + 130, 0); // magic number because vanilla does it the same way lmao
+		header.Top.Set(y, 0);
+		header.Left.Set(x, 0); // magic number because vanilla does it the same way lmao
 		Append(header);
 
 		list = new UIList();
-		list.Top.Set(Main.instance.invBottom + 30, 0);
-		list.Left.Set(506 + 130, 0);
+		list.Top.Set(y + 30, 0);
+		list.Left.Set(x, 0);
 		list.Width.Set(400, 0);
 		list.Height.Set(400, 0);
 		list.ListPadding = 14;
 		list.SetPadding(2);
 		Append(list);
 
-		AddSortOption("Default sort", (evt, elm) => NewItemSorting.DefaultSort(_reversed));
-		AddSortOption("Sort by ID", (evt, elm) => NewItemSorting.Sort(x => x.type, _reversed));
-		AddSortOption("Sort alphabetically", (evt, elm) => NewItemSorting.Sort(x => x.Name, _reversed));
-		AddSortOption("Sort by rarity", (evt, elm) => NewItemSorting.Sort(x => x.rare, !_reversed));
-		AddSortOption("Sort by stack size", (evt, elm) => NewItemSorting.Sort(x => x.stack, !_reversed));
-		AddSortOption("Sort by value", (evt, elm) => NewItemSorting.Sort(x => x.value, !_reversed));
-		AddSortOption("Sort by damage", (evt, elm) => NewItemSorting.Sort(x => x.damage, !_reversed));
-		AddSortOption("Sort by defense", (evt, elm) => NewItemSorting.Sort(x => x.defense, !_reversed));
+		AddSortOption("Default sort", (evt, elm) => NewItemSorting.SortByMode(_reversed, mode));
+		AddSortOption("Sort by ID", (evt, elm) => NewItemSorting.SortByMode(x => x.type, _reversed, mode));
+		AddSortOption("Sort alphabetically", (evt, elm) => NewItemSorting.SortByMode(x => x.Name, _reversed, mode));
+		AddSortOption("Sort by rarity", (evt, elm) => NewItemSorting.SortByMode(x => x.rare, !_reversed, mode));
+		AddSortOption("Sort by stack size", (evt, elm) => NewItemSorting.SortByMode(x => x.stack, !_reversed, mode));
+		AddSortOption("Sort by value", (evt, elm) => NewItemSorting.SortByMode(x => x.value, !_reversed, mode));
+		AddSortOption("Sort by damage", (evt, elm) => NewItemSorting.SortByMode(x => x.damage, !_reversed, mode));
+		AddSortOption("Sort by defense", (evt, elm) => NewItemSorting.SortByMode(x => x.defense, !_reversed, mode));
 		AddSortOption("Sort by Mod", new MouseEvent(ModCarusel));
-		AddSortOption("Sort randomly", (evt, elm) => NewItemSorting.Sort(x => Main.rand.NextFloat(), _reversed));
+		AddSortOption("Sort randomly", (evt, elm) => NewItemSorting.SortByMode(x => Main.rand.NextFloat(), _reversed, mode));
 
 		var option = new UITextOption("Reversed: No");
 		option.OnClick += (evt, elm) =>
@@ -77,6 +82,6 @@ internal class SortOptionsUI : UIState
 		// set text to mod name
 		(elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);
 		// sort items
-		NewItemSorting.Sort(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed);
+		NewItemSorting.SortByMode(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed, mode);
 	}
 }

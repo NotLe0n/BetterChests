@@ -19,7 +19,7 @@ namespace BetterChests.src.UIStates
 			searchbox.Height.Set(30, 0);
 			searchbox.OnTextChanged += () =>
 			{
-				NewItemSorting.Sort(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
+				NewItemSorting.SortChest(x => x.Name.ToLower().Contains(searchbox.currentString.ToLower()), true);
 			};
 			searchbox.OnKeyPressed += (key) =>
 			{
