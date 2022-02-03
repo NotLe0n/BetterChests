@@ -23,15 +23,13 @@ internal class UISystem : ModSystem
 		if (!Main.dedServ)
 		{
 			SortOptionsUserInterface = new UserInterface();
+			SearchbarUserInterface = new UserInterface();
 
 			ConfirmationUserInterface = new UserInterface();
 			ConfirmationUserInterface.SetState(new ConfirmationUI());
 
 			ChestHoverUserInterface = new UserInterface();
 			ChestHoverUserInterface.SetState(new ChestHoverUI());
-
-			SearchbarUserInterface = new UserInterface();
-			SearchbarUserInterface.SetState(new SearchbarUI());
 		}
 
 		base.Load();
@@ -44,6 +42,7 @@ internal class UISystem : ModSystem
 		SortOptionsUserInterface = null;
 		ConfirmationUserInterface = null;
 		ChestHoverUserInterface = null;
+		SearchbarUserInterface = null;
 		ChestHoverUI.chest = null;
 
 		base.Unload();
@@ -75,13 +74,17 @@ internal class UISystem : ModSystem
 			{
 				ConfirmationUserInterface.Update(gameTime);
 			}
+			
+			if (SearchbarUserInterface.CurrentState == null)
+				SearchbarUserInterface.SetState(new SearchbarUI());
 
-			SearchbarUserInterface.Update(gameTime);
+			SearchbarUserInterface?.Update(gameTime);
 
 		}
 		else
 		{
 			ConfirmationUI.visible = false;
+			SearchbarUserInterface.SetState(null);
 		}
 
 		if (ChestHoverUI.visible)

@@ -11,12 +11,13 @@ namespace BetterChests.src.UIStates;
 internal class SortOptionsUI : UIState
 {
 	public SortOptionsMode mode;
-	private bool _reversed = false;
+	private bool _reversed;
 	private readonly UIList list;
 
 	public SortOptionsUI(SortOptionsMode mode)
 	{
 		this.mode = mode;
+		_reversed = false;
 
 		int x = mode == SortOptionsMode.Chest ? 506 + 130 : 534 + 50;
 		int y = mode == SortOptionsMode.Chest ? Main.instance.invBottom : 244;
@@ -81,6 +82,7 @@ internal class SortOptionsUI : UIState
 
 		// set text to mod name
 		(elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);
+
 		// sort items
 		NewItemSorting.SortByMode(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed, mode);
 	}
