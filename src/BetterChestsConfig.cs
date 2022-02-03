@@ -1,5 +1,4 @@
 ﻿using BetterChests.src.UIElements;
-using System;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 

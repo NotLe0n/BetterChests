@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BetterChests.src;
 
@@ -24,9 +25,7 @@ internal class UISystem : ModSystem
 		{
 			SortOptionsUserInterface = new UserInterface();
 			SearchbarUserInterface = new UserInterface();
-
 			ConfirmationUserInterface = new UserInterface();
-			ConfirmationUserInterface.SetState(new ConfirmationUI());
 
 			ChestHoverUserInterface = new UserInterface();
 			ChestHoverUserInterface.SetState(new ChestHoverUI());
@@ -70,7 +69,7 @@ internal class UISystem : ModSystem
 
 		if (Main.LocalPlayer.chest != -1)
 		{
-			if (ConfirmationUI.visible)
+			if (ConfirmationUserInterface.CurrentState != null)
 			{
 				ConfirmationUserInterface.Update(gameTime);
 			}
@@ -78,12 +77,12 @@ internal class UISystem : ModSystem
 			if (SearchbarUserInterface.CurrentState == null)
 				SearchbarUserInterface.SetState(new SearchbarUI());
 
-			SearchbarUserInterface?.Update(gameTime);
+			SearchbarUserInterface.Update(gameTime);
 
 		}
 		else
 		{
-			ConfirmationUI.visible = false;
+			ConfirmationUserInterface.SetState(null);
 			SearchbarUserInterface.SetState(null);
 		}
 
@@ -96,45 +95,43 @@ internal class UISystem : ModSystem
 	public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 	{
 		int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-		if (mouseTextIndex != -1)
-		{
-			layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-				"BetterChests: UI",
-				delegate
+		if (mouseTextIndex == -1) return;
+
+		layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
+			"BetterChests: UI",
+			delegate
+			{
+				if (SortOptionsUserInterface.CurrentState != null)
 				{
-					if (SortOptionsUserInterface.CurrentState != null)
+					var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
+
+					if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest)
 					{
-						var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
-
-						if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest)
-						{
-							SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
-						}
-						if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory)
-						{
-							SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
-						}
+						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
-
-					if (Main.LocalPlayer.chest != -1)
+					if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory)
 					{
-						if (ConfirmationUI.visible)
-						{
-							ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
-						}
-
-						SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
+				}
 
-					if (ChestHoverUI.visible)
-					{
-						ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
-					}
+				if (Main.LocalPlayer.chest != -1)
+				{
+					if (ConfirmationUserInterface.CurrentState != null)
+						ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 
-					return true;
-				}, InterfaceScaleType.UI));
-		}
+					SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+				}
+
+				if (ChestHoverUI.visible)
+					ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+
+				return true;
+			},
+			InterfaceScaleType.UI)
+		);
 	}
+
 
 	public static void ToggleSortOptionsUI(SortOptionsUI sortOptionsUI)
 	{

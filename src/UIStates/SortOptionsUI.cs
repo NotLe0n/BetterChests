@@ -1,5 +1,4 @@
 ﻿using BetterChests.src.UIElements;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -67,7 +66,7 @@ internal class SortOptionsUI : UIState
 	private void ModCarusel(UIMouseEvent evt, UIElement elm)
 	{
 		// get list of all mods with items
-		List<Mod> modsWithItems = new List<Mod>();
+		var modsWithItems = new List<Mod>();
 		for (int i = 0; i < ItemLoader.ItemCount; i++)
 		{
 			var item = ItemLoader.GetItem(i);
@@ -78,7 +77,7 @@ internal class SortOptionsUI : UIState
 		}
 
 		// increase index and reset it if limit is reached
-		caruselIndex = caruselIndex < modsWithItems.Count - 1 ? caruselIndex + 1 : 0;
+		caruselIndex = ++caruselIndex % modsWithItems.Count;
 
 		// set text to mod name
 		(elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);

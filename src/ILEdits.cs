@@ -166,20 +166,14 @@ public class ILEdits
 		if (alreadyClicked) return;
 
 		alreadyClicked = true;
-		var ui = new ConfirmationUI
+		var ui = new ConfirmationUI(ChestUI.ButtonID.DepositAll, 55, () =>
 		{
-			buttonID = ChestUI.ButtonID.DepositAll,
-			topOffset = 55,
-			onclick = (evt, elm) =>
-			{
-				ChestUI.DepositAll();
-				ConfirmationUI.visible = false;
-				alreadyClicked = false;
-			}
-		};
+			ChestUI.DepositAll();
+			UISystem.instance.ConfirmationUserInterface.SetState(null);
+			alreadyClicked = false;
+		});
 
 		UISystem.instance.ConfirmationUserInterface.SetState(ui);
-		ConfirmationUI.visible = true;
 	}
 
 	// this is called when the player clicks on "Loot All" in the Chest UI
@@ -196,19 +190,13 @@ public class ILEdits
 		if (alreadyClicked) return;
 
 		alreadyClicked = true;
-		var ui = new ConfirmationUI
+		var ui = new ConfirmationUI(ChestUI.ButtonID.LootAll, 30, () =>
 		{
-			buttonID = ChestUI.ButtonID.LootAll,
-			topOffset = 30,
-			onclick = (evt, elm) =>
-			{
-				ChestUI.LootAll();
-				ConfirmationUI.visible = false;
-				alreadyClicked = false;
-			}
-		};
+			ChestUI.LootAll();
+			UISystem.instance.ConfirmationUserInterface.SetState(null);
+			alreadyClicked = false;
+		});
 
 		UISystem.instance.ConfirmationUserInterface.SetState(ui);
-		ConfirmationUI.visible = true;
 	}
 }

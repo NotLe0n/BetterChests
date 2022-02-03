@@ -1,5 +1,6 @@
 ﻿using BetterChests.src.UIElements;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.UI;
 
@@ -7,18 +8,19 @@ namespace BetterChests.src.UIStates;
 
 internal class ConfirmationUI : UIState
 {
-	public static bool visible = false;
-	public int buttonID;
-	public float topOffset;
-	public MouseEvent onclick;
+	private readonly int buttonID;
 
-	public override void OnInitialize()
+	public ConfirmationUI(int buttonID, float topOffset, Action onClick)
 	{
-		var confirmation = new UITextOption("Are you sure?");
-		confirmation.TextColor = Color.Red;
-		confirmation.Top.Set(Main.instance.invBottom + topOffset, 0);
-		confirmation.Left.Set(506, 0); // magic number because vanilla does it the same way lmao
-		confirmation.OnClick += onclick;
+		this.buttonID = buttonID;
+
+		var confirmation = new UITextOption("Are you sure?")
+		{
+			NewTextColor = Color.Red,
+			Top = new(Main.instance.invBottom + topOffset, 0),
+			Left = new(506, 0) // magic number because vanilla does it the same way lmao
+		};
+		confirmation.OnClick += (evt, elm) => onClick();
 		Append(confirmation);
 	}
 

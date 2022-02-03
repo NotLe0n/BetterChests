@@ -12,7 +12,7 @@ public enum SortOptionsMode
 	Inventory
 }
 
-public class NewItemSorting
+public static class NewItemSorting
 {
 	// default sort overload
 	public static void SortByMode(bool reversed, SortOptionsMode mode)

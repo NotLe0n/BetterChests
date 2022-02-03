@@ -1,7 +1,5 @@
 ﻿using BetterChests.src.UIElements;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Microsoft.Xna.Framework.Input;
 using Terraria.UI;
 
 namespace BetterChests.src.UIStates;
