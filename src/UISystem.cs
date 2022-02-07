@@ -26,9 +26,7 @@ internal class UISystem : ModSystem
 			SortOptionsUserInterface = new UserInterface();
 			SearchbarUserInterface = new UserInterface();
 			ConfirmationUserInterface = new UserInterface();
-
 			ChestHoverUserInterface = new UserInterface();
-			ChestHoverUserInterface.SetState(new ChestHoverUI());
 		}
 
 		base.Load();
@@ -42,7 +40,6 @@ internal class UISystem : ModSystem
 		ConfirmationUserInterface = null;
 		ChestHoverUserInterface = null;
 		SearchbarUserInterface = null;
-		ChestHoverUI.chest = null;
 
 		base.Unload();
 	}
@@ -86,10 +83,9 @@ internal class UISystem : ModSystem
 			SearchbarUserInterface.SetState(null);
 		}
 
-		if (ChestHoverUI.visible)
-		{
+		if (ChestHoverUserInterface.CurrentState != null)	
 			ChestHoverUserInterface.Update(gameTime);
-		}
+
 	}
 
 	public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -123,7 +119,7 @@ internal class UISystem : ModSystem
 					SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 				}
 
-				if (ChestHoverUI.visible)
+				if (ChestHoverUserInterface.CurrentState != null)
 					ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 
 				return true;
@@ -144,5 +140,20 @@ internal class UISystem : ModSystem
 		}
 
 		instance.SortOptionsUserInterface.SetState(null);
+	}
+
+	public static void OpenChestHoverUI(Chest chest)
+	{
+		if ((instance.ChestHoverUserInterface.CurrentState as ChestHoverUI)?.chest == chest)
+			return;
+
+		instance.ChestHoverUserInterface.SetState(new ChestHoverUI(chest));
+	}
+	public static void CloseChestHoverUI()
+	{
+		if (instance.ChestHoverUserInterface.CurrentState == null)
+			return;
+
+		instance.ChestHoverUserInterface.SetState(null);
 	}
 }

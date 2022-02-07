@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.UI;
 
-namespace BetterChests.src;
+namespace BetterChests.src.Edits;
 
 #pragma warning disable IDE0051 // Remove unused private members
 
@@ -19,7 +19,9 @@ public class ILEdits
 		IL.Terraria.UI.ChestUI.DrawButton += EditChestButtons;
 		On.Terraria.Main.DrawInventory += OpenSortInventoryOptionsLogic;
 		On.Terraria.UI.ChestUI.Draw += OpenSortChestOptionsLogic;
-		On.Terraria.Player.TileInteractionsMouseOver_Containers += Player_TileInteractionsMouseOver_Containers;
+
+		ChestHoverEdit.Load();
+		ChestHoverEdit.OnContainerHover += () => alreadyClicked = false; 
 	}
 
 	private static void OpenSortInventoryOptionsLogic(On.Terraria.Main.orig_DrawInventory orig, Main self)
@@ -44,32 +46,13 @@ public class ILEdits
 		}
 	}
 
-	// TODO: Find method which allows piggy bank to also be hoverable
-	private static void Player_TileInteractionsMouseOver_Containers(On.Terraria.Player.orig_TileInteractionsMouseOver_Containers orig, Player self, int myX, int myY)
-	{
-		orig(self, myX, myY);
-
-		Tile tile = Main.tile[myX, myY];
-
-		int chestX = myX;
-		int chestY = myY;
-		if (tile.frameX % 36 != 0)
-		{
-			chestX--;
-		}
-		if (tile.frameY % 36 != 0)
-		{
-			chestY--;
-		}
-
-		ChestHoverUI.chest = Main.chest[Chest.FindChest(chestX, chestY)];
-		ChestHoverUI.visible = true;
-		alreadyClicked = false;
-	}
-
 	private static void EditChestButtons(ILContext il)
 	{
 		var c = new ILCursor(il);
+
+		// IL_0362: br.s      IL_038C
+		// IL_0364: call      void Terraria.UI.ChestUI::LootAll()
+		//      <=== here
 
 		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("LootAll")))
 			return;

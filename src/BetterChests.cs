@@ -1,4 +1,5 @@
 using Terraria.ModLoader;
+using BetterChests.src.Edits;
 
 namespace BetterChests.src;
 

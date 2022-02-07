@@ -8,10 +8,14 @@ using Terraria.UI;
 
 namespace BetterChests.src.UIStates;
 
-class ChestHoverUI : UIState
+internal class ChestHoverUI : UIState
 {
-	public static Chest chest;
-	public static bool visible;
+	public readonly Chest chest;
+
+	public ChestHoverUI(Chest chest)
+	{
+		this.chest = chest;
+	}
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
@@ -67,7 +71,5 @@ class ChestHoverUI : UIState
 
 			collumn += maxSize + padding;
 		}
-
-		visible = false;
 	}
 }
