@@ -18,7 +18,7 @@ internal static class ChestHoverEdit
 	{
 		orig(self, myX, myY);
 
-		switch (Main.tile[myX, myY].type)
+		switch (Main.tile[myX, myY].TileType)
 		{
 			case TileID.Containers:
 			case TileID.Containers2:
@@ -43,7 +43,7 @@ internal static class ChestHoverEdit
 	{
 		orig(self, myX, myY);
 
-		if (Main.tile[myX, myY].type is not 
+		if (Main.tile[myX, myY].TileType is not 
 			(TileID.Containers or TileID.Containers2 or TileID.PiggyBank or
 			TileID.Safes or TileID.DefendersForge or TileID.VoidVault) || !self.IsInTileInteractionRange(myX, myY))
 		{
@@ -63,11 +63,11 @@ internal static class ChestHoverEdit
 
 		int chestX = x;
 		int chestY = y;
-		if (tile.frameX % 36 != 0)
+		if (tile.TileFrameX % 36 != 0)
 		{
 			chestX--;
 		}
-		if (tile.frameY % 36 != 0)
+		if (tile.TileFrameY % 36 != 0)
 		{
 			chestY--;
 		}
