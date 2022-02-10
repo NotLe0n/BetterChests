@@ -4,7 +4,6 @@ For a Changlog and more information visit my homepage!
 
 Special Thanks to:
 [c/66EEFF:direwolf420, darthmorf & jopojelly] for a UIElement!
-[c/66EEFF:Trivaxy] for providing his item drawing code!
 [c/66EEFF:Setnour6] for making the icon!
 
 _________________________
