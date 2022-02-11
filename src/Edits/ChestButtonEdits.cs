@@ -1,6 +1,6 @@
 ﻿using BetterChests.src.UIStates;
-using MonoMod.Cil;
 using System.Reflection;
+using MonoMod.Cil;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.UI;
@@ -9,7 +9,7 @@ namespace BetterChests.src.Edits;
 
 #pragma warning disable IDE0051 // Remove unused private members
 
-public class ILEdits
+internal class ChestButtonEdits
 {
 	public static bool DisableConfirmationButton { get; set; }
 	public static string CurrentSortFunction { get; set; }
@@ -19,9 +19,7 @@ public class ILEdits
 		IL.Terraria.UI.ChestUI.DrawButton += EditChestButtons;
 		On.Terraria.Main.DrawInventory += OpenSortInventoryOptionsLogic;
 		On.Terraria.UI.ChestUI.Draw += OpenSortChestOptionsLogic;
-
-		ChestHoverEdit.Load();
-		ChestHoverEdit.OnContainerHover += () => alreadyClicked = false; 
+		On.Terraria.Player.OpenChest += ResetAlreadyClicked;
 	}
 
 	private static void OpenSortInventoryOptionsLogic(On.Terraria.Main.orig_DrawInventory orig, Main self)
@@ -58,7 +56,7 @@ public class ILEdits
 			return;
 
 		// call own method instead of LootAll()
-		c.Prev.Operand = typeof(ILEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
 
 		// IL_0362: br.s      IL_038C
 		// IL_0364: call      void Terraria.UI.ChestUI::DepositAll()
@@ -68,7 +66,7 @@ public class ILEdits
 			return;
 
 		// call own method instead of DepositAll()
-		c.Prev.Operand = typeof(ILEdits).GetMethod("OpenDepositConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("OpenDepositConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
 
 		// The goal of this IL edit is to replace SortChest() with code to open my UI
 		// IL_0385: br.s      IL_038C
@@ -79,7 +77,7 @@ public class ILEdits
 			return;
 
 		// call own method instead of SortChest()
-		c.Prev.Operand = typeof(ILEdits).GetMethod("CallSortFunction", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("CallSortFunction", BindingFlags.NonPublic | BindingFlags.Static);
 	}
 
 	// Draw method because that calls every tick
@@ -181,5 +179,12 @@ public class ILEdits
 		});
 
 		UISystem.instance.ConfirmationUserInterface.SetState(ui);
+	}
+
+	// reset already clicked when opening a chest
+	private static void ResetAlreadyClicked(On.Terraria.Player.orig_OpenChest orig, Player self, int x, int y, int newChest)
+	{
+		orig(self, x, y, newChest);
+		alreadyClicked = false;
 	}
 }

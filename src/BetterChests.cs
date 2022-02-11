@@ -7,6 +7,14 @@ public class BetterChests : Mod
 {
 	public override void Load()
 	{
-		ILEdits.Load();
+		// Opens the ChestHoverUI when hovering over a container
+		ChestHoverEdits.Load();
+
+		// Changes the functionality of buttons
+		ChestButtonEdits.Load();
+
+		// Increases the maximum chest name length
+		ChestNameEdits.Load();
+
 	}
 }

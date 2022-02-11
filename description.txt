@@ -17,6 +17,7 @@ _________________________
 - Hovering over a chest shows its contents.
 - Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
 - Added a Config option to change the functionality of the "Sort Items" button.
+- Increased the maximum chest name length from 20 to 80. You can finally write longer chest names!
 
 _________________________
 

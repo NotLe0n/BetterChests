@@ -1,13 +1,10 @@
 ﻿using Terraria;
-using System;
 using Terraria.ID;
 
 namespace BetterChests.src.Edits;
 
-internal static class ChestHoverEdit
+internal static class ChestHoverEdits
 {
-	public static event Action OnContainerHover;
-
 	public static void Load()
 	{
 		On.Terraria.Player.TileInteractionsCheckLongDistance += CloseChestHoverUI;
@@ -54,7 +51,6 @@ internal static class ChestHoverEdit
 	private static void ContainerHover(Chest chest)
 	{
 		UISystem.OpenChestHoverUI(chest);
-		OnContainerHover?.Invoke();
 	}
 
 	private static Chest GetMultitileChest(int x, int y)

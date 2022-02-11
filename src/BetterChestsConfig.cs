@@ -38,8 +38,8 @@ internal class BetterChestsConfig : ModConfig
 
 	public override void OnChanged()
 	{
-		ILEdits.CurrentSortFunction = defaultChestSortOptions == null ? "Default sort" : defaultChestSortOptions.selection;
-		ILEdits.DisableConfirmationButton = disableConfirmationButton;
+		ChestButtonEdits.CurrentSortFunction = defaultChestSortOptions == null ? "Default sort" : defaultChestSortOptions.selection;
+		ChestButtonEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
 	}
 }
