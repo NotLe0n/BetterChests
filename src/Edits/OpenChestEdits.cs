@@ -1,6 +1,7 @@
-﻿using MonoMod.Cil;
-using Terraria;
+﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace BetterChests.src.Edits;
 
@@ -10,48 +11,62 @@ internal class OpenChestEdits
 	{
 		On.Terraria.Chest.IsPlayerInChest += QuckStackAllowOpenChests;
 		On.Terraria.Chest.UsingChest += AllowEnterOpenChests;
-		IL.Terraria.UI.ItemSlot.LeftClick_ItemArray_int_int += SyncChests;
+		On.Terraria.UI.ChestUI.DrawSlots += SyncChest;
 	}
 
-	private static void SyncChests(ILContext il)
+	private static Item[] prevItems;
+	public static bool serverUpdateRecieved;
+	private static void SyncChest(On.Terraria.UI.ChestUI.orig_DrawSlots orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
 	{
-		var c = new ILCursor(il);
+		orig(spriteBatch);
 
-		/*
-			GOAL: Send new chest info to server when player clicks into a chest slot.
+		// only check and send changes if playing in multiplayer and inside a chest
+		if (Main.netMode != NetmodeID.MultiplayerClient || Main.player[Main.myPlayer].chest < 0)
+			return;	
 
-			C#:
-				if (context == 3 && Main.netMode == 1) {
-					<--- here
-					NetMessage.SendData(MessageID.SyncChestItem, -1, -1, null, player.chest, slot);
-				}
+		Item[] items = Main.chest[Main.player[Main.myPlayer].chest].item;
 
-			IL:
-				IL_0300: ldarg.1
-				IL_0301: ldc.i4.3
-				IL_0302: bne.un    IL_0BC8
-
-				IL_0307: ldsfld    int32 Terraria.Main::netMode
-				IL_030C: ldc.i4.1
-				IL_030D: bne.un    IL_0BC8
-				<--- here
-		*/
-
-		c.GotoNext(MoveType.After,
-			i => i.MatchLdarg(1),
-			i => i.MatchLdcI4(3),
-			i => i.MatchBneUn(out _),
-			i => i.MatchLdsfld<Main>("netMode"),
-			i => i.MatchLdcI4(1),
-			i => i.MatchBneUn(out _));
-
-		c.EmitDelegate(() =>
+		// initialize prevItems and set it when this client recieved data from the server
+		if (prevItems == null || serverUpdateRecieved)
 		{
-			ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-			packet.Write((byte)0);
-			packet.Write("Hello world!");
-			packet.Send();
-		});
+			prevItems = CloneItemArray(items);
+			serverUpdateRecieved = false;
+		}
+
+		// go through all items and check if there were any changes, if so send the changes to the server
+		bool changed = false;
+		for (int i = 0; i < Chest.maxItems; i++)
+		{
+			// check if item has changed
+			if (items[i].IsNotSameTypePrefixAndStack(prevItems[i]))
+			{
+				changed = true; // item has changed
+
+				// send packet with slot id and item data to server
+				ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+				packet.Write((byte)0); // message id
+				packet.Write(i); // slot id
+				ItemIO.Send(items[i], packet, true); // item data
+				packet.Send();
+			}
+		}
+
+		if (changed)
+		{
+			prevItems = CloneItemArray(items);
+			BetterChests.dontUpdateMe = true; // dont apply change again
+		}
+	}
+
+	// creates a clone of an item array
+	private static Item[] CloneItemArray(Item[] arrayToClone)
+	{
+		var cloned = new Item[arrayToClone.Length];
+		for (int i = 0; i < Chest.maxItems; i++)
+		{
+			cloned[i] = arrayToClone[i].Clone();
+		}
+		return cloned;
 	}
 
 	private static int AllowEnterOpenChests(On.Terraria.Chest.orig_UsingChest orig, int i)
