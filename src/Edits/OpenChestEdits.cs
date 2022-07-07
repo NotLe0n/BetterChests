@@ -45,6 +45,7 @@ internal class OpenChestEdits
 				// send packet with slot id and item data to server
 				ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
 				packet.Write((byte)0); // message id
+				packet.Write(Main.player[Main.myPlayer].chest);
 				packet.Write(i); // slot id
 				ItemIO.Send(items[i], packet, true); // item data
 				packet.Send();

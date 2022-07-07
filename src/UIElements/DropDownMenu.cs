@@ -17,16 +17,14 @@ internal class DropDownMenu<T> : ConfigElement
 	public override void OnBind()
 	{
 		base.OnBind();
-		var subitem = memberInfo.GetValue(item) as OptionSelectionPair<T>;
-		if (subitem == null)
-		{
+		if (MemberInfo.GetValue(Item) is not OptionSelectionPair<T> subitem) {
 			var temp = new OptionSelectionPair<T>();
-			JsonConvert.PopulateObject(jsonDefaultValueAttribute.json, temp);
+			JsonConvert.PopulateObject(JsonDefaultValueAttribute.Json, temp);
 			subitem = temp;
 
 			subitem.selection = subitem.options[0];
 		}
-		
+
 		// set current selected item to first item
 		currentSelectedItem = subitem.selection;
 
