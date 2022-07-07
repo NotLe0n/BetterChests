@@ -58,7 +58,7 @@ internal class UIBetterTextBox : UIPanel
 	{
 		// exit if it's already unfocused
 		if (!focused) return;
-		
+
 		focused = false;
 		Main.blockInput = false;
 
@@ -86,8 +86,7 @@ internal class UIBetterTextBox : UIPanel
 		}
 
 		// prevent items being used when clicked on the search bar
-		if (ContainsPoint(Main.MouseScreen))
-		{
+		if (ContainsPoint(Main.MouseScreen)) {
 			Main.LocalPlayer.mouseInterface = true;
 		}
 		base.Update(gameTime);
@@ -117,8 +116,7 @@ internal class UIBetterTextBox : UIPanel
 		// draw panel
 		base.DrawSelf(spriteBatch);
 
-		if (focused)
-		{
+		if (focused) {
 			Terraria.GameInput.PlayerInput.WritingText = true;
 			Main.instance.HandleIME();
 
@@ -126,35 +124,30 @@ internal class UIBetterTextBox : UIPanel
 			SetText(Main.GetInputText(currentString));
 
 			// if any keys are currently pressed (this includes special/invisible keys)
-			if (Main.inputText.GetPressedKeys().Length > 0)
-			{
+			if (Main.inputText.GetPressedKeys().Length > 0) {
 				OnKeyPressed?.Invoke(Main.inputText.GetPressedKeys()[0]);
 			}
 
 			// special character: TAB
-			if (JustPressed(Keys.Tab))
-			{
+			if (JustPressed(Keys.Tab)) {
 				if (unfocusOnTab) Unfocus();
 				OnTabPressed?.Invoke();
 			}
 
 			// special character: ENTER
-			if (JustPressed(Keys.Enter))
-			{
+			if (JustPressed(Keys.Enter)) {
 				Main.drawingPlayerChat = false;
 				if (unfocusOnEnter) Unfocus();
 				OnEnterPressed?.Invoke();
 			}
 
 			// special character: ESC
-			if (unfocusOnEsc && JustPressed(Keys.Escape))
-			{
+			if (unfocusOnEsc && JustPressed(Keys.Escape)) {
 				Unfocus();
 			}
 
 			// increase and reset cursor bink counter
-			if (++textBlinkerCount >= 20)
-			{
+			if (++textBlinkerCount >= 20) {
 				textBlinkerState = (textBlinkerState + 1) % 2;
 				textBlinkerCount = 0;
 			}
@@ -169,19 +162,16 @@ internal class UIBetterTextBox : UIPanel
 	{
 		// add cursor bar
 		string displayString = currentString;
-		if (textBlinkerState == 1 && focused)
-		{
+		if (textBlinkerState == 1 && focused) {
 			displayString += "|";
 		}
 
 		var drawPos = GetDimensions().Position() + new Vector2(4, 2);
-		if (currentString.Length == 0 && !focused)
-		{
+		if (currentString.Length == 0 && !focused) {
 			// draw hint text
 			spriteBatch.DrawString(FontAssets.MouseText.Value, hintText, drawPos, TextColor * 0.5f);
 		}
-		else
-		{
+		else {
 			// draw text
 			spriteBatch.DrawString(FontAssets.MouseText.Value, displayString, drawPos, TextColor);
 		}

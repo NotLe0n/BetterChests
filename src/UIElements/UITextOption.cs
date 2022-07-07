@@ -36,23 +36,19 @@ public class UITextOption : UIText
 	{
 		base.Draw(spriteBatch);
 
-		if (IsMouseHovering)
-		{
+		if (IsMouseHovering) {
 			if (_newTextColor == Color.White)
 				TextColor = Main.OurFavoriteColor;
 
-			if (TextScale <= 1)
-			{
+			if (TextScale <= 1) {
 				TextScale += 0.05f;
 			}
 		}
-		else
-		{
+		else {
 			if (_newTextColor == Color.White)
 				TextColor = Color.White;
 
-			if (TextScale > _firstTextScale)
-			{
+			if (TextScale > _firstTextScale) {
 				TextScale -= 0.05f;
 			}
 		}
@@ -64,8 +60,7 @@ public class UITextOption : UIText
 	{
 		base.Update(gameTime);
 
-		if (ContainsPoint(Main.MouseScreen))
-		{
+		if (ContainsPoint(Main.MouseScreen)) {
 			Main.LocalPlayer.mouseInterface = true;
 		}
 	}

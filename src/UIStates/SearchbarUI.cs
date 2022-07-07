@@ -10,8 +10,7 @@ internal class SearchbarUI : UIState
 	{
 		base.OnInitialize();
 
-		var searchbox = new UIBetterTextBox("search item")
-		{
+		var searchbox = new UIBetterTextBox("search item") {
 			Top = new(Main.instance.invBottom + 170, 0),
 			Left = new(71, 0),
 			Width = new(209, 0),

@@ -33,11 +33,9 @@ internal class ChestHoverUI : UIState
 
 		int collumn = 0;
 		int row = 0;
-		for (int i = 0; i < items.Length; i++)
-		{
+		for (int i = 0; i < items.Length; i++) {
 			// set positions (10 items per row)
-			if (i % 10 == 0)
-			{
+			if (i % 10 == 0) {
 				row += maxSize + padding;
 				collumn = 0;
 			}
@@ -54,16 +52,14 @@ internal class ChestHoverUI : UIState
 			// handle animation frames
 			int frameCount = 1;
 			Rectangle itemFrameRect = itemTexture.Frame();
-			if (Main.itemAnimations[items[i].type] != null)
-			{
+			if (Main.itemAnimations[items[i].type] != null) {
 				itemFrameRect = Main.itemAnimations[items[i].type].GetFrame(itemTexture);
 				frameCount = Main.itemAnimations[items[i].type].FrameCount;
 			}
 
 			// handle draw scale
 			float drawScale = 1f;
-			if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > maxSize)
-			{
+			if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > maxSize) {
 				drawScale = maxSize / (float)(itemFrameRect.Width <= itemFrameRect.Height ?
 					itemFrameRect.Height :
 					itemFrameRect.Width);
@@ -72,10 +68,9 @@ internal class ChestHoverUI : UIState
 			// draw item texture
 			Vector2 itemPos = drawPos - itemFrameRect.Size() * drawScale / 2;
 			spriteBatch.DrawWithScale(itemTexture, itemPos, itemFrameRect, drawScale);
-			
+
 			// draw stack text
-			if (items[i].stack > 1)
-			{
+			if (items[i].stack > 1) {
 				Vector2 textPos = drawPos - new Vector2(10, 0);
 				Utils.DrawBorderString(spriteBatch, items[i].stack.ToString(), textPos, Color.White, Main.inventoryScale);
 			}

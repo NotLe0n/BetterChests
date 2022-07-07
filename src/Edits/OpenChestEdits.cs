@@ -22,24 +22,21 @@ internal class OpenChestEdits
 
 		// only check and send changes if playing in multiplayer and inside a chest
 		if (Main.netMode != NetmodeID.MultiplayerClient || Main.player[Main.myPlayer].chest < 0)
-			return;	
+			return;
 
 		Item[] items = Main.chest[Main.player[Main.myPlayer].chest].item;
 
 		// initialize prevItems and set it when this client recieved data from the server
-		if (prevItems == null || serverUpdateRecieved)
-		{
+		if (prevItems == null || serverUpdateRecieved) {
 			prevItems = CloneItemArray(items);
 			serverUpdateRecieved = false;
 		}
 
 		// go through all items and check if there were any changes, if so send the changes to the server
 		bool changed = false;
-		for (int i = 0; i < Chest.maxItems; i++)
-		{
+		for (int i = 0; i < Chest.maxItems; i++) {
 			// check if item has changed
-			if (items[i].IsNotSameTypePrefixAndStack(prevItems[i]))
-			{
+			if (items[i].IsNotSameTypePrefixAndStack(prevItems[i])) {
 				changed = true; // item has changed
 
 				// send packet with slot id and item data to server
@@ -52,8 +49,7 @@ internal class OpenChestEdits
 			}
 		}
 
-		if (changed)
-		{
+		if (changed) {
 			prevItems = CloneItemArray(items);
 			BetterChests.dontUpdateMe = true; // dont apply change again
 		}
@@ -63,8 +59,7 @@ internal class OpenChestEdits
 	private static Item[] CloneItemArray(Item[] arrayToClone)
 	{
 		var cloned = new Item[arrayToClone.Length];
-		for (int i = 0; i < Chest.maxItems; i++)
-		{
+		for (int i = 0; i < Chest.maxItems; i++) {
 			cloned[i] = arrayToClone[i].Clone();
 		}
 		return cloned;

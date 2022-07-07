@@ -35,15 +35,13 @@ public class BetterChests : Mod
 				Item item = ItemIO.Receive(reader, true); // item changes
 
 				// only apply changes when in multiplayer, inside a chest and if the update didn't come from this client
-				if (Main.netMode == NetmodeID.MultiplayerClient && Main.player[Main.myPlayer].chest > -1 && Main.player[Main.myPlayer].chest == chest && !dontUpdateMe)
-				{
+				if (Main.netMode == NetmodeID.MultiplayerClient && Main.player[Main.myPlayer].chest > -1 && Main.player[Main.myPlayer].chest == chest && !dontUpdateMe) {
 					Main.chest[chest].item[slot] = item;
 					OpenChestEdits.serverUpdateRecieved = true;
 				}
 
 				// transmit from Server to all clients because ItemSlot is client side
-				if (Main.netMode == NetmodeID.Server)
-				{
+				if (Main.netMode == NetmodeID.Server) {
 					var packet = GetPacket();
 					packet.Write(id);
 					packet.Write(chest);

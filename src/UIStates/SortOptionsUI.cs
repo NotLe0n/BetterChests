@@ -67,11 +67,9 @@ internal class SortOptionsUI : UIState
 	{
 		// get list of all mods with items
 		var modsWithItems = new List<Mod>();
-		for (int i = 0; i < ItemLoader.ItemCount; i++)
-		{
+		for (int i = 0; i < ItemLoader.ItemCount; i++) {
 			var item = ItemLoader.GetItem(i);
-			if (item != null && !modsWithItems.Contains(item.Mod))
-			{
+			if (item != null && !modsWithItems.Contains(item.Mod)) {
 				modsWithItems.Add(item.Mod);
 			}
 		}

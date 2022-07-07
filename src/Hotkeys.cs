@@ -13,29 +13,23 @@ internal class Hotkeys : ModPlayer
 	{
 		base.ProcessTriggers(triggersSet);
 
-		if (DepositAll.JustPressed && Player.chest != -1)
-		{
+		if (DepositAll.JustPressed && Player.chest != -1) {
 			ChestUI.DepositAll();
 		}
-		if (LootAll.JustPressed && Player.chest != -1)
-		{
+		if (LootAll.JustPressed && Player.chest != -1) {
 			ChestUI.LootAll();
 		}
-		if (QuickStack.JustPressed)
-		{
+		if (QuickStack.JustPressed) {
 			Player.QuickStackAllChests();
 			ChestUI.QuickStack();
 		}
-		if (Restock.JustPressed)
-		{
+		if (Restock.JustPressed) {
 			ChestUI.Restock();
 		}
-		if (SortChest.JustPressed)
-		{
+		if (SortChest.JustPressed) {
 			ItemSorting.SortChest();
 		}
-		if (SortInventory.JustPressed)
-		{
+		if (SortInventory.JustPressed) {
 			ItemSorting.SortInventory();
 		}
 	}

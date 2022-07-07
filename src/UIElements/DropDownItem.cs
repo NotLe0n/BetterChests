@@ -39,14 +39,12 @@ internal class DropDownItem<T> : UIElement
 
 		// Play sound once on hover
 		IsMouseHovering = dimensions.Contains(Main.MouseScreen.ToPoint());
-		if (IsMouseHovering && !dimensions.Contains(Main.lastMouseX, Main.lastMouseY))
-		{
+		if (IsMouseHovering && !dimensions.Contains(Main.lastMouseX, Main.lastMouseY)) {
 			SoundEngine.PlaySound(SoundID.MenuTick);
 		}
 
 		// On click
-		if (IsMouseHovering && Main.mouseLeft && !Main.mouseLeftRelease)
-		{
+		if (IsMouseHovering && Main.mouseLeft && !Main.mouseLeftRelease) {
 			OnSelect.Invoke(this);
 		}
 	}

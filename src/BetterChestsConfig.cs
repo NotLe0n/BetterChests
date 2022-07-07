@@ -51,8 +51,7 @@ internal class OptionSelectionPair<T>
 
 	public override bool Equals(object obj)
 	{
-		if (obj is OptionSelectionPair<T> otherPair)
-		{
+		if (obj is OptionSelectionPair<T> otherPair) {
 			return otherPair.selection.Equals(selection) && otherPair.options.Equals(options);
 		}
 		return false;

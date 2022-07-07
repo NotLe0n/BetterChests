@@ -30,16 +30,14 @@ internal class DropDownMenu<T> : ConfigElement
 
 		// add DropDownItems
 		items = new DropDownItem<T>[subitem.options.Length];
-		for (int i = subitem.options.Length - 1; i >= 0; i--)
-		{
+		for (int i = subitem.options.Length - 1; i >= 0; i--) {
 			items[i] = new DropDownItem<T>(subitem.options[i]);
 		}
 
 		// align DropDownItems
 		Rectangle dimensions = GetDimensions().ToRectangle();
 		float width = LargestItemSize() + 20;
-		for (int i = subitem.options.Length - 1; i >= 0; i--)
-		{
+		for (int i = subitem.options.Length - 1; i >= 0; i--) {
 			items[i].Left = new(550 - width, 0);
 			items[i].Top = new(dimensions.Height + 21 * i + 25, 0);
 			items[i].Width = new(width - 10, 0);
@@ -75,20 +73,17 @@ internal class DropDownMenu<T> : ConfigElement
 
 	public void ToggleExpand()
 	{
-		if (expanded)
-		{
+		if (expanded) {
 			CloseMenu();
 		}
-		else
-		{
+		else {
 			OpenMenu();
 		}
 	}
 
 	public void CloseMenu()
 	{
-		for (int i = 0; i < items.Length; i++)
-		{
+		for (int i = 0; i < items.Length; i++) {
 			items[i].Remove();
 		}
 		expanded = false;
@@ -96,8 +91,7 @@ internal class DropDownMenu<T> : ConfigElement
 
 	public void OpenMenu()
 	{
-		for (int i = items.Length - 1; i >= 0; i--)
-		{
+		for (int i = items.Length - 1; i >= 0; i--) {
 			Append(items[i]);
 		}
 		expanded = true;
@@ -106,11 +100,9 @@ internal class DropDownMenu<T> : ConfigElement
 	private float LargestItemSize()
 	{
 		float result = 0;
-		foreach (var item in items)
-		{
+		foreach (var item in items) {
 			float width = FontAssets.MouseText.Value.MeasureString(item.Name.ToString()).X;
-			if (width > result)
-			{
+			if (width > result) {
 				result = width;
 			}
 		}

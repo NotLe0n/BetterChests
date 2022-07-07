@@ -14,8 +14,7 @@ internal class ConfirmationUI : UIState
 	{
 		this.buttonID = buttonID;
 
-		var confirmation = new UITextOption("Are you sure?")
-		{
+		var confirmation = new UITextOption("Are you sure?") {
 			NewTextColor = Color.Red,
 			Top = new(Main.instance.invBottom + topOffset, 0),
 			Left = new(506, 0) // magic number because vanilla does it the same way lmao

@@ -21,8 +21,7 @@ internal class UISystem : ModSystem
 	{
 		instance = this;
 
-		if (!Main.dedServ)
-		{
+		if (!Main.dedServ) {
 			SortOptionsUserInterface = new UserInterface();
 			SearchbarUserInterface = new UserInterface();
 			ConfirmationUserInterface = new UserInterface();
@@ -49,41 +48,35 @@ internal class UISystem : ModSystem
 	{
 		_lastUpdateUiGameTime = gameTime;
 
-		if (SortOptionsUserInterface.CurrentState != null)
-		{
+		if (SortOptionsUserInterface.CurrentState != null) {
 			var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
 
-			if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest)
-			{
+			if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest) {
 				SortOptionsUserInterface.Update(gameTime);
 			}
 
-			if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory)
-			{
+			if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory) {
 				SortOptionsUserInterface.Update(gameTime);
 			}
 		}
 
-		if (Main.LocalPlayer.chest != -1)
-		{
-			if (ConfirmationUserInterface.CurrentState != null)
-			{
+		if (Main.LocalPlayer.chest != -1) {
+			if (ConfirmationUserInterface.CurrentState != null) {
 				ConfirmationUserInterface.Update(gameTime);
 			}
-			
+
 			if (SearchbarUserInterface.CurrentState == null)
 				SearchbarUserInterface.SetState(new SearchbarUI());
 
 			SearchbarUserInterface.Update(gameTime);
 
 		}
-		else
-		{
+		else {
 			ConfirmationUserInterface.SetState(null);
 			SearchbarUserInterface.SetState(null);
 		}
 
-		if (ChestHoverUserInterface.CurrentState != null)	
+		if (ChestHoverUserInterface.CurrentState != null)
 			ChestHoverUserInterface.Update(gameTime);
 
 	}
@@ -95,24 +88,19 @@ internal class UISystem : ModSystem
 
 		layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
 			"BetterChests: UI",
-			delegate
-			{
-				if (SortOptionsUserInterface.CurrentState != null)
-				{
+			delegate {
+				if (SortOptionsUserInterface.CurrentState != null) {
 					var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
 
-					if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest)
-					{
+					if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest) {
 						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
-					if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory)
-					{
+					if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory) {
 						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
 				}
 
-				if (Main.LocalPlayer.chest != -1)
-				{
+				if (Main.LocalPlayer.chest != -1) {
 					if (ConfirmationUserInterface.CurrentState != null)
 						ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 
@@ -133,8 +121,7 @@ internal class UISystem : ModSystem
 	{
 		SortOptionsUI currentState = instance.SortOptionsUserInterface.CurrentState as SortOptionsUI;
 
-		if (currentState?.mode != sortOptionsUI?.mode)
-		{
+		if (currentState?.mode != sortOptionsUI?.mode) {
 			instance.SortOptionsUserInterface.SetState(sortOptionsUI);
 			return;
 		}

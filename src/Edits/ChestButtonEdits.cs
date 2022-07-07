@@ -31,11 +31,9 @@ internal class ChestButtonEdits
 		const int buttonHeight = 30;
 
 		// true if the mouse is hovering over the sort inventory button
-		if (Main.mouseX >= buttonX && Main.mouseX <= buttonX + buttonWidth && Main.mouseY >= buttonY && Main.mouseY <= buttonY + buttonHeight && !PlayerInput.IgnoreMouseInterface)
-		{
+		if (Main.mouseX >= buttonX && Main.mouseX <= buttonX + buttonWidth && Main.mouseY >= buttonY && Main.mouseY <= buttonY + buttonHeight && !PlayerInput.IgnoreMouseInterface) {
 			// true if the user right clicked
-			if (Main.mouseRight && Main.mouseRightRelease)
-			{
+			if (Main.mouseRight && Main.mouseRightRelease) {
 				Main.mouseRightRelease = false;
 
 				// toggle Sort option UI
@@ -85,8 +83,7 @@ internal class ChestButtonEdits
 	{
 		orig(spritebatch);
 		// if the "Sort" Button has been clicked once: toggle the Sort option UI
-		if (Main.mouseRight && Main.mouseRightRelease && ChestUI.ButtonHovered[ChestUI.ButtonID.Sort])
-		{
+		if (Main.mouseRight && Main.mouseRightRelease && ChestUI.ButtonHovered[ChestUI.ButtonID.Sort]) {
 			Main.mouseRightRelease = false;
 
 			// toggle Sort option UI
@@ -96,8 +93,7 @@ internal class ChestButtonEdits
 
 	private static void CallSortFunction()
 	{
-		switch (CurrentSortFunction)
-		{
+		switch (CurrentSortFunction) {
 			case "Default sort":
 				NewItemSorting.DefaultChestSort(false);
 				break;
@@ -137,8 +133,7 @@ internal class ChestButtonEdits
 	private static void OpenDepositConfirmation()
 	{
 		// if confirmations are disabled call DepositAll normally
-		if (DisableConfirmationButton)
-		{
+		if (DisableConfirmationButton) {
 			ChestUI.DepositAll();
 			return;
 		}
@@ -161,8 +156,7 @@ internal class ChestButtonEdits
 	private static void OpenLootConfirmation()
 	{
 		// if confirmations are disabled call LootAll normally
-		if (DisableConfirmationButton)
-		{
+		if (DisableConfirmationButton) {
 			ChestUI.LootAll();
 			return;
 		}

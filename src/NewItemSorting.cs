@@ -17,8 +17,7 @@ public static class NewItemSorting
 	// default sort overload
 	public static void SortByMode(bool reversed, SortOptionsMode mode)
 	{
-		switch (mode)
-		{
+		switch (mode) {
 			case SortOptionsMode.Chest:
 				DefaultChestSort(reversed);
 				break;
@@ -30,8 +29,7 @@ public static class NewItemSorting
 
 	public static void SortByMode<T>(Func<Item, T> func, bool reversed, SortOptionsMode mode)
 	{
-		switch (mode)
-		{
+		switch (mode) {
 			case SortOptionsMode.Chest:
 				SortChest(func, reversed);
 				break;
@@ -47,8 +45,7 @@ public static class NewItemSorting
 	{
 		ItemSorting.SortInventory();
 
-		if (reversed)
-		{
+		if (reversed) {
 			ref var items = ref Main.LocalPlayer.inventory;
 			var reversedItems = items.Where((_, index) => index is > 9 and < 50); // do not reverse hotbar or money/ammo slots
 
@@ -66,13 +63,11 @@ public static class NewItemSorting
 		ref var items = ref Main.LocalPlayer.inventory;
 		var sortedItems = items.Where((_, index) => index is > 9 and < 50);
 
-		if (!reversed)
-		{
+		if (!reversed) {
 			// order the items according to the function.
 			sortedItems = sortedItems.OrderBy(func).ThenBy(x => x.type);
 		}
-		else
-		{
+		else {
 			// order the items according to the function in reversed order.
 			sortedItems = sortedItems.OrderByDescending(func).ThenByDescending(x => x.type);
 		}
@@ -96,11 +91,10 @@ public static class NewItemSorting
 	{
 		ItemSorting.SortChest();
 
-		if (reversed)
-		{
+		if (reversed) {
 			// all items in the chest
 			ref var items = ref GetChestItems();
-			
+
 			var reversedItems = items.Reverse() // reverse order
 				.OrderBy(x => x.IsAir); // air always goes last
 
@@ -120,8 +114,7 @@ public static class NewItemSorting
 		// order the items according to the function.
 		var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ToArray();
 
-		if (reversed)
-		{
+		if (reversed) {
 			// reverse the order
 			sortedItems = sortedItems.Reverse().ToArray();
 		}
@@ -141,10 +134,8 @@ public static class NewItemSorting
 
 	private static void AddRandomGlow(Item[] items, Item[] sortedItems, bool chest)
 	{
-		for (int i = 0; i < items.Length; i++)
-		{
-			if (!sortedItems[i].IsAir && items[i] != sortedItems[i])
-			{
+		for (int i = 0; i < items.Length; i++) {
+			if (!sortedItems[i].IsAir && items[i] != sortedItems[i]) {
 				// Change color of changed slots
 				ItemSlot.SetGlow(i, Main.rand.NextFloat(), chest);
 			}
@@ -153,8 +144,7 @@ public static class NewItemSorting
 
 	private static ref Item[] GetChestItems()
 	{
-		switch (Main.LocalPlayer.chest)
-		{
+		switch (Main.LocalPlayer.chest) {
 			case -2:
 				return ref Main.LocalPlayer.bank.item;
 			case -3:
@@ -171,10 +161,8 @@ public static class NewItemSorting
 	private static void SyncChest(Item[] items)
 	{
 		// sync chest contents with all clients
-		if (Main.netMode == NetmodeID.MultiplayerClient)
-		{
-			for (int i = 0; i < items.Length; i++)
-			{
+		if (Main.netMode == NetmodeID.MultiplayerClient) {
+			for (int i = 0; i < items.Length; i++) {
 				NetMessage.SendData(MessageID.SyncChestItem, number: Main.LocalPlayer.chest, number2: i);
 			}
 		}
