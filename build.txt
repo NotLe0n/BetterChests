@@ -1,6 +1,6 @@
 displayName = Better Chests
 author = NotLe0n
-version = 1.6.0.3
+version = 1.6.0.4
 hideCode = false
 hideResources = false
 includeSource = false
