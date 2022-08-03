@@ -1,11 +1,10 @@
 [c/FFE900:This mod improves some aspects of vanilla chests]
 
-For a Changlog and more information visit my homepage!
-
 Special Thanks to:
 [c/66EEFF:direwolf420, darthmorf & jopojelly] for a UIElement!
 [c/66EEFF:Setnour6] for making the icon!
 
+This mod is open source on GitHub. If you have a GitHub account, please give it a star! (link is the homepage button)
 _________________________
 
 [c/FFE900: Changes]

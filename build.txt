@@ -1,8 +1,8 @@
 displayName = Better Chests
 author = NotLe0n
-version = 1.6.0.4
+version = 1.6.0.5
 hideCode = false
 hideResources = false
 includeSource = false
 buildIgnore = vs/*, *.csproj, *.sln, *.pidb, *.userprefs, *.user, obj/*, bin/*
-homepage = https://forums.terraria.org/index.php?threads/better-chests.104841/
+homepage = https://github.com/NotLe0n/BetterChests

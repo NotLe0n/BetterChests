@@ -9,11 +9,45 @@ internal class ChestNameEdits
 
 	public static void Load()
 	{
-		IL.Terraria.GameContent.UI.States.UIVirtualKeyboard.ctor += AllowBiggerChestNameClient;
-		IL.Terraria.MessageBuffer.GetData += AllowBiggerChestNameServer;
+		IL.Terraria.GameContent.UI.States.UIVirtualKeyboard.ctor += AllowBiggerChestName_Client;
+		IL.Terraria.MessageBuffer.GetData += AllowBiggerChestName_GetData;
+		IL.Terraria.NetMessage.SendData += AllowBiggerChestName_SendData;
 	}
 
-	private static void AllowBiggerChestNameClient(ILContext il)
+	private static void AllowBiggerChestName_SendData(ILContext il)
+	{
+		var c = new ILCursor(il);
+
+		/*
+			C#:
+				before:
+					string text3 = text.ToString();
+					num12 = (byte)text3.Length;
+					if (num12 == 0 || num12 > 20)
+						num12 = 255;
+					else
+						text2 = text3;
+				after:
+					if (num12 == 0 || num12 > 20)
+			IL:
+				IL_1b85: ldloc.s 68
+				IL_1b87: brfalse.s IL_1b8f
+				IL_1b89: ldloc.s 68
+				IL_1b8b: ldc.i4.s 20		<==== change this
+					<=== here
+		*/
+
+		if (!c.TryGotoNext(MoveType.After,
+			i => i.MatchLdloc(68),
+			i => i.MatchBrfalse(out _),
+			i => i.MatchLdloc(68),
+			i => i.MatchLdcI4(20)
+		)) throw new("AllowBiggerChestName_SendData edit failed!");
+
+		c.Prev.Operand = newMaxChestLength;
+	}
+
+	private static void AllowBiggerChestName_Client(ILContext il)
 	{
 		var c = new ILCursor(il);
 
@@ -37,16 +71,23 @@ internal class ChestNameEdits
 			i => i.MatchLdfld<UIVirtualKeyboard>("_edittingSign"),
 			i => i.MatchBrtrue(out _),
 			i => i.MatchLdcI4(20)
-				)) throw new("client chest name edit failed");
+				)) throw new("AllowBiggerChestName_Client edit failed!");
 
 		c.Prev.Operand = newMaxChestLength;
 	}
 
-	private static void AllowBiggerChestNameServer(ILContext il)
+	private static void AllowBiggerChestName_GetData(ILContext il)
 	{
 		var c = new ILCursor(il);
 
 		/*
+			NOTES:
+				GetData() case 33 docs:
+					chestIndex, x, y, nameLen, name
+					name is only sent if nameLen <= 20
+					on client, does the open and close sounds (if changed)
+					on server, sends ChestName and SyncPlayerChestIndex to other clients
+
 			GOAL: Allow the user to write a chest name longer than 20 chars.
 				  There is a const Chest::MaxNameLength, but const names don't get compiled into IL
 
@@ -60,12 +101,12 @@ internal class ChestNameEdits
 
 			IL:
 				IL_44ca: ldsfld string [System.Runtime]System.String::Empty
-				IL_44cf: stloc.s 208
+				IL_44cf: stloc.s 207
 
-				IL_44d1: ldloc.s 207
-				IL_44d3: brfalse.s IL_44f6
+				IL_44d1: ldloc.s 206
+				IL_44d3: brfalse.s IL_4478
 
-				IL_44d5: ldloc.s 207
+				IL_44d5: ldloc.s 206
 				IL_44d7: ldc.i4.s 20	<=== change this
 
 				<---- here
@@ -73,13 +114,14 @@ internal class ChestNameEdits
 
 		if (!c.TryGotoNext(MoveType.After,
 			i => i.MatchLdsfld<string>("Empty"),
-			i => i.MatchStloc(208),
-			i => i.MatchLdloc(207),
+			i => i.MatchStloc(207),
+			i => i.MatchLdloc(206),
 			i => i.MatchBrfalse(out _),
-			i => i.MatchLdloc(207),
+			i => i.MatchLdloc(206),
 			i => i.MatchLdcI4(20)
-		))
-			throw new("server chest name edit failed");
+		)) {
+			throw new("AllowBiggerChestName_GetData edit failed!");
+		}
 
 		c.Prev.Operand = newMaxChestLength;
 	}

@@ -5,6 +5,8 @@ Special Thanks to:
 [b]direwolf420, darthmorf & jopojelly[/b] for a UIElement!
 [b]Setnour6[/b] for making the icon!
 
+This mod is open source on [url=https://github.com/NotLe0n/BetterChests]GitHub[/url]. If you have a GitHub account, please give it a star!
+
 [hr]
 [h2]Changes:[/h2]
 [list]
