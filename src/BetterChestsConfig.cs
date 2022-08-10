@@ -36,6 +36,10 @@ internal class BetterChestsConfig : ModConfig
 	[CustomModConfigItem(typeof(DropDownMenu<string>))]
 	public OptionSelectionPair<string> defaultChestSortOptions;
 
+	[Label("Disable chest content display")]
+	[DefaultValue(false)]
+	public bool disableChestHover;
+
 	public override void OnChanged()
 	{
 		ChestButtonEdits.CurrentSortFunction = defaultChestSortOptions == null ? "Default sort" : defaultChestSortOptions.selection;

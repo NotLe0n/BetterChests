@@ -1,24 +1,21 @@
-﻿using Terraria;
+﻿using System.Linq;
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace BetterChests.src.Edits;
 
-internal static class ChestHoverEdits
+internal class ChestHoverEdits : GlobalTile
 {
-	public static void Load()
+	public override void MouseOver(int i, int j, int type)
 	{
-		On.Terraria.Player.TileInteractionsCheckLongDistance += CloseChestHoverUI;
-		On.Terraria.Player.TileInteractionsMouseOver += OpenChestHoverUI;
-	}
+		if (ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
+			return;
 
-	private static void OpenChestHoverUI(On.Terraria.Player.orig_TileInteractionsMouseOver orig, Player self, int myX, int myY)
-	{
-		orig(self, myX, myY);
-
-		switch (Main.tile[myX, myY].TileType) {
+		switch (type) {
 			case TileID.Containers:
 			case TileID.Containers2:
-				ContainerHover(GetMultitileChest(myX, myY));
+				ContainerHover(GetMultitileChest(i, j));
 				break;
 			case TileID.PiggyBank:
 				ContainerHover(Main.LocalPlayer.bank);
@@ -32,18 +29,15 @@ internal static class ChestHoverEdits
 			case TileID.VoidVault:
 				ContainerHover(Main.LocalPlayer.bank4);
 				break;
+			case TileID.Dressers:
+				ContainerHover(GetDresserChest(i, j));
+				break;
+			default:
+				UISystem.CloseChestHoverUI();
+				break;
 		}
-	}
 
-	private static void CloseChestHoverUI(On.Terraria.Player.orig_TileInteractionsCheckLongDistance orig, Player self, int myX, int myY)
-	{
-		orig(self, myX, myY);
-
-		if (Main.tile[myX, myY].TileType is not
-			(TileID.Containers or TileID.Containers2 or TileID.PiggyBank or
-			TileID.Safes or TileID.DefendersForge or TileID.VoidVault) || !self.IsInTileInteractionRange(myX, myY)) {
-			UISystem.CloseChestHoverUI();
-		}
+		base.MouseOver(i, j, type);
 	}
 
 	private static void ContainerHover(Chest chest)
@@ -64,6 +58,21 @@ internal static class ChestHoverEdits
 			chestY--;
 		}
 
+		return Main.chest[Chest.FindChest(chestX, chestY)];
+	}
+
+	// reference: TileInteractionsCheckLongDistance(int, int)
+	private static Chest GetDresserChest(int x, int y)
+	{
+		Tile tile = Main.tile[x, y];
+
+		int chestX = x - tile.TileFrameX % 54 / 18;
+		int chestY = y;
+
+		if (tile.TileFrameY % 36 != 0) {
+			chestY--;
+		}
+			
 		return Main.chest[Chest.FindChest(chestX, chestY)];
 	}
 }

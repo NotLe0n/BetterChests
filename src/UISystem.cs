@@ -76,9 +76,14 @@ internal class UISystem : ModSystem
 			SearchbarUserInterface.SetState(null);
 		}
 
-		if (ChestHoverUserInterface.CurrentState != null)
-			ChestHoverUserInterface.Update(gameTime);
 
+		if (!Main.tile[Main.MouseWorld.ToTileCoordinates()].HasTile) {
+			CloseChestHoverUI();
+		}
+
+		if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
+			ChestHoverUserInterface.Update(gameTime);
+		}
 	}
 
 	public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -107,7 +112,7 @@ internal class UISystem : ModSystem
 					SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 				}
 
-				if (ChestHoverUserInterface.CurrentState != null)
+				if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
 					ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 
 				return true;
@@ -131,13 +136,20 @@ internal class UISystem : ModSystem
 
 	public static void OpenChestHoverUI(Chest chest)
 	{
+		// don't open the same ChestHoverUI again
 		if ((instance.ChestHoverUserInterface.CurrentState as ChestHoverUI)?.chest == chest)
 			return;
+
+		// don't open if chest is locked
+		if (Chest.IsLocked(chest.x, chest.y)) {
+			return;
+		}
 
 		instance.ChestHoverUserInterface.SetState(new ChestHoverUI(chest));
 	}
 	public static void CloseChestHoverUI()
 	{
+		// don't always close the chest
 		if (instance.ChestHoverUserInterface.CurrentState == null)
 			return;
 

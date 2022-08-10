@@ -11,9 +11,6 @@ public class BetterChests : Mod
 {
 	public override void Load()
 	{
-		// Opens the ChestHoverUI when hovering over a container
-		ChestHoverEdits.Load();
-
 		// Changes the functionality of buttons
 		ChestButtonEdits.Load();
 
