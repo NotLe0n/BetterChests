@@ -1,4 +1,5 @@
-﻿using MonoMod.Cil;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using Terraria.GameContent.UI.States;
 
 namespace BetterChests.src.Edits;
@@ -38,9 +39,9 @@ internal class ChestNameEdits
 		*/
 
 		if (!c.TryGotoNext(MoveType.After,
-			i => i.MatchLdloc(68),
-			i => i.MatchBrfalse(out _),
-			i => i.MatchLdloc(68),
+			i => i.Match(OpCodes.Ldloc_S),
+			i => i.Match(OpCodes.Brfalse_S),
+			i => i.Match(OpCodes.Ldloc_S),
 			i => i.MatchLdcI4(20)
 		)) throw new("AllowBiggerChestName_SendData edit failed!");
 
@@ -92,13 +93,19 @@ internal class ChestNameEdits
 				  There is a const Chest::MaxNameLength, but const names don't get compiled into IL
 
 			C#:
-				string name = string.Empty;
-				if (num74 != 0) {
-					if (num74 <= 20)
-						name = reader.ReadString();
-				...
-				}
+				before:
+					string name = string.Empty;
+					if (num74 != 0) {
+						if (num74 <= 20) {
+							name = reader.ReadString();
+						}
 
+				after:
+					string name = string.Empty;
+					if (num74 != 0) {
+						if (num74 <= newMaxChestLength) {
+							name = reader.ReadString();
+						}
 			IL:
 				IL_44ca: ldsfld string [System.Runtime]System.String::Empty
 				IL_44cf: stloc.s 207
@@ -114,10 +121,10 @@ internal class ChestNameEdits
 
 		if (!c.TryGotoNext(MoveType.After,
 			i => i.MatchLdsfld<string>("Empty"),
-			i => i.MatchStloc(207),
-			i => i.MatchLdloc(206),
-			i => i.MatchBrfalse(out _),
-			i => i.MatchLdloc(206),
+			i => i.Match(OpCodes.Stloc_S),
+			i => i.Match(OpCodes.Ldloc_S),
+			i => i.Match(OpCodes.Brfalse_S),
+			i => i.Match(OpCodes.Ldloc_S),
 			i => i.MatchLdcI4(20)
 		)) {
 			throw new("AllowBiggerChestName_GetData edit failed!");
