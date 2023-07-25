@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace BetterChests.src;
+namespace BetterChests;
 
 internal class Hotkeys : ModPlayer
 {

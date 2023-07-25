@@ -1,10 +1,10 @@
-﻿using BetterChests.src.UIElements;
+﻿using BetterChests.UIElements;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.UI;
 
-namespace BetterChests.src.UIStates;
+namespace BetterChests.UIStates;
 
 internal class ConfirmationUI : UIState
 {

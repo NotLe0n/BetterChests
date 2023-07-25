@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace BetterChests.src.UIElements;
+namespace BetterChests.UIElements;
 
 public class UITextOption : UIText
 {

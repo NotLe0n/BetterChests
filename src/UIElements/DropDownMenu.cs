@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.UI;
-using Terraria.ModLoader.Config.UI;
-using ReLogic.Graphics;
 using Newtonsoft.Json;
+using ReLogic.Graphics;
+using Terraria.GameContent;
+using Terraria.ModLoader.Config.UI;
+using Terraria.UI;
 
-namespace BetterChests.src.UIElements;
+namespace BetterChests.UIElements;
 
 internal class DropDownMenu<T> : ConfigElement
 {

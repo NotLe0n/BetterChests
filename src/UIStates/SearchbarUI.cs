@@ -1,8 +1,8 @@
-﻿using BetterChests.src.UIElements;
+﻿using BetterChests.UIElements;
 using Terraria;
 using Terraria.UI;
 
-namespace BetterChests.src.UIStates;
+namespace BetterChests.UIStates;
 
 internal class SearchbarUI : UIState
 {

@@ -1,9 +1,9 @@
-﻿using BetterChests.src.UIElements;
-using BetterChests.src.Edits;
+﻿using BetterChests.Edits;
+using BetterChests.UIElements;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-namespace BetterChests.src;
+namespace BetterChests;
 
 #pragma warning disable CS0649 // field is never assigned to
 

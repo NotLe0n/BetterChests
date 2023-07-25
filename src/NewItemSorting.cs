@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace BetterChests.src;
+namespace BetterChests;
 
 public enum SortOptionsMode
 {

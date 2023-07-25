@@ -3,7 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace BetterChests.src.Edits;
+namespace BetterChests.Edits;
 
 internal class OpenChestEdits
 {

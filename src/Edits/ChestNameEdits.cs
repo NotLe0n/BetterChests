@@ -2,7 +2,7 @@
 using MonoMod.Cil;
 using Terraria.GameContent.UI.States;
 
-namespace BetterChests.src.Edits;
+namespace BetterChests.Edits;
 
 internal class ChestNameEdits
 {

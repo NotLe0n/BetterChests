@@ -8,7 +8,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace BetterChests.src.UIElements;
+namespace BetterChests.UIElements;
 
 // original code from jopojelly and darthmorf. Modified to suit my needs
 internal class UIBetterTextBox : UIPanel

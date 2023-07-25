@@ -1,11 +1,12 @@
-﻿using BetterChests.src.UIStates;
-using System.Reflection;
+﻿using BetterChests.UIStates;
 using MonoMod.Cil;
+using System.Reflection;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.UI;
 
-namespace BetterChests.src.Edits;
+namespace BetterChests.Edits;
 
 #pragma warning disable IDE0051 // Remove unused private members
 
@@ -134,7 +135,7 @@ internal class ChestButtonEdits
 	{
 		// if confirmations are disabled call DepositAll normally
 		if (DisableConfirmationButton) {
-			ChestUI.DepositAll();
+			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 			return;
 		}
 
@@ -144,7 +145,7 @@ internal class ChestButtonEdits
 		alreadyClicked = true;
 		var ui = new ConfirmationUI(ChestUI.ButtonID.DepositAll, 55, () =>
 		{
-			ChestUI.DepositAll();
+			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 			UISystem.instance.ConfirmationUserInterface.SetState(null);
 			alreadyClicked = false;
 		});
@@ -176,7 +177,7 @@ internal class ChestButtonEdits
 	}
 
 	// reset already clicked when opening a chest
-	private static void ResetAlreadyClicked(On.Terraria.Player.orig_OpenChest orig, Player self, int x, int y, int newChest)
+	private static void ResetAlreadyClicked(On_Player.orig_OpenChest orig, Player self, int x, int y, int newChest)
 	{
 		orig(self, x, y, newChest);
 		alreadyClicked = false;

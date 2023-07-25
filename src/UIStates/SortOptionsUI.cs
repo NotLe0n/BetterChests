@@ -1,11 +1,11 @@
-﻿using BetterChests.src.UIElements;
+﻿using BetterChests.UIElements;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace BetterChests.src.UIStates;
+namespace BetterChests.UIStates;
 
 internal class SortOptionsUI : UIState
 {

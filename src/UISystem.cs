@@ -1,12 +1,11 @@
-﻿using BetterChests.src.UIStates;
+﻿using BetterChests.UIStates;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace BetterChests.src;
+namespace BetterChests;
 
 internal class UISystem : ModSystem
 {

@@ -1,11 +1,11 @@
-using Terraria.ModLoader;
-using BetterChests.src.Edits;
+using BetterChests.Edits;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace BetterChests.src;
+namespace BetterChests;
 
 public class BetterChests : Mod
 {

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.UI;
 using ReLogic.Graphics;
-using Terraria.Audio;
-using Terraria.ID;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.UI;
 
-namespace BetterChests.src.UIElements;
+namespace BetterChests.UIElements;
 
 internal class DropDownItem<T> : UIElement
 {

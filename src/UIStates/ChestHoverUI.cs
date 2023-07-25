@@ -6,7 +6,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace BetterChests.src.UIStates;
+namespace BetterChests.UIStates;
 
 internal class ChestHoverUI : UIState
 {
