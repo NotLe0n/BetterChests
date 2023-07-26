@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -24,6 +25,8 @@ public static class NewItemSorting
 			case SortOptionsMode.Inventory:
 				DefaultInventorySort(reversed);
 				break;
+			default:
+				throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
 		}
 	}
 
@@ -54,7 +57,7 @@ public static class NewItemSorting
 				.OrderBy(x => x.IsAir); // air always goes last
 
 			// insert sorted list
-			items = items[0..10].Concat(reversedItems).Concat(items[50..]).ToArray();
+			items = items[..10].Concat(reversedItems).Concat(items[50..]).ToArray();
 		}
 	}
 
@@ -65,7 +68,7 @@ public static class NewItemSorting
 
 		if (!reversed) {
 			// order the items according to the function.
-			sortedItems = sortedItems.OrderBy(func).ThenBy(x => x.type);
+			sortedItems = sortedItems.OrderBy(func).ThenBy(x => x.type).ThenBy(x => x.stack);
 		}
 		else {
 			// order the items according to the function in reversed order.
@@ -76,13 +79,14 @@ public static class NewItemSorting
 		sortedItems = sortedItems.OrderBy(x => x.IsAir);
 
 		// insert sorted list
-		sortedItems = items[0..10].Concat(sortedItems).Concat(items[50..]);
+		sortedItems = items[..10].Concat(sortedItems).Concat(items[50..]);
+		var sortedItemsArr = sortedItems.ToArray();
 
 		// add glow to changed items
-		AddRandomGlow(items, sortedItems.ToArray(), false);
+		AddRandomGlow(items, sortedItemsArr, false);
 
 		// Apply changes
-		items = sortedItems.ToArray();
+		items = sortedItemsArr.ToArray();
 	}
 
 	// Chest Sorting
@@ -112,7 +116,7 @@ public static class NewItemSorting
 		ref var items = ref GetChestItems();
 
 		// order the items according to the function.
-		var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ToArray();
+		var sortedItems = items.OrderBy(func).ThenBy(x => x.type).ThenBy(x => x.stack).ToArray();
 
 		if (reversed) {
 			// reverse the order
@@ -132,9 +136,9 @@ public static class NewItemSorting
 		SyncChest(items);
 	}
 
-	private static void AddRandomGlow(Item[] items, Item[] sortedItems, bool chest)
+	private static void AddRandomGlow(IReadOnlyList<Item> items, IReadOnlyList<Item> sortedItems, bool chest)
 	{
-		for (int i = 0; i < items.Length; i++) {
+		for (int i = 0; i < items.Count; i++) {
 			if (!sortedItems[i].IsAir && items[i] != sortedItems[i]) {
 				// Change color of changed slots
 				ItemSlot.SetGlow(i, Main.rand.NextFloat(), chest);
@@ -158,11 +162,11 @@ public static class NewItemSorting
 		}
 	}
 
-	private static void SyncChest(Item[] items)
+	private static void SyncChest(IReadOnlyCollection<Item> items)
 	{
 		// sync chest contents with all clients
 		if (Main.netMode == NetmodeID.MultiplayerClient) {
-			for (int i = 0; i < items.Length; i++) {
+			for (int i = 0; i < items.Count; i++) {
 				NetMessage.SendData(MessageID.SyncChestItem, number: Main.LocalPlayer.chest, number2: i);
 			}
 		}

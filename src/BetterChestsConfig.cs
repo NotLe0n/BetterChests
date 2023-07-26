@@ -1,5 +1,7 @@
 ﻿using BetterChests.Edits;
 using BetterChests.UIElements;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
@@ -10,13 +12,11 @@ namespace BetterChests;
 internal class BetterChestsConfig : ModConfig
 {
 	public override ConfigScope Mode => ConfigScope.ClientSide;
-
-	[Label("Disable Deposit All/Loot All Confirmation message")]
+	
 	[DefaultValue(false)]
 	public bool disableConfirmationButton;
 
-	[Label("Default sort option")]
-	[Tooltip("Changes the functionality of the \"Sort Items\" button")]
+	
 	[JsonDefaultValue(
 @"{
 'selection': 'Default sort',
@@ -35,34 +35,20 @@ internal class BetterChestsConfig : ModConfig
 	)]
 	[CustomModConfigItem(typeof(DropDownMenu<string>))]
 	public OptionSelectionPair<string> defaultChestSortOptions;
-
-	[Label("Disable chest content display")]
+	
 	[DefaultValue(false)]
 	public bool disableChestHover;
 
 	public override void OnChanged()
 	{
-		ChestButtonEdits.CurrentSortFunction = defaultChestSortOptions == null ? "Default sort" : defaultChestSortOptions.selection;
+		ChestButtonEdits.CurrentSortFunction = defaultChestSortOptions.selection;
 		ChestButtonEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
 	}
 }
 
-internal class OptionSelectionPair<T>
+internal struct OptionSelectionPair<T>
 {
 	public T selection;
 	public T[] options;
-
-	public override bool Equals(object obj)
-	{
-		if (obj is OptionSelectionPair<T> otherPair) {
-			return otherPair.selection.Equals(selection) && otherPair.options.Equals(options);
-		}
-		return false;
-	}
-
-	public override int GetHashCode()
-	{
-		return new { selection, options }.GetHashCode();
-	}
 }

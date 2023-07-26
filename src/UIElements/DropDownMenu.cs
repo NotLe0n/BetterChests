@@ -17,6 +17,7 @@ internal class DropDownMenu<T> : ConfigElement
 	public override void OnBind()
 	{
 		base.OnBind();
+		var vl = MemberInfo.GetValue(Item);
 		if (MemberInfo.GetValue(Item) is not OptionSelectionPair<T> subitem) {
 			var temp = new OptionSelectionPair<T>();
 			JsonConvert.PopulateObject(JsonDefaultValueAttribute.Json, temp);
@@ -31,7 +32,13 @@ internal class DropDownMenu<T> : ConfigElement
 		// add DropDownItems
 		items = new DropDownItem<T>[subitem.options.Length];
 		for (int i = subitem.options.Length - 1; i >= 0; i--) {
-			items[i] = new DropDownItem<T>(subitem.options[i]);
+			items[i] = new DropDownItem<T>(subitem.options[i], elm =>
+			{
+				currentSelectedItem = ((DropDownItem<T>)elm).Name;
+				subitem.GetType().GetField("selection")?.SetValue(subitem, currentSelectedItem);
+				SetObject(subitem);
+				CloseMenu();
+			});
 		}
 
 		// align DropDownItems
@@ -39,16 +46,9 @@ internal class DropDownMenu<T> : ConfigElement
 		float width = LargestItemSize() + 20;
 		for (int i = subitem.options.Length - 1; i >= 0; i--) {
 			items[i].Left = new(550 - width, 0);
-			items[i].Top = new(dimensions.Height + 21 * i + 25, 0);
+			items[i].Top = new(dimensions.Height + 22 * i + 25, 0);
 			items[i].Width = new(width - 10, 0);
 			items[i].Height = new(20, 0);
-			items[i].OnSelect += (elm) =>
-			{
-				currentSelectedItem = (elm as DropDownItem<T>).Name;
-				subitem.GetType().GetField("selection").SetValue(subitem, currentSelectedItem);
-				SetObject(subitem);
-				CloseMenu();
-			};
 		}
 	}
 
@@ -66,12 +66,12 @@ internal class DropDownMenu<T> : ConfigElement
 		spriteBatch.DrawString(FontAssets.MouseText.Value, currentSelectedItem.ToString(), new(x + 5, dimensions.Y + 5), Color.White);
 	}
 
-	public override void Click(UIMouseEvent evt)
+	public override void LeftClick(UIMouseEvent evt)
 	{
 		ToggleExpand();
 	}
 
-	public void ToggleExpand()
+	private void ToggleExpand()
 	{
 		if (expanded) {
 			CloseMenu();
@@ -81,7 +81,7 @@ internal class DropDownMenu<T> : ConfigElement
 		}
 	}
 
-	public void CloseMenu()
+	private void CloseMenu()
 	{
 		for (int i = 0; i < items.Length; i++) {
 			items[i].Remove();
@@ -89,7 +89,7 @@ internal class DropDownMenu<T> : ConfigElement
 		expanded = false;
 	}
 
-	public void OpenMenu()
+	private void OpenMenu()
 	{
 		for (int i = items.Length - 1; i >= 0; i--) {
 			Append(items[i]);

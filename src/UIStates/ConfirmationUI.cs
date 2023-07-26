@@ -19,7 +19,7 @@ internal class ConfirmationUI : UIState
 			Top = new(Main.instance.invBottom + topOffset, 0),
 			Left = new(506, 0) // magic number because vanilla does it the same way lmao
 		};
-		confirmation.OnClick += (evt, elm) => onClick();
+		confirmation.OnLeftClick += (_, _) => onClick();
 		Append(confirmation);
 	}
 

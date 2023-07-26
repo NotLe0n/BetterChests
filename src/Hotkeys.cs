@@ -16,14 +16,14 @@ internal class Hotkeys : ModPlayer
 		base.ProcessTriggers(triggersSet);
 
 		if (DepositAll.JustPressed && Player.chest != -1) {
-			ChestUI.DepositAll();
+			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 		}
 		if (LootAll.JustPressed && Player.chest != -1) {
 			ChestUI.LootAll();
 		}
 		if (QuickStack.JustPressed) {
 			Player.QuickStackAllChests();
-			ChestUI.QuickStack();
+			ChestUI.QuickStack(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 		}
 		if (Restock.JustPressed) {
 			ChestUI.Restock();
@@ -37,7 +37,7 @@ internal class Hotkeys : ModPlayer
 	}
 }
 
-class HotkeyLoader : ModSystem
+internal class HotkeyLoader : ModSystem
 {
 	public override void Load()
 	{

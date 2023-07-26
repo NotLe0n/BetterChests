@@ -9,14 +9,14 @@ internal class OpenChestEdits
 {
 	public static void Load()
 	{
-		On.Terraria.Chest.IsPlayerInChest += QuckStackAllowOpenChests;
-		On.Terraria.Chest.UsingChest += AllowEnterOpenChests;
-		On.Terraria.UI.ChestUI.DrawSlots += SyncChest;
+		On_Chest.IsPlayerInChest += QuckStackAllowOpenChests;
+		On_Chest.UsingChest += AllowEnterOpenChests;
+		Terraria.UI.On_ChestUI.DrawSlots += SyncChest;
 	}
 
 	private static Item[] prevItems;
 	public static bool serverUpdateRecieved;
-	private static void SyncChest(On.Terraria.UI.ChestUI.orig_DrawSlots orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+	private static void SyncChest(Terraria.UI.On_ChestUI.orig_DrawSlots orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
 	{
 		orig(spriteBatch);
 
@@ -65,12 +65,12 @@ internal class OpenChestEdits
 		return cloned;
 	}
 
-	private static int AllowEnterOpenChests(On.Terraria.Chest.orig_UsingChest orig, int i)
+	private static int AllowEnterOpenChests(On_Chest.orig_UsingChest orig, int i)
 	{
 		return -1; // no player is currently in this chest
 	}
 
-	private static bool QuckStackAllowOpenChests(On.Terraria.Chest.orig_IsPlayerInChest orig, int i)
+	private static bool QuckStackAllowOpenChests(On_Chest.orig_IsPlayerInChest orig, int i)
 	{
 		return false; // no player is currently in this chest
 	}

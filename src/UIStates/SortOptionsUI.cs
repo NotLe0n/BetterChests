@@ -35,19 +35,19 @@ internal class SortOptionsUI : UIState
 		list.SetPadding(2);
 		Append(list);
 
-		AddSortOption("Default sort", (evt, elm) => NewItemSorting.SortByMode(_reversed, mode));
-		AddSortOption("Sort by ID", (evt, elm) => NewItemSorting.SortByMode(x => x.type, _reversed, mode));
-		AddSortOption("Sort alphabetically", (evt, elm) => NewItemSorting.SortByMode(x => x.Name, _reversed, mode));
-		AddSortOption("Sort by rarity", (evt, elm) => NewItemSorting.SortByMode(x => x.rare, !_reversed, mode));
-		AddSortOption("Sort by stack size", (evt, elm) => NewItemSorting.SortByMode(x => x.stack, !_reversed, mode));
-		AddSortOption("Sort by value", (evt, elm) => NewItemSorting.SortByMode(x => x.value, !_reversed, mode));
-		AddSortOption("Sort by damage", (evt, elm) => NewItemSorting.SortByMode(x => x.damage, !_reversed, mode));
-		AddSortOption("Sort by defense", (evt, elm) => NewItemSorting.SortByMode(x => x.defense, !_reversed, mode));
-		AddSortOption("Sort by Mod", new MouseEvent(ModCarusel));
-		AddSortOption("Sort randomly", (evt, elm) => NewItemSorting.SortByMode(x => Main.rand.NextFloat(), _reversed, mode));
+		AddSortOption("Default sort", (_, _) => NewItemSorting.SortByMode(_reversed, mode));
+		AddSortOption("Sort by ID", (_, _) => NewItemSorting.SortByMode(i => i.type, _reversed, mode));
+		AddSortOption("Sort alphabetically", (_, _) => NewItemSorting.SortByMode(i => i.Name, _reversed, mode));
+		AddSortOption("Sort by rarity", (_, _) => NewItemSorting.SortByMode(i => i.rare, !_reversed, mode));
+		AddSortOption("Sort by stack size", (_, _) => NewItemSorting.SortByMode(i => i.stack, !_reversed, mode));
+		AddSortOption("Sort by value", (_, _) => NewItemSorting.SortByMode(i => i.value, !_reversed, mode));
+		AddSortOption("Sort by damage", (_, _) => NewItemSorting.SortByMode(i => i.damage, !_reversed, mode));
+		AddSortOption("Sort by defense", (_, _) => NewItemSorting.SortByMode(i => i.defense, !_reversed, mode));
+		AddSortOption("Sort by Mod", ModCarusel);
+		AddSortOption("Sort randomly", (_, _) => NewItemSorting.SortByMode(_ => Main.rand.NextFloat(), _reversed, mode));
 
 		var option = new UITextOption("Reversed: No");
-		option.OnClick += (evt, elm) =>
+		option.OnLeftClick += (_, _) =>
 		{
 			_reversed = !_reversed;
 			option.SetText(_reversed ? "Reversed: Yes" : "Reversed: No");
@@ -58,11 +58,11 @@ internal class SortOptionsUI : UIState
 	private void AddSortOption(string title, MouseEvent onclick)
 	{
 		var option = new UITextOption(title);
-		option.OnClick += onclick;
+		option.OnLeftClick += onclick;
 		list.Add(option);
 	}
 
-	private int caruselIndex = 0;
+	private int caruselIndex;
 	private void ModCarusel(UIMouseEvent evt, UIElement elm)
 	{
 		// get list of all mods with items
@@ -78,7 +78,7 @@ internal class SortOptionsUI : UIState
 		caruselIndex = ++caruselIndex % modsWithItems.Count;
 
 		// set text to mod name
-		(elm as UITextOption).SetText("Sort my Mod: " + modsWithItems[caruselIndex].Name);
+		(elm as UITextOption).SetText("Sort by Mod: " + modsWithItems[caruselIndex].Name);
 
 		// sort items
 		NewItemSorting.SortByMode(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed, mode);

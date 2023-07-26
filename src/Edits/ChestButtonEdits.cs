@@ -8,6 +8,7 @@ using Terraria.UI;
 
 namespace BetterChests.Edits;
 
+// ReSharper disable UnusedMember.Local
 #pragma warning disable IDE0051 // Remove unused private members
 
 internal class ChestButtonEdits
@@ -17,13 +18,13 @@ internal class ChestButtonEdits
 
 	public static void Load()
 	{
-		IL.Terraria.UI.ChestUI.DrawButton += EditChestButtons;
-		On.Terraria.Main.DrawInventory += OpenSortInventoryOptionsLogic;
-		On.Terraria.UI.ChestUI.Draw += OpenSortChestOptionsLogic;
-		On.Terraria.Player.OpenChest += ResetAlreadyClicked;
+		IL_ChestUI.DrawButton += EditChestButtons;
+		On_Main.DrawInventory += OpenSortInventoryOptionsLogic;
+		On_ChestUI.Draw += OpenSortChestOptionsLogic;
+		On_Player.OpenChest += ResetAlreadyClicked;
 	}
 
-	private static void OpenSortInventoryOptionsLogic(On.Terraria.Main.orig_DrawInventory orig, Main self)
+	private static void OpenSortInventoryOptionsLogic(On_Main.orig_DrawInventory orig, Main self)
 	{
 		orig(self);
 		const int buttonX = 534;
@@ -45,42 +46,43 @@ internal class ChestButtonEdits
 
 	private static void EditChestButtons(ILContext il)
 	{
+		BindingFlags nonPubS = BindingFlags.NonPublic | BindingFlags.Static;
 		var c = new ILCursor(il);
 
 		// IL_0362: br.s      IL_038C
 		// IL_0364: call      void Terraria.UI.ChestUI::LootAll()
 		//      <=== here
 
-		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("LootAll")))
-			return;
-
+		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>(nameof(ChestUI.LootAll))))
+			throw new($"{nameof(EditChestButtons)} IL Edit failed at {nameof(ChestUI.LootAll)}");
+		
 		// call own method instead of LootAll()
-		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("OpenLootConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod(nameof(OpenLootConfirmation), nonPubS);
 
 		// IL_0362: br.s      IL_038C
-		// IL_0364: call      void Terraria.UI.ChestUI::DepositAll()
+		// IL_0364: call      void Terraria.UI.ChestUI::DepositAll(ContainerTransferContext)
 		//      <=== here
 
-		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>("DepositAll")))
-			return;
+		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ChestUI>(nameof(ChestUI.DepositAll))))
+			throw new($"{nameof(EditChestButtons)} IL Edit failed at {nameof(ChestUI.DepositAll)}");
 
-		// call own method instead of DepositAll()
-		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("OpenDepositConfirmation", BindingFlags.NonPublic | BindingFlags.Static);
+		// call own method instead of DepositAll(ContainerTransferContext)
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod(nameof(OpenDepositConfirmation), nonPubS);
 
 		// The goal of this IL edit is to replace SortChest() with code to open my UI
 		// IL_0385: br.s      IL_038C
 		// IL_0387: call      void Terraria.UI.ItemSorting::SortChest()
 		//      <=== here
 
-		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ItemSorting>("SortChest")))
-			return;
+		if (!c.TryGotoNext(MoveType.After, i => i.MatchCall<ItemSorting>(nameof(ItemSorting.SortChest))))
+			throw new($"{nameof(EditChestButtons)} IL Edit failed at {nameof(ItemSorting.SortChest)}");
 
 		// call own method instead of SortChest()
-		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod("CallSortFunction", BindingFlags.NonPublic | BindingFlags.Static);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod(nameof(CallSortFunction), nonPubS);
 	}
 
 	// Draw method because that calls every tick
-	private static void OpenSortChestOptionsLogic(On.Terraria.UI.ChestUI.orig_Draw orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
+	private static void OpenSortChestOptionsLogic(On_ChestUI.orig_Draw orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
 	{
 		orig(spritebatch);
 		// if the "Sort" Button has been clicked once: toggle the Sort option UI
@@ -114,15 +116,13 @@ internal class ChestButtonEdits
 				NewItemSorting.SortChest(x => x.value, true);
 				break;
 			case "Sort by damage":
-				NewItemSorting.SortChest(x => x.defense, true);
+				NewItemSorting.SortChest(x => x.damage, true);
 				break;
 			case "Sort by defense":
 				NewItemSorting.SortChest(x => x.defense, true);
 				break;
 			case "Sort randomly":
-				NewItemSorting.SortChest(x => Main.rand.NextFloat(), false);
-				break;
-			default:
+				NewItemSorting.SortChest(_ => Main.rand.NextFloat(), false);
 				break;
 		}
 	}
@@ -131,11 +131,11 @@ internal class ChestButtonEdits
 	private static bool alreadyClicked;
 
 	// this is called when the player clicks on "Deposit All" in the Chest UI
-	private static void OpenDepositConfirmation()
+	private static void OpenDepositConfirmation(ContainerTransferContext context)
 	{
 		// if confirmations are disabled call DepositAll normally
 		if (DisableConfirmationButton) {
-			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
+			ChestUI.DepositAll(context);
 			return;
 		}
 

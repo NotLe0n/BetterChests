@@ -1,0 +1,29 @@
+Keybinds: {
+	"Deposit All.DisplayName": Deposit All
+	"Loot All.DisplayName": Loot All
+	"Quick Stack.DisplayName": Quick Stack
+	Restock.DisplayName: Restock
+	"Sort Chest.DisplayName": Sort Chest
+	"Sort Inventory.DisplayName": Sort Inventory
+}
+
+Configs: {
+	BetterChestsConfig: {
+		DisplayName: Better Chests Config
+
+		disableConfirmationButton: {
+			Label: Disable Deposit All/Loot All Confirmation message
+			Tooltip: Disables the \"Are you sure?\" message
+		}
+
+		defaultChestSortOptions: {
+			Label: Default sort option
+			Tooltip: Changes the functionality of the "Sort Items" button
+		}
+
+		disableChestHover: {
+			Label: Disable chest content display
+			Tooltip: Disables the chest content display when you hover over a chest
+		}
+	}
+}

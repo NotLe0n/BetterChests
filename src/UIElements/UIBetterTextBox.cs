@@ -48,10 +48,10 @@ internal class UIBetterTextBox : UIPanel
 		this.hintText = hintText;
 	}
 
-	public override void Click(UIMouseEvent evt)
+	public override void LeftClick(UIMouseEvent evt)
 	{
 		Focus();
-		base.Click(evt);
+		base.LeftClick(evt);
 	}
 
 	public void Unfocus()

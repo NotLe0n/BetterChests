@@ -6,13 +6,13 @@ namespace BetterChests.Edits;
 
 internal class ChestNameEdits
 {
-	public const int newMaxChestLength = 80;
+	private const int NewMaxChestLength = 80;
 
 	public static void Load()
 	{
-		IL.Terraria.GameContent.UI.States.UIVirtualKeyboard.ctor += AllowBiggerChestName_Client;
-		IL.Terraria.MessageBuffer.GetData += AllowBiggerChestName_GetData;
-		IL.Terraria.NetMessage.SendData += AllowBiggerChestName_SendData;
+		IL_UIVirtualKeyboard.ctor += AllowBiggerChestName_Client;
+		Terraria.IL_MessageBuffer.GetData += AllowBiggerChestName_GetData;
+		Terraria.IL_NetMessage.SendData += AllowBiggerChestName_SendData;
 	}
 
 	private static void AllowBiggerChestName_SendData(ILContext il)
@@ -45,7 +45,7 @@ internal class ChestNameEdits
 			i => i.MatchLdcI4(20)
 		)) throw new("AllowBiggerChestName_SendData edit failed!");
 
-		c.Prev.Operand = newMaxChestLength;
+		c.Prev.Operand = NewMaxChestLength;
 	}
 
 	private static void AllowBiggerChestName_Client(ILContext il)
@@ -74,7 +74,7 @@ internal class ChestNameEdits
 			i => i.MatchLdcI4(20)
 				)) throw new("AllowBiggerChestName_Client edit failed!");
 
-		c.Prev.Operand = newMaxChestLength;
+		c.Prev.Operand = NewMaxChestLength;
 	}
 
 	private static void AllowBiggerChestName_GetData(ILContext il)
@@ -130,6 +130,6 @@ internal class ChestNameEdits
 			throw new("AllowBiggerChestName_GetData edit failed!");
 		}
 
-		c.Prev.Operand = newMaxChestLength;
+		c.Prev.Operand = NewMaxChestLength;
 	}
 }
