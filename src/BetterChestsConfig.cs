@@ -16,7 +16,10 @@ internal class BetterChestsConfig : ModConfig
 	[DefaultValue(false)]
 	public bool disableConfirmationButton;
 
+	[DefaultValue(false)]
+	public bool disableChestHover;
 	
+	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(
 @"{
 'selection': 'Default sort',
@@ -35,9 +38,6 @@ internal class BetterChestsConfig : ModConfig
 	)]
 	[CustomModConfigItem(typeof(DropDownMenu<string>))]
 	public OptionSelectionPair<string> defaultChestSortOptions;
-	
-	[DefaultValue(false)]
-	public bool disableChestHover;
 
 	public override void OnChanged()
 	{
