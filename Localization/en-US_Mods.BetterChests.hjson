@@ -13,7 +13,7 @@ Configs: {
 
 		disableConfirmationButton: {
 			Label: Disable Deposit All/Loot All Confirmation message
-			Tooltip: Disables the \"Are you sure?\" message
+			Tooltip: Disables the "Are you sure?" message
 		}
 
 		defaultChestSortOptions: {

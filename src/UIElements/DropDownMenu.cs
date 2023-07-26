@@ -17,26 +17,22 @@ internal class DropDownMenu<T> : ConfigElement
 	public override void OnBind()
 	{
 		base.OnBind();
-		var vl = MemberInfo.GetValue(Item);
-		if (MemberInfo.GetValue(Item) is not OptionSelectionPair<T> subitem) {
-			var temp = new OptionSelectionPair<T>();
-			JsonConvert.PopulateObject(JsonDefaultValueAttribute.Json, temp);
-			subitem = temp;
-
-			subitem.selection = subitem.options[0];
+		var subItem = (OptionSelectionPair<T>)MemberInfo.GetValue(Item);
+		if (subItem.selection is null || subItem.options is null) {
+			subItem = JsonConvert.DeserializeObject<OptionSelectionPair<T>>(JsonDefaultValueAttribute.Json);
 		}
 
 		// set current selected item to first item
-		currentSelectedItem = subitem.selection;
+		currentSelectedItem = subItem.selection;
 
 		// add DropDownItems
-		items = new DropDownItem<T>[subitem.options.Length];
-		for (int i = subitem.options.Length - 1; i >= 0; i--) {
-			items[i] = new DropDownItem<T>(subitem.options[i], elm =>
+		items = new DropDownItem<T>[subItem.options.Length];
+		for (int i = subItem.options.Length - 1; i >= 0; i--) {
+			items[i] = new DropDownItem<T>(subItem.options[i], elm =>
 			{
 				currentSelectedItem = ((DropDownItem<T>)elm).Name;
-				subitem.GetType().GetField("selection")?.SetValue(subitem, currentSelectedItem);
-				SetObject(subitem);
+				subItem.GetType().GetField("selection")?.SetValue(subItem, currentSelectedItem);
+				SetObject(subItem);
 				CloseMenu();
 			});
 		}
@@ -44,7 +40,7 @@ internal class DropDownMenu<T> : ConfigElement
 		// align DropDownItems
 		Rectangle dimensions = GetDimensions().ToRectangle();
 		float width = LargestItemSize() + 20;
-		for (int i = subitem.options.Length - 1; i >= 0; i--) {
+		for (int i = subItem.options.Length - 1; i >= 0; i--) {
 			items[i].Left = new(550 - width, 0);
 			items[i].Top = new(dimensions.Height + 22 * i + 25, 0);
 			items[i].Width = new(width - 10, 0);

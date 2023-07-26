@@ -47,6 +47,7 @@ internal class BetterChestsConfig : ModConfig
 	}
 }
 
+[Serializable]
 internal struct OptionSelectionPair<T>
 {
 	public T selection;
