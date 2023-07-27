@@ -1,5 +1,6 @@
 ﻿using BetterChests.UIStates;
 using MonoMod.Cil;
+using System;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
@@ -14,7 +15,7 @@ namespace BetterChests.Edits;
 internal class ChestButtonEdits
 {
 	public static bool DisableConfirmationButton { get; set; }
-	public static string CurrentSortFunction { get; set; }
+	public static SortOptions CurrentSortFunction { get; set; }
 
 	public static void Load()
 	{
@@ -97,33 +98,35 @@ internal class ChestButtonEdits
 	private static void CallSortFunction()
 	{
 		switch (CurrentSortFunction) {
-			case "Default sort":
+			case SortOptions.Default:
 				NewItemSorting.DefaultChestSort(false);
 				break;
-			case "Sort by ID":
+			case SortOptions.ID:
 				NewItemSorting.SortChest(x => x.type, false);
 				break;
-			case "Sort alphabetically":
+			case SortOptions.Alphabetically:
 				NewItemSorting.SortChest(x => x.Name, false);
 				break;
-			case "Sort by rarity":
+			case SortOptions.Rarity:
 				NewItemSorting.SortChest(x => x.rare, true);
 				break;
-			case "Sort by stack size":
+			case SortOptions.Stack:
 				NewItemSorting.SortChest(x => x.stack, true);
 				break;
-			case "Sort by value":
+			case SortOptions.Value:
 				NewItemSorting.SortChest(x => x.value, true);
 				break;
-			case "Sort by damage":
+			case SortOptions.Damage:
 				NewItemSorting.SortChest(x => x.damage, true);
 				break;
-			case "Sort by defense":
+			case SortOptions.Defense:
 				NewItemSorting.SortChest(x => x.defense, true);
 				break;
-			case "Sort randomly":
+			case SortOptions.Random:
 				NewItemSorting.SortChest(_ => Main.rand.NextFloat(), false);
 				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 	}
 

@@ -1,7 +1,5 @@
 ﻿using BetterChests.Edits;
 using BetterChests.UIElements;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
@@ -22,22 +20,22 @@ internal class BetterChestsConfig : ModConfig
 	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(
 @"{
-'selection': 'Default sort',
+'selection': 'Default',
 'options': [
-    'Default sort',
-    'Sort by ID',
-    'Sort alphabetically',
-    'Sort by rarity',
-    'Sort by stack size',
-    'Sort by value',
-    'Sort by damage',
-    'Sort by defense',
-    'Sort randomly'
+    'Default',
+    'ID',
+    'Alphabetically',
+    'Rarity',
+    'Stack',
+    'Value',                                         
+    'Damage',
+    'Defense',
+    'Random'
     ]
 }"
 	)]
-	[CustomModConfigItem(typeof(DropDownMenu<string>))]
-	public OptionSelectionPair<string> defaultChestSortOptions;
+	[CustomModConfigItem(typeof(DropDownMenu<SortOption>))]
+	public OptionSelectionPair<SortOption> defaultChestSortOptions;
 
 	public override void OnChanged()
 	{
@@ -45,11 +43,4 @@ internal class BetterChestsConfig : ModConfig
 		ChestButtonEdits.DisableConfirmationButton = disableConfirmationButton;
 		base.OnChanged();
 	}
-}
-
-[Serializable]
-internal struct OptionSelectionPair<T>
-{
-	public T selection;
-	public T[] options;
 }

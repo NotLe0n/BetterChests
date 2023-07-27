@@ -29,10 +29,10 @@ internal class DropDownItem<T> : UIElement
 
 		// draw Background
 		Color bgColor = IsMouseHovering ? new Color(63, 82, 151) * 0.8f : new Color(39, 58, 127) * 0.7f;
-		
-		
+
 		spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.ToRectangle(), Color.Black * 0.8f);
 		spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)dimensions.X + 2, (int)dimensions.Y + 2, (int)dimensions.Width - 4, (int)dimensions.Height - 4), bgColor);
+		
 		// draw name
 		spriteBatch.DrawString(FontAssets.MouseText.Value, name.ToString(), new Vector2(dimensions.X + 5, dimensions.Y + 1), Color.White);
 	}
@@ -40,7 +40,7 @@ internal class DropDownItem<T> : UIElement
 	public override void Update(GameTime gameTime)
 	{
 		base.Update(gameTime);
-		var dimensions = GetDimensions().ToRectangle();
+		Rectangle dimensions = GetDimensions().ToRectangle();
 
 		// Play sound once on hover
 		IsMouseHovering = dimensions.Contains(Main.MouseScreen.ToPoint());

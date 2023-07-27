@@ -13,17 +13,35 @@ Configs: {
 
 		disableConfirmationButton: {
 			Label: Disable Deposit All/Loot All Confirmation message
-			Tooltip: Disables the "Are you sure?" message
+			Tooltip: Disables the "Are you sure?" message.
 		}
 
 		defaultChestSortOptions: {
 			Label: Default sort option
-			Tooltip: Changes the functionality of the "Sort Items" button
+			Tooltip: Changes the functionality of the "Sort Items" button.
 		}
 
 		disableChestHover: {
 			Label: Disable chest content display
-			Tooltip: Disables the chest content display when you hover over a chest
+			Tooltip: Disables the chest content display when you hover over a chest.
 		}
 	}
 }
+
+SortOptions: {
+	Default.Label: Default Sort
+	ID.Label: Sort by ID
+	Alphabetically.Label: Sort alphabetically
+	Rarity.Label: Sort by rarity
+	Stack.Label: Sort by stack size
+	Value.Label: Sort by value
+	Damage.Label: Sort by damage
+	Defense.Label: Sort by defense
+	Mod.Label: Sort by mod
+	Random.Label: Sort randomly
+}
+
+Confirmation: Are you sure?
+SortingOptions: Sorting options
+Reversed: Reversed
+SearchItem: Search Item

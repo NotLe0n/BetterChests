@@ -1,0 +1,47 @@
+Keybinds: {
+	"Deposit All.DisplayName": Alle ablegen
+	"Loot All.DisplayName": Alle einsammeln
+	"Quick Stack.DisplayName": Schnellstapeln
+	Restock.DisplayName: Auffüllen
+	"Sort Chest.DisplayName": Items sortieren
+	"Sort Inventory.DisplayName": Inventar sortieren
+}
+
+Configs: {
+	BetterChestsConfig: {
+		DisplayName: Better Chests Einstellungen
+
+		disableConfirmationButton: {
+			Label: '''"Alle einsammeln/ablegen" Warnungsnachricht ausschalten'''
+			Tooltip: Schaltet die "Bist du dir sicher?" Nachricht aus.
+		}
+
+		defaultChestSortOptions: {
+			Label: Standard Sortieroption
+			Tooltip: Ändert die Funktion des "Items sortieren" Knopfs.
+		}
+
+		disableChestHover: {
+			Label: Truheninhaltsvorschau ausschalten
+			Tooltip: Schaltet die Truheninhaltsvorschau wenn man mit der Maus über einer Truhe geht aus.
+		}
+	}
+}
+
+SortOptions: {
+	Default.Label: Standardsortierung
+	ID.Label: Nach ID sortieren
+	Alphabetically.Label: Alphabetisch sortieren
+	Rarity.Label: Nach Seltenheit sortieren
+	Stack.Label: Nach Stapelgröße sortieren
+	Value.Label: Nach Wert sortieren
+	Damage.Label: Nach Schaden sortieren
+	Defense.Label: Nach Verteitigung sortieren
+	Mod.Label: Nach Mod sortieren
+	Random.Label: Zufällig sortieren
+}
+
+Confirmation: Bist du dir sicher?
+SortingOptions: Sortieroptionen
+Reversed: Umgekehrt
+SearchItem: Item suchen

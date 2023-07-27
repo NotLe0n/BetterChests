@@ -2,12 +2,20 @@
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using ReLogic.Graphics;
+using System;
 using System.Linq;
 using Terraria.GameContent;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
 namespace BetterChests.UIElements;
+
+[Serializable]
+internal struct OptionSelectionPair<T>
+{
+	public T selection;
+	public T[] options;
+}
 
 internal class DropDownMenu<T> : ConfigElement
 {
@@ -63,6 +71,11 @@ internal class DropDownMenu<T> : ConfigElement
 		spriteBatch.DrawString(FontAssets.MouseText.Value, currentSelectedItem.ToString(), new(x + 5, dimensions.Y + 5), Color.White);
 	}
 
+	private float LargestItemSize()
+	{
+		return items.Max(item => FontAssets.MouseText.Value.MeasureString(item.Name.ToString()).X);
+	}
+	
 	public override void Update(GameTime gameTime)
 	{
 		if (changed) {
@@ -108,10 +121,5 @@ internal class DropDownMenu<T> : ConfigElement
 			Append(item);
 		}
 		expanded = true;
-	}
-	
-	private float LargestItemSize()
-	{
-		return items.Max(item => FontAssets.MouseText.Value.MeasureString(item.Name.ToString()).X);
 	}
 }

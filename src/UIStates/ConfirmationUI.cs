@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace BetterChests.UIStates;
@@ -14,7 +15,7 @@ internal class ConfirmationUI : UIState
 	{
 		this.buttonID = buttonID;
 
-		var confirmation = new UITextOption("Are you sure?") {
+		var confirmation = new UITextOption(Language.GetTextValue("Mods.BetterChests.Confirmation")) {
 			NewTextColor = Color.Red,
 			Top = new(Main.instance.invBottom + topOffset, 0),
 			Left = new(506, 0) // magic number because vanilla does it the same way lmao

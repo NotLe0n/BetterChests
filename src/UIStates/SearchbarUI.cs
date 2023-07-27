@@ -1,5 +1,6 @@
 ﻿using BetterChests.UIElements;
 using Terraria;
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace BetterChests.UIStates;
@@ -10,7 +11,7 @@ internal class SearchbarUI : UIState
 	{
 		base.OnInitialize();
 
-		var searchbox = new UIBetterTextBox("search item") {
+		var searchbox = new UIBetterTextBox(Language.GetTextValue("Mods.BetterChests.SearchItem")) {
 			Top = new(Main.instance.invBottom + 170, 0),
 			Left = new(71, 0),
 			Width = new(209, 0),
