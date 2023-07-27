@@ -1,0 +1,47 @@
+Keybinds: {
+	"Deposit All.DisplayName": на хранение всё
+	"Loot All.DisplayName": всять всё
+	"Quick Stack.DisplayName": быстрая стопка
+	Restock.DisplayName: восполнить запасы
+	"Sort Chest.DisplayName": сортировать предметы
+	"Sort Inventory.DisplayName": сортировка инвентаря
+}
+
+Configs: {
+	BetterChestsConfig: {
+		DisplayName: настройки Better Chests
+
+		disableConfirmationButton: {
+			Label: Отключите предупреждающее сообщение "Собрать/на хранение все".
+			Tooltip: Включает "Вы уверены?" сообщение.
+		}
+
+		defaultChestSortOptions: {
+			Label: Вариант сортировки по умолчанию
+			Tooltip: Изменяет функцию кнопки "Сортировать предметы".
+		}
+
+		disableChestHover: {
+			Label: Отключить предварительный просмотр содержимого сундука
+			Tooltip: Отключает предварительный просмотр содержимого сундука при наведении курсора на сундук.
+		}
+	}
+}
+
+SortOptions: {
+	Default.Label: сортировка по стандарту
+	ID.Label: сортировка по ID
+	Alphabetically.Label: сортировка по алфавиту
+	Rarity.Label: сортировка по редкость
+	Stack.Label: сортировка по размер стека
+	Value.Label: Сортировать по значению
+	Damage.Label: Сортировать по урону
+	Defense.Label: Сортировать по защите
+	Mod.Label: Сортировать по мод
+	Random.Label: случайное сортирование
+}
+
+Confirmation: Вы уверены?
+SortingOptions: параметры сортировки
+Reversed: перевернутый
+SearchItem: поиска предмета

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -20,7 +21,9 @@ internal class SortOptionsUI : UIState
 		this.mode = mode;
 		_reversed = false;
 
-		int x = mode == SortOptionsMode.Chest ? 506 + 130 : 534 + 50;
+		string sortChestText = Language.GetTextValue("LegacyInterface.122"); 
+		int minXstart = (int)FontAssets.MouseText.Value.MeasureString(sortChestText).X;
+		int x = mode == SortOptionsMode.Chest ? 506 + minXstart + 10 : 534 + 50;
 		int y = mode == SortOptionsMode.Chest ? Main.instance.invBottom : 244;
 
 		var header = new UIText(Language.GetTextValue("Mods.BetterChests.SortingOptions"));
