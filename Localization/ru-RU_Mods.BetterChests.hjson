@@ -9,7 +9,7 @@ Keybinds: {
 
 Configs: {
 	BetterChestsConfig: {
-		DisplayName: настройки Better Chests
+		DisplayName: настройки
 
 		disableConfirmationButton: {
 			Label: Отключите предупреждающее сообщение "Собрать/на хранение все".
@@ -17,7 +17,7 @@ Configs: {
 		}
 
 		defaultChestSortOptions: {
-			Label: Вариант сортировки по умолчанию
+			Label: Стандартный вариант сортировки
 			Tooltip: Изменяет функцию кнопки "Сортировать предметы".
 		}
 
@@ -30,7 +30,7 @@ Configs: {
 
 SortOptions: {
 	Default.Label: сортировка по стандарту
-	ID.Label: сортировка по ID
+	ID.Label: сортировка по ИД.
 	Alphabetically.Label: сортировка по алфавиту
 	Rarity.Label: сортировка по редкость
 	Stack.Label: сортировка по размер стека
@@ -44,4 +44,4 @@ SortOptions: {
 Confirmation: Вы уверены?
 SortingOptions: параметры сортировки
 Reversed: перевернутый
-SearchItem: поиска предмета
+SearchItem: поиск предмета
