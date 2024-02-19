@@ -12,10 +12,19 @@ internal class BetterChestsConfig : ModConfig
 	public override ConfigScope Mode => ConfigScope.ClientSide;
 	
 	[DefaultValue(false)]
-	public bool disableConfirmationButton;
+	public bool disableLootAllConfirmationButton;
+	
+	[DefaultValue(false)]
+	public bool disableDepositAllConfirmationButton;
+	
+	[DefaultValue(true)]
+	public bool disableSortConfirmationButton;
 
 	[DefaultValue(false)]
 	public bool disableChestHover;
+
+	[DefaultValue(false)]
+	public bool autoCloseSortingOptions;
 	
 	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(
@@ -40,7 +49,11 @@ internal class BetterChestsConfig : ModConfig
 	public override void OnChanged()
 	{
 		ChestButtonEdits.CurrentSortFunction = defaultChestSortOptions.selection;
-		ChestButtonEdits.DisableConfirmationButton = disableConfirmationButton;
+		ChestButtonEdits.DisableDepositAllConfirmationButton = disableDepositAllConfirmationButton;
+		ChestButtonEdits.DisableLootAllConfirmationButton = disableLootAllConfirmationButton;
+		ChestButtonEdits.DisableSortConfirmationButton = disableSortConfirmationButton;
+		ChestButtonEdits.AutoCloseSortOptions = autoCloseSortingOptions;
+
 		base.OnChanged();
 	}
 }

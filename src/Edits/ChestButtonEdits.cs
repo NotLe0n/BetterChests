@@ -14,8 +14,11 @@ namespace BetterChests.Edits;
 
 internal class ChestButtonEdits
 {
-	public static bool DisableConfirmationButton { get; set; }
+	public static bool DisableDepositAllConfirmationButton { get; set; }
+	public static bool DisableLootAllConfirmationButton { get; set; }
+	public static bool DisableSortConfirmationButton { get; set; }
 	public static SortOptions CurrentSortFunction { get; set; }
+	public static bool AutoCloseSortOptions { get; set; }
 
 	public static void Load()
 	{
@@ -79,7 +82,7 @@ internal class ChestButtonEdits
 			throw new($"{nameof(EditChestButtons)} IL Edit failed at {nameof(ItemSorting.SortChest)}");
 
 		// call own method instead of SortChest()
-		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod(nameof(CallSortFunction), nonPubS);
+		c.Prev.Operand = typeof(ChestButtonEdits).GetMethod(nameof(OpenSortConfirmation), nonPubS);
 	}
 
 	// Draw method because that calls every tick
@@ -95,6 +98,72 @@ internal class ChestButtonEdits
 		}
 	}
 
+	// to prevent repeatidly clicking the button when held
+	private static bool alreadyClicked;
+	
+	// this is called when the player clicks on "Deposit All" in the Chest UI
+	private static void OpenDepositConfirmation(ContainerTransferContext context)
+	{
+		// if confirmation are disabled call DepositAll normally
+		if (DisableDepositAllConfirmationButton) {
+			ChestUI.DepositAll(context);
+			return;
+		}
+
+		OpenConfirmation(ChestUI.ButtonID.DepositAll, 
+			() => ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer)));
+	}
+
+	// this is called when the player clicks on "Loot All" in the Chest UI
+	private static void OpenLootConfirmation()
+	{
+		// if confirmation are disabled call LootAll normally
+		if (DisableLootAllConfirmationButton) {
+			ChestUI.LootAll();
+			return;
+		}
+		
+		OpenConfirmation(ChestUI.ButtonID.LootAll, ChestUI.LootAll);
+	}
+	
+	// this is called when the player clicks on "Sort" in the Chest UI
+	private static void OpenSortConfirmation()
+	{
+		// if confirmation are disabled call CallSortFunction normally
+		if (DisableSortConfirmationButton) {
+			CallSortFunction();
+			return;
+		}
+		
+		OpenConfirmation(ChestUI.ButtonID.Sort, CallSortFunction);
+	}
+
+	private static void OpenConfirmation(int id, Action action)
+	{
+		// if the button was already clicked last call: skip
+		if (alreadyClicked) return;
+
+		alreadyClicked = true;
+		var ui = new ConfirmationUI(id, () =>
+		{
+			action();
+			UISystem.instance.ConfirmationUserInterface.SetState(null);
+			alreadyClicked = false;
+		});
+
+		UISystem.instance.ConfirmationUserInterface.SetState(ui);
+	}
+
+	// reset already clicked when opening a chest
+	private static void ResetAlreadyClicked(On_Player.orig_OpenChest orig, Player self, int x, int y, int newChest)
+	{
+		orig(self, x, y, newChest);
+		alreadyClicked = false;
+		if (AutoCloseSortOptions) {
+			UISystem.CloseSortOptionsUI();
+		}
+	}
+	
 	private static void CallSortFunction()
 	{
 		switch (CurrentSortFunction) {
@@ -128,61 +197,5 @@ internal class ChestButtonEdits
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
-	}
-
-	// to prevent repeatidly clicking the button when held
-	private static bool alreadyClicked;
-
-	// this is called when the player clicks on "Deposit All" in the Chest UI
-	private static void OpenDepositConfirmation(ContainerTransferContext context)
-	{
-		// if confirmations are disabled call DepositAll normally
-		if (DisableConfirmationButton) {
-			ChestUI.DepositAll(context);
-			return;
-		}
-
-		// if the button was already clicked last call: skip
-		if (alreadyClicked) return;
-
-		alreadyClicked = true;
-		var ui = new ConfirmationUI(ChestUI.ButtonID.DepositAll, 55, () =>
-		{
-			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
-			UISystem.instance.ConfirmationUserInterface.SetState(null);
-			alreadyClicked = false;
-		});
-
-		UISystem.instance.ConfirmationUserInterface.SetState(ui);
-	}
-
-	// this is called when the player clicks on "Loot All" in the Chest UI
-	private static void OpenLootConfirmation()
-	{
-		// if confirmations are disabled call LootAll normally
-		if (DisableConfirmationButton) {
-			ChestUI.LootAll();
-			return;
-		}
-
-		// if the button was already clicked last call: skip
-		if (alreadyClicked) return;
-
-		alreadyClicked = true;
-		var ui = new ConfirmationUI(ChestUI.ButtonID.LootAll, 30, () =>
-		{
-			ChestUI.LootAll();
-			UISystem.instance.ConfirmationUserInterface.SetState(null);
-			alreadyClicked = false;
-		});
-
-		UISystem.instance.ConfirmationUserInterface.SetState(ui);
-	}
-
-	// reset already clicked when opening a chest
-	private static void ResetAlreadyClicked(On_Player.orig_OpenChest orig, Player self, int x, int y, int newChest)
-	{
-		orig(self, x, y, newChest);
-		alreadyClicked = false;
 	}
 }

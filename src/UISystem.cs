@@ -133,6 +133,11 @@ internal class UISystem : ModSystem
 		instance.SortOptionsUserInterface.SetState(null);
 	}
 
+	public static void CloseSortOptionsUI()
+	{
+		instance.SortOptionsUserInterface.SetState(null);
+	}
+
 	public static void OpenChestHoverUI(Chest chest)
 	{
 		// don't open the same ChestHoverUI again

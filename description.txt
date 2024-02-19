@@ -10,7 +10,7 @@ _________________________
 [c/FFE900: Changes]
 _________________________
 
-- "Deposit All" and "Loot all" have a confirmation button now. (toggleable in the config)
+- "Deposit All", "Loot all", "Sort" have a confirmation button now. (separately toggleable in the config)
 - Added a search bar!
 - Right clicking on "Sort Items" in a chest or right clicking "Sort Inventory" will open a menu with more sort options.
 - Hovering over a chest shows its contents.

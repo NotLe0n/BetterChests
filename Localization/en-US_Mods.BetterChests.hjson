@@ -11,8 +11,18 @@ Configs: {
 	BetterChestsConfig: {
 		DisplayName: Better Chests Config
 
-		disableConfirmationButton: {
-			Label: Disable Deposit All/Loot All Confirmation message
+		disableDepositAllConfirmationButton: {
+			Label: Disable Deposit All confirmation message
+			Tooltip: Disables the "Are you sure?" message.
+		}
+
+		disableLootAllConfirmationButton: {
+			Label: Disable Loot All confirmation message
+			Tooltip: Disables the "Are you sure?" message.
+		}
+
+		disableSortConfirmationButton: {
+			Label: Disable Sort confirmation message
 			Tooltip: Disables the "Are you sure?" message.
 		}
 
@@ -24,6 +34,11 @@ Configs: {
 		disableChestHover: {
 			Label: Disable chest content display
 			Tooltip: Disables the chest content display when you hover over a chest.
+		}
+
+		autoCloseSortingOptions: {
+			Label: Automatically close sorting options
+			Tooltip: Closes the sorting options every time you open a chest.
 		}
 	}
 }

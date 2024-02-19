@@ -11,8 +11,18 @@ Configs: {
 	BetterChestsConfig: {
 		DisplayName: Better Chests Einstellungen
 
-		disableConfirmationButton: {
-			Label: '''"Alle einsammeln/ablegen" Warnungsnachricht ausschalten'''
+		disableDepositAllConfirmationButton: {
+			Label: Alle ablegen Warnnachricht ausschalten
+			Tooltip: Schaltet die "Bist du dir sicher?" Nachricht aus.
+		}
+
+		disableLootAllConfirmationButton: {
+			Label: Alle einsammeln Warnnachricht ausschalten
+			Tooltip: Schaltet die "Bist du dir sicher?" Nachricht aus.
+		}
+
+		disableSortConfirmationButton: {
+			Label: Items sortieren Warnnachricht ausschalten
 			Tooltip: Schaltet die "Bist du dir sicher?" Nachricht aus.
 		}
 
@@ -24,6 +34,11 @@ Configs: {
 		disableChestHover: {
 			Label: Truheninhaltsvorschau ausschalten
 			Tooltip: Schaltet die Truheninhaltsvorschau wenn man mit der Maus über einer Truhe geht aus.
+		}
+
+		autoCloseSortingOptions: {
+			Label: Sortieroptionen automatisch schließen
+			Tooltip: Schließt die Sortieroptionen jedes mal wenn man eine Truhe öffnet.
 		}
 	}
 }

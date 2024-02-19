@@ -11,8 +11,18 @@ Configs: {
 	BetterChestsConfig: {
 		DisplayName: настройки
 
-		disableConfirmationButton: {
-			Label: Отключите предупреждающее сообщение "Собрать/на хранение все".
+		disableDepositAllConfirmationButton: {
+			Label: Отключите предупреждающее сообщение "Собрать все".
+			Tooltip: Включает "Вы уверены?" сообщение.
+		}
+
+		disableLootAllConfirmationButton: {
+			Label: Отключите предупреждающее сообщение "на хранение все".
+			Tooltip: Включает "Вы уверены?" сообщение.
+		}
+
+		disableSortConfirmationButton: {
+			Label: Отключите предупреждающее сообщение о сортировке.
 			Tooltip: Включает "Вы уверены?" сообщение.
 		}
 
@@ -24,6 +34,11 @@ Configs: {
 		disableChestHover: {
 			Label: Отключить предварительный просмотр содержимого сундука
 			Tooltip: Отключает предварительный просмотр содержимого сундука при наведении курсора на сундук.
+		}
+
+		autoCloseSortingOptions: {
+			Label: Автоматически закрывать параметры сортировки
+			Tooltip: Закрывает параметры сортировки каждый раз, когда вы открываете сундук.
 		}
 	}
 }

@@ -11,10 +11,17 @@ internal class ConfirmationUI : UIState
 {
 	private readonly int buttonID;
 
-	public ConfirmationUI(int buttonID, float topOffset, Action onClick)
+	public ConfirmationUI(int buttonID, Action onClick)
 	{
 		this.buttonID = buttonID;
 
+		float topOffset = buttonID switch {
+			ChestUI.ButtonID.LootAll => 30,
+			ChestUI.ButtonID.DepositAll => 55,
+			ChestUI.ButtonID.Sort => 135,
+			_ => 0
+		};
+		
 		var confirmation = new UITextOption(Language.GetTextValue("Mods.BetterChests.Confirmation")) {
 			NewTextColor = Color.Red,
 			Top = new(Main.instance.invBottom + topOffset, 0),

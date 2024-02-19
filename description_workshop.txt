@@ -10,7 +10,7 @@ This mod is open source on [url=https://github.com/NotLe0n/BetterChests]GitHub[/
 [hr]
 [h2]Changes:[/h2]
 [list]
-[*] "Deposit All" and "Loot all" have a confirmation button now. (toggleable in the config)
+[*] "Deposit All", "Loot all", "Sort" have a confirmation button now. (separately toggleable in the config)
 [img]https://i.imgur.com/vB8jQqZ.png[/img]
 [*] Added a search bar!
 [img]https://i.imgur.com/p0BWQvU.png[/img]
