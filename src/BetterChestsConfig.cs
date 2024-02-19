@@ -21,10 +21,13 @@ internal class BetterChestsConfig : ModConfig
 	public bool disableSortConfirmationButton;
 
 	[DefaultValue(false)]
-	public bool disableChestHover;
-
-	[DefaultValue(false)]
 	public bool autoCloseSortingOptions;
+	
+	[DefaultValue(false)]
+	public bool disableChestHover;
+	
+	[DefaultValue(false)]
+	public bool disableSearchbar;
 	
 	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(

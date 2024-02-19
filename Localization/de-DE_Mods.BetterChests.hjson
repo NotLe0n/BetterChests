@@ -40,6 +40,11 @@ Configs: {
 			Label: Sortieroptionen automatisch schließen
 			Tooltip: Schließt die Sortieroptionen jedes mal wenn man eine Truhe öffnet.
 		}
+
+		disableSearchbar: {
+			Label: Suchleiste entfernen
+			Tooltip: Entfernt die Suchleiste unter Truhen.
+		}
 	}
 }
 

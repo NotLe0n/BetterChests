@@ -40,6 +40,11 @@ Configs: {
 			Label: Automatically close sorting options
 			Tooltip: Closes the sorting options every time you open a chest.
 		}
+
+		disableSearchbar: {
+			Label: Remove searchbar
+			Tooltip: Removes the search bar under chests.
+		}
 	}
 }
 

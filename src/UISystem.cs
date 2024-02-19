@@ -105,14 +105,18 @@ internal class UISystem : ModSystem
 				}
 
 				if (Main.LocalPlayer.chest != -1) {
-					if (ConfirmationUserInterface.CurrentState != null)
+					if (ConfirmationUserInterface.CurrentState != null) {
 						ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					}
 
-					SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					if (!ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+						SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					}
 				}
 
-				if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
+				if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
 					ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+				}
 
 				return true;
 			},
