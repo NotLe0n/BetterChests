@@ -23,7 +23,7 @@ internal class SortOptionsUI : UIState
 
 		string sortChestText = Language.GetTextValue("LegacyInterface.122"); 
 		int minXstart = (int)FontAssets.MouseText.Value.MeasureString(sortChestText).X;
-		int x = mode == SortOptionsMode.Chest ? 506 + minXstart + 10 : 534 + 50;
+		int x = mode == SortOptionsMode.Chest ? 506 + minXstart + 20 : 534 + 50;
 		int y = mode == SortOptionsMode.Chest ? Main.instance.invBottom : 244;
 
 		var header = new UIText(Language.GetTextValue("Mods.BetterChests.SortingOptions"));

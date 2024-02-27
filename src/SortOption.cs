@@ -47,7 +47,7 @@ public readonly struct SortOption
 
 		public override SortOption ReadJson(JsonReader reader, Type objectType, SortOption existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			string str = reader.Value?.ToString();
+			string? str = reader.Value?.ToString();
 			if (!Enum.TryParse(str, out SortOptions opt)) {
 				throw new JsonException();
 			}

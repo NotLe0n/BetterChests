@@ -9,12 +9,13 @@ namespace BetterChests;
 
 internal class UISystem : ModSystem
 {
-	public static UISystem instance;
+	public static UISystem? instance;
 
-	internal UserInterface SortOptionsUserInterface;
-	internal UserInterface ConfirmationUserInterface;
-	internal UserInterface ChestHoverUserInterface;
-	internal UserInterface SearchbarUserInterface;
+	internal UserInterface? SortOptionsUserInterface;
+	internal UserInterface? ConfirmationUserInterface;
+	internal UserInterface? ChestHoverUserInterface;
+	internal UserInterface? SearchbarUserInterface;
+	private UserInterface? QuickstackLockInterface;
 
 	public override void Load()
 	{
@@ -25,6 +26,7 @@ internal class UISystem : ModSystem
 			SearchbarUserInterface = new UserInterface();
 			ConfirmationUserInterface = new UserInterface();
 			ChestHoverUserInterface = new UserInterface();
+			QuickstackLockInterface = new UserInterface();
 		}
 
 		base.Load();
@@ -38,6 +40,7 @@ internal class UISystem : ModSystem
 		ConfirmationUserInterface = null;
 		ChestHoverUserInterface = null;
 		SearchbarUserInterface = null;
+		QuickstackLockInterface = null;
 
 		base.Unload();
 	}
@@ -64,17 +67,23 @@ internal class UISystem : ModSystem
 				ConfirmationUserInterface.Update(gameTime);
 			}
 
+			// TODO: Fix bug where if you switch to another chest while already having one open, the UI doesn't get updated 
 			if (SearchbarUserInterface.CurrentState == null)
 				SearchbarUserInterface.SetState(new SearchbarUI());
+			
+			if (QuickstackLockInterface.CurrentState == null && Main.LocalPlayer.chest > 0)
+				QuickstackLockInterface.SetState(new OwnershipLockUI());
 
 			SearchbarUserInterface.Update(gameTime);
-
+			if (Main.LocalPlayer.chest > 0) {
+				QuickstackLockInterface.Update(gameTime);
+			}
 		}
 		else {
 			ConfirmationUserInterface.SetState(null);
 			SearchbarUserInterface.SetState(null);
+			QuickstackLockInterface.SetState(null);
 		}
-
 
 		if (!Main.tile[Main.MouseWorld.ToTileCoordinates()].HasTile) {
 			CloseChestHoverUI();
@@ -111,6 +120,10 @@ internal class UISystem : ModSystem
 
 					if (!ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
 						SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					}
+
+					if (Main.LocalPlayer.chest > 0) {
+						QuickstackLockInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 					}
 				}
 

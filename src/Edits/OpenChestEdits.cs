@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using Humanizer;
+using System;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -7,11 +9,33 @@ namespace BetterChests.Edits;
 
 internal class OpenChestEdits
 {
+	private static readonly OwnershipSystem OwnershipSystem = ModContent.GetInstance<OwnershipSystem>();
+	
 	public static void Load()
 	{
-		On_Chest.IsPlayerInChest += QuckStackAllowOpenChests;
+		On_Chest.IsPlayerInChest += QuickStackIsPlayerInChest;
 		On_Chest.UsingChest += AllowEnterOpenChests;
 		Terraria.UI.On_ChestUI.DrawSlots += SyncChest;
+		On_Player.TileInteractionsUse += On_PlayerOnTileInteractionsUse;
+	}
+
+	private static void On_PlayerOnTileInteractionsUse(On_Player.orig_TileInteractionsUse orig, Player self, int myx, int myy)
+	{
+		if (TileID.Sets.BasicChest[Main.tile[myx, myy].TileType]) {
+			int chest = BetterChests.GetMultitileChest(myx, myy);
+			if (chest != -1 && OwnershipSystem.IsNotOwner(chest, self.name)) {
+				return;
+			}
+		}
+
+		if (Main.tile[myx, myy].TileType == TileID.Dressers) {
+			int dresser = BetterChests.GetDresserChest(myx, myy);
+			if (dresser != -1 && OwnershipSystem.IsNotOwner(dresser, self.name)) {
+				return;
+			}
+		}
+
+		orig(self, myx, myy);
 	}
 
 	private static Item[] prevItems;
@@ -41,7 +65,7 @@ internal class OpenChestEdits
 
 				// send packet with slot id and item data to server
 				ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-				packet.Write((byte)0); // message id
+				packet.Write(BetterChests.ChestUpdatePacketID); // message id
 				packet.Write(Main.player[Main.myPlayer].chest);
 				packet.Write(i); // slot id
 				ItemIO.Send(items[i], packet, true); // item data
@@ -70,8 +94,12 @@ internal class OpenChestEdits
 		return -1; // no player is currently in this chest
 	}
 
-	private static bool QuckStackAllowOpenChests(On_Chest.orig_IsPlayerInChest orig, int i)
+	private static bool QuickStackIsPlayerInChest(On_Chest.orig_IsPlayerInChest orig, int i)
 	{
+		if (OwnershipSystem.IsNotOwner(i, Main.LocalPlayer.name)) {
+			return true;
+		}
+
 		return false; // no player is currently in this chest
 	}
 }

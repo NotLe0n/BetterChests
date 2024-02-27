@@ -1,4 +1,5 @@
 using BetterChests.Edits;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -21,12 +22,17 @@ public class BetterChests : Mod
 		OpenChestEdits.Load();
 	}
 
+	public const byte ChestUpdatePacketID = 0;
+	public const byte AddChestOwnerPacketID = 1;
+	public const byte RemoveChestOwnerPacketID = 2;
+	public const byte GetAllOwnersPacketID = 3;
+
 	public static bool dontUpdateMe;
 	public override void HandlePacket(BinaryReader reader, int whoAmI)
 	{
 		byte id = reader.ReadByte();
 		switch (id) {
-			case 0:
+			case ChestUpdatePacketID:
 				int chest = reader.ReadInt32();
 				int slot = reader.ReadInt32(); // the chest slot that was changed
 				Item item = ItemIO.Receive(reader, true); // item changes
@@ -47,8 +53,92 @@ public class BetterChests : Mod
 					packet.Send();
 				}
 				break;
+			case AddChestOwnerPacketID: {
+				int chestID = reader.ReadInt32();
+				string playerName = reader.ReadString();
+				
+				ModContent.GetInstance<OwnershipSystem>().SetOwner(chestID, playerName);
+				// send to other clients
+				if (Main.netMode == NetmodeID.Server) {
+					GetAddOwnerPacket(chestID, playerName).Send();
+				}
+
+				break;
+			}
+			case RemoveChestOwnerPacketID: {
+				int chestID = reader.ReadInt32();
+
+				ModContent.GetInstance<OwnershipSystem>().RemoveOwner(chestID);
+				// send to other clients
+				if (Main.netMode == NetmodeID.Server) {
+					GetRemoveOwnerPacket(chestID).Send();
+				}
+
+				break;
+			}
+			case GetAllOwnersPacketID: {
+				if (Main.netMode != NetmodeID.Server) {
+					break;
+				}
+				
+				int player = reader.ReadInt32();
+
+				foreach (var kv in ModContent.GetInstance<OwnershipSystem>().GetMap()) {
+					GetAddOwnerPacket(kv.Key, kv.Value).Send(player);
+				}
+
+				break;
+			}
 		}
 
 		dontUpdateMe = false;
+	}
+	
+	public static ModPacket GetAddOwnerPacket(int chest, string owner)
+	{
+		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+		packet.Write(AddChestOwnerPacketID);
+		packet.Write(chest);
+		packet.Write(owner);
+		return packet;
+	}
+
+	public static ModPacket GetRemoveOwnerPacket(int chest)
+	{
+		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+		packet.Write(RemoveChestOwnerPacketID);
+		packet.Write(chest);
+		return packet;
+	}
+	
+	public static int GetMultitileChest(int x, int y)
+	{
+		Tile tile = Main.tile[x, y];
+
+		int chestX = x;
+		int chestY = y;
+		if (tile.TileFrameX % 36 != 0) {
+			chestX--;
+		}
+		if (tile.TileFrameY % 36 != 0) {
+			chestY--;
+		}
+
+		return Chest.FindChest(chestX, chestY);
+	}
+
+	// reference: TileInteractionsCheckLongDistance(int, int)
+	public static int GetDresserChest(int x, int y)
+	{
+		Tile tile = Main.tile[x, y];
+
+		int chestX = x - tile.TileFrameX % 54 / 18;
+		int chestY = y;
+
+		if (tile.TileFrameY % 36 != 0) {
+			chestY--;
+		}
+			
+		return Chest.FindChest(chestX, chestY);
 	}
 }
