@@ -147,11 +147,11 @@ internal class ChestButtonEdits
 		var ui = new ConfirmationUI(id, () =>
 		{
 			action();
-			UISystem.instance.ConfirmationUserInterface.SetState(null);
+			UISystem.CloseConfirmationUI();
 			alreadyClicked = false;
 		});
 
-		UISystem.instance.ConfirmationUserInterface.SetState(ui);
+		UISystem.OpenConfirmationUI(ui);
 	}
 
 	// reset already clicked when opening a chest

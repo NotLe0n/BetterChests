@@ -9,24 +9,20 @@ namespace BetterChests;
 
 internal class UISystem : ModSystem
 {
-	public static UISystem? instance;
-
-	internal UserInterface? SortOptionsUserInterface;
-	internal UserInterface? ConfirmationUserInterface;
-	internal UserInterface? ChestHoverUserInterface;
-	internal UserInterface? SearchbarUserInterface;
-	private UserInterface? QuickstackLockInterface;
+	private UserInterface? sortOptionsUserInterface;
+	private UserInterface? confirmationUserInterface;
+	private UserInterface? chestHoverUserInterface;
+	private UserInterface? searchbarUserInterface;
+	private UserInterface? quickstackLockInterface;
 
 	public override void Load()
 	{
-		instance = this;
-
 		if (!Main.dedServ) {
-			SortOptionsUserInterface = new UserInterface();
-			SearchbarUserInterface = new UserInterface();
-			ConfirmationUserInterface = new UserInterface();
-			ChestHoverUserInterface = new UserInterface();
-			QuickstackLockInterface = new UserInterface();
+			sortOptionsUserInterface = new UserInterface();
+			searchbarUserInterface = new UserInterface();
+			confirmationUserInterface = new UserInterface();
+			chestHoverUserInterface = new UserInterface();
+			quickstackLockInterface = new UserInterface();
 		}
 
 		base.Load();
@@ -34,63 +30,50 @@ internal class UISystem : ModSystem
 
 	public override void Unload()
 	{
-		instance = null;
-
-		SortOptionsUserInterface = null;
-		ConfirmationUserInterface = null;
-		ChestHoverUserInterface = null;
-		SearchbarUserInterface = null;
-		QuickstackLockInterface = null;
+		sortOptionsUserInterface = null;
+		confirmationUserInterface = null;
+		chestHoverUserInterface = null;
+		searchbarUserInterface = null;
+		quickstackLockInterface = null;
 
 		base.Unload();
 	}
 
-	private GameTime _lastUpdateUiGameTime;
+	private GameTime? lastUpdateUiGameTime;
 	public override void UpdateUI(GameTime gameTime)
 	{
-		_lastUpdateUiGameTime = gameTime;
+		lastUpdateUiGameTime = gameTime;
 
-		if (SortOptionsUserInterface.CurrentState != null) {
-			var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
-
-			if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest) {
-				SortOptionsUserInterface.Update(gameTime);
+		if (sortOptionsUserInterface?.CurrentState is SortOptionsUI state) {
+			if (Main.LocalPlayer.chest != -1 && state.mode == SortOptionsMode.Chest) {
+				sortOptionsUserInterface.Update(gameTime);
 			}
 
-			if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory) {
-				SortOptionsUserInterface.Update(gameTime);
+			if (Main.playerInventory && state.mode == SortOptionsMode.Inventory) {
+				sortOptionsUserInterface.Update(gameTime);
 			}
 		}
 
 		if (Main.LocalPlayer.chest != -1) {
-			if (ConfirmationUserInterface.CurrentState != null) {
-				ConfirmationUserInterface.Update(gameTime);
+			if (confirmationUserInterface?.CurrentState != null) {
+				confirmationUserInterface.Update(gameTime);
 			}
 
-			// TODO: Fix bug where if you switch to another chest while already having one open, the UI doesn't get updated 
-			if (SearchbarUserInterface.CurrentState == null)
-				SearchbarUserInterface.SetState(new SearchbarUI());
-			
-			if (QuickstackLockInterface.CurrentState == null && Main.LocalPlayer.chest > 0)
-				QuickstackLockInterface.SetState(new OwnershipLockUI());
-
-			SearchbarUserInterface.Update(gameTime);
-			if (Main.LocalPlayer.chest > 0) {
-				QuickstackLockInterface.Update(gameTime);
+			if (searchbarUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+				searchbarUserInterface.Update(gameTime);
 			}
-		}
-		else {
-			ConfirmationUserInterface.SetState(null);
-			SearchbarUserInterface.SetState(null);
-			QuickstackLockInterface.SetState(null);
+
+			if (quickstackLockInterface?.CurrentState != null && Main.LocalPlayer.chest > 0) {
+				quickstackLockInterface.Update(gameTime);
+			}
 		}
 
 		if (!Main.tile[Main.MouseWorld.ToTileCoordinates()].HasTile) {
 			CloseChestHoverUI();
 		}
 
-		if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
-			ChestHoverUserInterface.Update(gameTime);
+		if (chestHoverUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
+			chestHoverUserInterface.Update(gameTime);
 		}
 	}
 
@@ -102,33 +85,31 @@ internal class UISystem : ModSystem
 		layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
 			"BetterChests: UI",
 			delegate {
-				if (SortOptionsUserInterface.CurrentState != null) {
-					var currentState = SortOptionsUserInterface.CurrentState as SortOptionsUI;
-
-					if (Main.LocalPlayer.chest != -1 && currentState.mode == SortOptionsMode.Chest) {
-						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+				if (sortOptionsUserInterface?.CurrentState is SortOptionsUI state) {
+					if (Main.LocalPlayer.chest != -1 && state.mode == SortOptionsMode.Chest) {
+						sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 					}
-					if (Main.playerInventory && currentState.mode == SortOptionsMode.Inventory) {
-						SortOptionsUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					if (Main.playerInventory && state.mode == SortOptionsMode.Inventory) {
+						sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 					}
 				}
 
 				if (Main.LocalPlayer.chest != -1) {
-					if (ConfirmationUserInterface.CurrentState != null) {
-						ConfirmationUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					if (confirmationUserInterface?.CurrentState != null) {
+						confirmationUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 					}
 
-					if (!ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
-						SearchbarUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					if (searchbarUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+						searchbarUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 					}
 
-					if (Main.LocalPlayer.chest > 0) {
-						QuickstackLockInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+					if (quickstackLockInterface?.CurrentState != null && Main.LocalPlayer.chest > 0) {
+						quickstackLockInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 					}
 				}
 
-				if (ChestHoverUserInterface.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
-					ChestHoverUserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+				if (chestHoverUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
+					chestHoverUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 				}
 
 				return true;
@@ -140,25 +121,29 @@ internal class UISystem : ModSystem
 
 	public static void ToggleSortOptionsUI(SortOptionsUI sortOptionsUI)
 	{
-		SortOptionsUI currentState = instance.SortOptionsUserInterface.CurrentState as SortOptionsUI;
+		UISystem inst = ModContent.GetInstance<UISystem>();
 
-		if (currentState?.mode != sortOptionsUI?.mode) {
-			instance.SortOptionsUserInterface.SetState(sortOptionsUI);
+		SortOptionsUI? currentState = inst.sortOptionsUserInterface?.CurrentState as SortOptionsUI;
+
+		if (currentState?.mode != sortOptionsUI.mode) {
+			inst.sortOptionsUserInterface?.SetState(sortOptionsUI);
 			return;
 		}
 
-		instance.SortOptionsUserInterface.SetState(null);
+		inst.sortOptionsUserInterface?.SetState(null);
 	}
 
 	public static void CloseSortOptionsUI()
 	{
-		instance.SortOptionsUserInterface.SetState(null);
+		ModContent.GetInstance<UISystem>().sortOptionsUserInterface?.SetState(null);
 	}
 
 	public static void OpenChestHoverUI(Chest chest)
 	{
+		UISystem inst = ModContent.GetInstance<UISystem>();
+
 		// don't open the same ChestHoverUI again
-		if ((instance.ChestHoverUserInterface.CurrentState as ChestHoverUI)?.chest == chest)
+		if ((inst.chestHoverUserInterface?.CurrentState as ChestHoverUI)?.chest == chest)
 			return;
 
 		// don't open if chest is locked
@@ -166,14 +151,46 @@ internal class UISystem : ModSystem
 			return;
 		}
 
-		instance.ChestHoverUserInterface.SetState(new ChestHoverUI(chest));
+		inst.chestHoverUserInterface?.SetState(new ChestHoverUI(chest));
 	}
 	public static void CloseChestHoverUI()
 	{
+		UISystem inst = ModContent.GetInstance<UISystem>();
+
 		// don't always close the chest
-		if (instance.ChestHoverUserInterface.CurrentState == null)
+		if (inst.chestHoverUserInterface?.CurrentState == null)
 			return;
 
-		instance.ChestHoverUserInterface.SetState(null);
+		inst.chestHoverUserInterface.SetState(null);
+	}
+
+	public static void OpenChestUI(int chestID) {
+		UISystem inst = ModContent.GetInstance<UISystem>();
+
+		if (!ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+			inst.searchbarUserInterface?.SetState(new SearchbarUI());
+		}
+
+		if (chestID > 0) {
+			inst.quickstackLockInterface?.SetState(new OwnershipLockUI(chestID));
+		}
+	}
+
+	public static void CloseChestUI()
+	{
+		UISystem inst = ModContent.GetInstance<UISystem>();
+		inst.searchbarUserInterface?.SetState(null);
+		inst.quickstackLockInterface?.SetState(null);
+		inst.confirmationUserInterface?.SetState(null);
+	}
+
+	public static void OpenConfirmationUI(ConfirmationUI ui)
+	{
+		ModContent.GetInstance<UISystem>().confirmationUserInterface?.SetState(ui);
+	}
+
+	public static void CloseConfirmationUI()
+	{
+		ModContent.GetInstance<UISystem>().confirmationUserInterface?.SetState(null);
 	}
 }

@@ -19,9 +19,9 @@ public class OwnershipLockUI : UIState
 	private readonly Rectangle frame = new(0, 0, 22, 22);
 	private bool hovering;
 	
-	public OwnershipLockUI()
+	public OwnershipLockUI(int chestID)
 	{
-		button = new UIImageFramed(system.HasOwner(Main.LocalPlayer.chest) ? locked : unlocked, frame) {
+		button = new UIImageFramed(system.HasOwner(chestID) ? locked : unlocked, frame) {
 			Top = new(Main.instance.invBottom+190, 0),
 			Left = new(506+70, 0)
 		};

@@ -110,8 +110,21 @@ public class BetterChests : Mod
 		packet.Write(chest);
 		return packet;
 	}
+
+	public static int GetChest(int x, int y)
+	{
+		if (TileID.Sets.BasicChest[Main.tile[x, y].TileType]) {
+			return GetMultitileChest(x, y);
+		}
+		
+		if (Main.tile[x, y].TileType == TileID.Dressers) {
+			return GetDresserChest(x, y);
+		}
+
+		return -1;
+	}
 	
-	public static int GetMultitileChest(int x, int y)
+	private static int GetMultitileChest(int x, int y)
 	{
 		Tile tile = Main.tile[x, y];
 
@@ -128,7 +141,7 @@ public class BetterChests : Mod
 	}
 
 	// reference: TileInteractionsCheckLongDistance(int, int)
-	public static int GetDresserChest(int x, int y)
+	private static int GetDresserChest(int x, int y)
 	{
 		Tile tile = Main.tile[x, y];
 

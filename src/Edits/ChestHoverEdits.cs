@@ -11,6 +11,14 @@ internal class ChestHoverEdits : GlobalTile
 
 	public override void MouseOver(int i, int j, int type)
 	{
+		int chestID = BetterChests.GetChest(i, j); // ONLY USE WHEN TYPE IS Containers, Containers2 OR Dressers
+
+		if (OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner)) {
+			Main.instance.MouseText("This chest is owned by " + owner);
+			UISystem.CloseChestHoverUI();
+			return;
+		}
+		
 		if (ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
 			return;
 
@@ -18,21 +26,7 @@ internal class ChestHoverEdits : GlobalTile
 			case TileID.Containers:
 			case TileID.Containers2:
 			case TileID.Dressers:
-				int chest;
-				if (type is TileID.Containers or TileID.Containers2) {
-					chest = BetterChests.GetMultitileChest(i, j);
-				}
-				else {
-					chest = BetterChests.GetDresserChest(i, j);
-				}
-
-				if (OwnershipSystem.IsNotOwner(chest, Main.LocalPlayer.name, out string? owner)) {
-					Main.instance.MouseText("This chest is owned by " + owner);
-					UISystem.CloseChestHoverUI();
-					return;
-				}
-
-				UISystem.OpenChestHoverUI(Main.chest[chest]);
+				UISystem.OpenChestHoverUI(Main.chest[chestID]);
 				break;
 			case TileID.PiggyBank:
 				UISystem.OpenChestHoverUI(Main.LocalPlayer.bank);
