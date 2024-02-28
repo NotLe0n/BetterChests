@@ -6,23 +6,38 @@ Special Thanks to:
 [b]Setnour6[/b] for making the icon!
 
 This mod is open source on [url=https://github.com/NotLe0n/BetterChests]GitHub[/url]. If you have a GitHub account, please give it a star!
+If you have any problems, bugs, or suggestions contact me on my [url=https://discord.gg/NX4DVzz2v6]discord[/url]!
 
 [hr]
 [h2]Changes:[/h2]
-[list]
-[*] "Deposit All", "Loot all", "Sort" have a confirmation button now. (separately toggleable in the config)
-[img]https://i.imgur.com/vB8jQqZ.png[/img]
-[*] Added a search bar!
-[img]https://i.imgur.com/p0BWQvU.png[/img]
-[*] Right clicking on "Sort Items" in a chest or right clicking "Sort Inventory" will open a menu with more sort options.
+[h3]More Sorting Options[/h3]
+Right clicking on "Sort Items" in a chest or right clicking "Sort Inventory" will open a menu with more sort options.
 [img]https://i.imgur.com/JdzYfFQ.png[/img]
-[*] Hovering over a chest shows its contents.
-[img]https://i.imgur.com/Ni5JNZG.png[/img]
-[*] Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
-[*] Added a Config option to change the functionality of the "Sort Items" button.
-[*] Increased the maximum chest name length from 20 to 80. You can finally write longer chest names!
-[img]https://i.imgur.com/dfqQviY.png[/img]
-[*] Multiple players can use a chest at the same time now! (might still have some bugs, it's the hardest feature to test)
-[/list]
 
-If you have any problems, bugs, or suggestions contact me on my [url=https://discord.gg/NX4DVzz2v6]discord[/url]!
+[h3]Content Display[/h3]
+Hovering over a chest shows its contents.
+[img]https://i.imgur.com/Ni5JNZG.png[/img]
+
+[h3]Multiplayer Chests[/h3]
+Multiple players can use a chest at the same time now! (might still have some bugs, it's the hardest feature to test)
+
+[h3]Ownership[/h3]
+You can claim chest ownership. This prevents other players from opening or quick stacking into chests which you own.
+
+[h3]Longer Chest Names[/h3]
+Increased the maximum chest name length from 20 to 80. You can finally write longer chest names!
+[img]https://i.imgur.com/dfqQviY.png[/img]
+
+[h3]Searchbar[/h3]
+A search bar to search for items inside a chest quickly.
+[img]https://i.imgur.com/p0BWQvU.png[/img]
+
+[h3]Confirmation Buttons[/h3]
+"Deposit All", "Loot all", "Sort" have a confirmation button now (separately toggleable in the config).
+[img]https://i.imgur.com/vB8jQqZ.png[/img]
+
+[h3]Change Default Sort[/h3]
+Added a Config option to change the functionality of the "Sort Items" button.
+
+[h3]Hotkeys[/h3]
+Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.

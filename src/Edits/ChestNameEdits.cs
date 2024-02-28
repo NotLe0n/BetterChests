@@ -4,7 +4,7 @@ using Terraria.GameContent.UI.States;
 
 namespace BetterChests.Edits;
 
-internal class ChestNameEdits
+internal static class ChestNameEdits
 {
 	private const int NewMaxChestLength = 80;
 

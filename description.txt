@@ -18,6 +18,7 @@ _________________________
 - Added a Config option to change the functionality of the "Sort Items" button.
 - Increased the maximum chest name length from 20 to 80. You can finally write longer chest names!
 - Multiple players can use a chest at the same time now! (might still have some bugs, it's the hardest feature to test)
+- You can now own chests, locks chests for other players so that they can't open or quick stack them.
 
 _________________________
 
@@ -27,7 +28,9 @@ _________________________
 [c/C4C4C4: Simply open a chest and right click on "Sort Items".]
 [c/C4C4C4: This will open another menu to the right.]
 
-[c/C4C4C4: Open Mod Config to change the "Sort Items" button]
-[c/C4C4C4: You can disable the confirmation messages there]
+[c/C4C4C4: Open Mod Config to change the "Sort Items" button.]
+[c/C4C4C4: You can disable the confirmation messages there.]
 
-[c/C4C4C4: Use the search bar to search for items]
+[c/C4C4C4: Use the search bar to search for items.]
+
+[c/C4C4C4: Click the lock button under "Rename" to toggle ownership.]

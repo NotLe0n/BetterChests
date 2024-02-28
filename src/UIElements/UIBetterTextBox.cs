@@ -8,6 +8,12 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable FieldCanBeMadeReadOnly.Global
+
 namespace BetterChests.UIElements;
 
 // original code from jopojelly and darthmorf. Modified to suit my needs
@@ -20,12 +26,12 @@ internal class UIBetterTextBox : UIPanel
 	private int textBlinkerState;
 	private readonly string hintText;
 
-	public event Action OnFocus;
-	public event Action OnUnfocus;
-	public event Action OnTextChanged;
-	public event Action OnTabPressed;
-	public event Action OnEnterPressed;
-	public event Action<Keys> OnKeyPressed;
+	public event Action? OnFocus;
+	public event Action? OnUnfocus;
+	public event Action? OnTextChanged;
+	public event Action? OnTabPressed;
+	public event Action? OnEnterPressed;
+	public event Action<Keys>? OnKeyPressed;
 
 	internal bool unfocusOnEnter = true;
 	internal bool unfocusOnTab = true;

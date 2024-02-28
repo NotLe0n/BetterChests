@@ -1,6 +1,6 @@
-﻿using System;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace BetterChests.Edits;
@@ -14,7 +14,7 @@ internal class ChestHoverEdits : GlobalTile
 		int chestID = BetterChests.GetChest(i, j); // ONLY USE WHEN TYPE IS Containers, Containers2 OR Dressers
 
 		if (OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner)) {
-			Main.instance.MouseText("This chest is owned by " + owner);
+			Main.instance.MouseText(Language.GetTextValue("Mods.BetterChests.ChestOwned", owner));
 			UISystem.CloseChestHoverUI();
 			return;
 		}

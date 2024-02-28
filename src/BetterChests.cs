@@ -20,6 +20,9 @@ public class BetterChests : Mod
 
 		// allows the user to open already opened chests
 		OpenChestEdits.Load();
+		
+		// prevents chest access if it's owned by a different player
+		ChestOwnershipEdits.Load();
 	}
 
 	public const byte ChestUpdatePacketID = 0;

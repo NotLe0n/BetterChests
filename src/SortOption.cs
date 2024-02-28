@@ -49,7 +49,7 @@ public readonly struct SortOption
 		{
 			string? str = reader.Value?.ToString();
 			if (!Enum.TryParse(str, out SortOptions opt)) {
-				throw new JsonException();
+				throw new JsonException($"Failed while trying to parse {str}.");
 			}
 
 			return opt;

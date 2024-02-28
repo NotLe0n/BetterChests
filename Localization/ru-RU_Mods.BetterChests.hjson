@@ -65,3 +65,4 @@ Confirmation: Вы уверены?
 SortingOptions: параметры сортировки
 Reversed: перевернутый
 SearchItem: поиск предмета
+ChestOwned: этот сундук принадлежит {0}

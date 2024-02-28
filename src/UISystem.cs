@@ -7,6 +7,7 @@ using Terraria.UI;
 
 namespace BetterChests;
 
+[Autoload(Side = ModSide.Client)]
 internal class UISystem : ModSystem
 {
 	private UserInterface? sortOptionsUserInterface;
@@ -17,26 +18,13 @@ internal class UISystem : ModSystem
 
 	public override void Load()
 	{
-		if (!Main.dedServ) {
-			sortOptionsUserInterface = new UserInterface();
-			searchbarUserInterface = new UserInterface();
-			confirmationUserInterface = new UserInterface();
-			chestHoverUserInterface = new UserInterface();
-			quickstackLockInterface = new UserInterface();
-		}
+		sortOptionsUserInterface = new UserInterface();
+		searchbarUserInterface = new UserInterface();
+		confirmationUserInterface = new UserInterface();
+		chestHoverUserInterface = new UserInterface();
+		quickstackLockInterface = new UserInterface();
 
 		base.Load();
-	}
-
-	public override void Unload()
-	{
-		sortOptionsUserInterface = null;
-		confirmationUserInterface = null;
-		chestHoverUserInterface = null;
-		searchbarUserInterface = null;
-		quickstackLockInterface = null;
-
-		base.Unload();
 	}
 
 	private GameTime? lastUpdateUiGameTime;
@@ -77,47 +65,46 @@ internal class UISystem : ModSystem
 		}
 	}
 
+	private bool DrawUI()
+	{
+		if (sortOptionsUserInterface?.CurrentState is SortOptionsUI state) {
+			if (Main.LocalPlayer.chest != -1 && state.mode == SortOptionsMode.Chest) {
+				sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+			}
+
+			if (Main.playerInventory && state.mode == SortOptionsMode.Inventory) {
+				sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+			}
+		}
+
+		if (Main.LocalPlayer.chest != -1) {
+			if (confirmationUserInterface?.CurrentState != null) {
+				confirmationUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+			}
+
+			if (searchbarUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+				searchbarUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+			}
+
+			if (quickstackLockInterface?.CurrentState != null && Main.LocalPlayer.chest > 0) {
+				quickstackLockInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+			}
+		}
+
+		if (chestHoverUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
+			chestHoverUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+		}
+
+		return true;
+	}
+	
 	public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 	{
 		int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 		if (mouseTextIndex == -1) return;
 
-		layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-			"BetterChests: UI",
-			delegate {
-				if (sortOptionsUserInterface?.CurrentState is SortOptionsUI state) {
-					if (Main.LocalPlayer.chest != -1 && state.mode == SortOptionsMode.Chest) {
-						sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-					}
-					if (Main.playerInventory && state.mode == SortOptionsMode.Inventory) {
-						sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-					}
-				}
-
-				if (Main.LocalPlayer.chest != -1) {
-					if (confirmationUserInterface?.CurrentState != null) {
-						confirmationUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-					}
-
-					if (searchbarUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
-						searchbarUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-					}
-
-					if (quickstackLockInterface?.CurrentState != null && Main.LocalPlayer.chest > 0) {
-						quickstackLockInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-					}
-				}
-
-				if (chestHoverUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
-					chestHoverUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
-				}
-
-				return true;
-			},
-			InterfaceScaleType.UI)
-		);
+		layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer("BetterChests: UI", DrawUI, InterfaceScaleType.UI));
 	}
-
 
 	public static void ToggleSortOptionsUI(SortOptionsUI sortOptionsUI)
 	{

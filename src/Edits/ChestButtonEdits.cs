@@ -12,7 +12,7 @@ namespace BetterChests.Edits;
 // ReSharper disable UnusedMember.Local
 #pragma warning disable IDE0051 // Remove unused private members
 
-internal class ChestButtonEdits
+internal static class ChestButtonEdits
 {
 	public static bool DisableDepositAllConfirmationButton { get; set; }
 	public static bool DisableLootAllConfirmationButton { get; set; }
