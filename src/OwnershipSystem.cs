@@ -14,7 +14,16 @@ public class OwnershipSystem : ModSystem
 
 	public Dictionary<int, string> GetMap() => ownershipMap;
 
-	public void SetOwner(int chest, string owner) => ownershipMap.Add(chest, owner);
+	public void SetOwner(int chest, string owner)
+	{
+		// if the chest the current player is in is being owned by another player
+		if (Main.netMode != NetmodeID.Server && Main.LocalPlayer.chest == chest && Main.LocalPlayer.name != owner) {
+			Main.LocalPlayer.chest = -1; // close chest
+			UISystem.CloseChestUI();
+		}
+		
+		ownershipMap.Add(chest, owner);
+	}
 
 	public void RemoveOwner(int chest) => ownershipMap.Remove(chest);
 

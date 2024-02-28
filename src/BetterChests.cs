@@ -93,7 +93,20 @@ public class BetterChests : Mod
 
 		dontUpdateMe = false;
 	}
-	
+
+	public override object Call(params object[] args)
+	{
+		if (args[0] is not string function) {
+			throw new Exception($"Call Error: First parameter is {args[0]} but expected string!");
+		}
+
+		// use pattern matching when https://github.com/tModLoader/tModLoader/pull/2472 gets merged
+		return function switch {
+			"GetOwnershipMap" => ModContent.GetInstance<OwnershipSystem>().GetMap(),
+			_ => throw new Exception($"Call Error: Function '{function}' not found!")
+		};
+	}
+
 	public static ModPacket GetAddOwnerPacket(int chest, string owner)
 	{
 		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
