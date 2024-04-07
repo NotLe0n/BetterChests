@@ -26,7 +26,7 @@ internal static class OpenChestEdits
 
 		Item[] items = Main.chest[Main.player[Main.myPlayer].chest].item;
 
-		// initialize prevItems and set it when this client recieved data from the server
+		// initialize prevItems and set it when this client received data from the server
 		if (prevItems == null || serverUpdateRecieved) {
 			prevItems = CloneItemArray(items);
 			serverUpdateRecieved = false;
@@ -51,7 +51,7 @@ internal static class OpenChestEdits
 
 		if (changed) {
 			prevItems = CloneItemArray(items);
-			BetterChests.dontUpdateMe = true; // dont apply change again
+			BetterChests.dontUpdateMe = true; // don't apply change again
 		}
 	}
 

@@ -31,13 +31,13 @@ internal static class ChestButtonEdits
 	private static void OpenSortInventoryOptionsLogic(On_Main.orig_DrawInventory orig, Main self)
 	{
 		orig(self);
-		const int buttonX = 534;
-		const int buttonY = 244;
-		const int buttonWidth = 30;
-		const int buttonHeight = 30;
+		const int ButtonX = 534;
+		const int ButtonY = 244;
+		const int ButtonWidth = 30;
+		const int ButtonHeight = 30;
 
 		// true if the mouse is hovering over the sort inventory button
-		if (Main.mouseX >= buttonX && Main.mouseX <= buttonX + buttonWidth && Main.mouseY >= buttonY && Main.mouseY <= buttonY + buttonHeight && !PlayerInput.IgnoreMouseInterface) {
+		if (Main.mouseX >= ButtonX && Main.mouseX <= ButtonX + ButtonWidth && Main.mouseY >= ButtonY && Main.mouseY <= ButtonY + ButtonHeight && !PlayerInput.IgnoreMouseInterface) {
 			// true if the user right clicked
 			if (Main.mouseRight && Main.mouseRightRelease) {
 				Main.mouseRightRelease = false;
@@ -98,7 +98,7 @@ internal static class ChestButtonEdits
 		}
 	}
 
-	// to prevent repeatidly clicking the button when held
+	// to prevent repeatedly clicking the button when held
 	private static bool alreadyClicked;
 	
 	// this is called when the player clicks on "Deposit All" in the Chest UI

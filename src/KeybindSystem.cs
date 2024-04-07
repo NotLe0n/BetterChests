@@ -44,23 +44,23 @@ internal class KeybindPlayer : ModPlayer
 	{
 		base.ProcessTriggers(triggersSet);
 
-		if (Keybinds.depositAll.JustPressed && Player.chest != -1) {
+		if (Keybinds.depositAll!.JustPressed && Player.chest != -1) {
 			ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 		}
-		if (Keybinds.lootAll.JustPressed && Player.chest != -1) {
+		if (Keybinds.lootAll!.JustPressed && Player.chest != -1) {
 			ChestUI.LootAll();
 		}
-		if (Keybinds.quickStack.JustPressed) {
+		if (Keybinds.quickStack!.JustPressed) {
 			Player.QuickStackAllChests();
 			ChestUI.QuickStack(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 		}
-		if (Keybinds.restock.JustPressed) {
+		if (Keybinds.restock!.JustPressed) {
 			ChestUI.Restock();
 		}
-		if (Keybinds.sortChest.JustPressed) {
+		if (Keybinds.sortChest!.JustPressed) {
 			ItemSorting.SortChest();
 		}
-		if (Keybinds.sortInventory.JustPressed) {
+		if (Keybinds.sortInventory!.JustPressed) {
 			ItemSorting.SortInventory();
 		}
 	}

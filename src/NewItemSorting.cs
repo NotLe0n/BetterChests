@@ -44,7 +44,7 @@ public static class NewItemSorting
 
 	// Inventory Sorting
 
-	public static void DefaultInventorySort(bool reversed)
+    private static void DefaultInventorySort(bool reversed)
 	{
 		ItemSorting.SortInventory();
 
@@ -61,7 +61,7 @@ public static class NewItemSorting
 		}
 	}
 
-	public static void SortInventory<T>(Func<Item, T> func, bool reversed)
+    private static void SortInventory<T>(Func<Item, T> func, bool reversed)
 	{
 		ref var items = ref Main.LocalPlayer.inventory;
 		var sortedItems = items.Where((_, index) => index is > 9 and < 50);
