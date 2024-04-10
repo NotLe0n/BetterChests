@@ -13,7 +13,7 @@ internal class ChestHoverEdits : GlobalTile
 	{
 		int chestID = BetterChests.GetChest(i, j); // ONLY USE WHEN TYPE IS Containers, Containers2 OR Dressers
 
-		if (OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner)) {
+		if (TileID.Sets.BasicChest[type] && OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner)) {
 			Main.instance.MouseText(Language.GetTextValue("Mods.BetterChests.ChestOwned", owner));
 			UISystem.CloseChestHoverUI();
 			return;
@@ -22,12 +22,12 @@ internal class ChestHoverEdits : GlobalTile
 		if (ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
 			return;
 
+        if (TileID.Sets.BasicChest[type] && chestID != -1) {
+            UISystem.OpenChestHoverUI(Main.chest[chestID]);
+            return;
+        }
+        
 		switch (type) {
-			case TileID.Containers:
-			case TileID.Containers2:
-			case TileID.Dressers:
-				UISystem.OpenChestHoverUI(Main.chest[chestID]);
-				break;
 			case TileID.PiggyBank:
 				UISystem.OpenChestHoverUI(Main.LocalPlayer.bank);
 				break;
@@ -44,7 +44,5 @@ internal class ChestHoverEdits : GlobalTile
 				UISystem.CloseChestHoverUI();
 				break;
 		}
-
-		base.MouseOver(i, j, type);
-	}
+    }
 }
