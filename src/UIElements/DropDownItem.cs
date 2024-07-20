@@ -9,20 +9,13 @@ using Terraria.UI;
 
 namespace BetterChests.UIElements;
 
-internal class DropDownItem<T> : UIElement
+internal class DropDownItem<T>(T name, UIElement.UIElementAction onSelectAction) : UIElement
 {
-	private readonly T name;
-	private event UIElementAction OnSelect;
+    private event UIElementAction OnSelect = onSelectAction;
 	public T Name => name;
 	public new bool IsMouseHovering { get; private set; }
 
-	public DropDownItem(T name, UIElementAction onSelectAction)
-	{
-		this.name = name;
-		OnSelect = onSelectAction;
-	}
-
-	protected override void DrawSelf(SpriteBatch spriteBatch)
+    protected override void DrawSelf(SpriteBatch spriteBatch)
 	{
 		base.DrawSelf(spriteBatch);
 		CalculatedStyle dimensions = GetDimensions();
@@ -34,7 +27,7 @@ internal class DropDownItem<T> : UIElement
 		spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)dimensions.X + 2, (int)dimensions.Y + 2, (int)dimensions.Width - 4, (int)dimensions.Height - 4), bgColor);
 		
 		// draw name
-		spriteBatch.DrawString(FontAssets.MouseText.Value, name.ToString(), new Vector2(dimensions.X + 5, dimensions.Y + 1), Color.White);
+		spriteBatch.DrawString(FontAssets.MouseText.Value, name?.ToString() ?? "", new Vector2(dimensions.X + 5, dimensions.Y + 1), Color.White);
 	}
 
 	public override void Update(GameTime gameTime)

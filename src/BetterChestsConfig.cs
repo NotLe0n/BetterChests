@@ -31,21 +31,23 @@ internal class BetterChestsConfig : ModConfig
 	
 	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(
-@"{
-'selection': 'Default',
-'options': [
-    'Default',
-    'ID',
-    'Alphabetically',
-    'Rarity',
-    'Stack',
-    'Value',                                         
-    'Damage',
-    'Defense',
-    'Random'
-    ]
-}"
-	)]
+        """
+        {
+        'selection': 'Default',
+        'options': [
+            'Default',
+            'ID',
+            'Alphabetically',
+            'Rarity',
+            'Stack',
+            'Value',
+            'Damage',
+            'Defense',
+            'Random'
+            ]
+        }
+        """
+    )]
 	[CustomModConfigItem(typeof(DropDownMenu<SortOption>))]
 	public OptionSelectionPair<SortOption> defaultChestSortOptions;
 

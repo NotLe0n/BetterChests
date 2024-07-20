@@ -68,12 +68,12 @@ internal class DropDownMenu<T> : ConfigElement
 		DrawPanel2(spriteBatch, new(x - 2, y - 2), TextureAssets.MagicPixel.Value, LargestItemSize() + 14, 24, Color.Black * 0.8f); // draw black border
 		DrawPanel2(spriteBatch, new(x, y), TextureAssets.MagicPixel.Value, LargestItemSize() + 10, 20, new Color(63, 82, 151) * 0.8f);
 
-		spriteBatch.DrawString(FontAssets.MouseText.Value, currentSelectedItem.ToString(), new(x + 5, dimensions.Y + 5), Color.White);
+		spriteBatch.DrawString(FontAssets.MouseText.Value, currentSelectedItem?.ToString() ?? "", new(x + 5, dimensions.Y + 5), Color.White);
 	}
 
 	private float LargestItemSize()
 	{
-		return items.Max(item => FontAssets.MouseText.Value.MeasureString(item.Name.ToString()).X);
+		return items.Max(item => FontAssets.MouseText.Value.MeasureString(item.Name?.ToString() ?? "").X);
 	}
 	
 	public override void Update(GameTime gameTime)

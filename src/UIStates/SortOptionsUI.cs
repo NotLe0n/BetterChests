@@ -13,13 +13,13 @@ namespace BetterChests.UIStates;
 internal class SortOptionsUI : UIState
 {
 	public SortOptionsMode mode;
-	private bool _reversed;
+	private bool reversed;
 	private readonly UIList list;
 
 	public SortOptionsUI(SortOptionsMode mode)
 	{
 		this.mode = mode;
-		_reversed = false;
+		reversed = false;
 
 		string sortChestText = Language.GetTextValue("LegacyInterface.122"); 
 		int minXstart = (int)FontAssets.MouseText.Value.MeasureString(sortChestText).X;
@@ -40,22 +40,22 @@ internal class SortOptionsUI : UIState
 		list.SetPadding(2);
 		Append(list);
 
-		AddSortOption(SortOptions.Default, _ => NewItemSorting.SortByMode(_reversed, mode));
-		AddSortOption(SortOptions.ID, _ => NewItemSorting.SortByMode(i => i.type, _reversed, mode));
-		AddSortOption(SortOptions.Alphabetically, _ => NewItemSorting.SortByMode(i => i.Name, _reversed, mode));
-		AddSortOption(SortOptions.Rarity, _ => NewItemSorting.SortByMode(i => i.rare, !_reversed, mode));
-		AddSortOption(SortOptions.Stack, _ => NewItemSorting.SortByMode(i => i.stack, !_reversed, mode));
-		AddSortOption(SortOptions.Value, _ => NewItemSorting.SortByMode(i => i.value, !_reversed, mode));
-		AddSortOption(SortOptions.Damage, _ => NewItemSorting.SortByMode(i => i.damage, !_reversed, mode));
-		AddSortOption(SortOptions.Defense, _ => NewItemSorting.SortByMode(i => i.defense, !_reversed, mode));
+		AddSortOption(SortOptions.Default, _ => NewItemSorting.SortByMode(reversed, mode));
+		AddSortOption(SortOptions.ID, _ => NewItemSorting.SortByMode(i => i.type, reversed, mode));
+		AddSortOption(SortOptions.Alphabetically, _ => NewItemSorting.SortByMode(i => i.Name, reversed, mode));
+		AddSortOption(SortOptions.Rarity, _ => NewItemSorting.SortByMode(i => i.rare, !reversed, mode));
+		AddSortOption(SortOptions.Stack, _ => NewItemSorting.SortByMode(i => i.stack, !reversed, mode));
+		AddSortOption(SortOptions.Value, _ => NewItemSorting.SortByMode(i => i.value, !reversed, mode));
+		AddSortOption(SortOptions.Damage, _ => NewItemSorting.SortByMode(i => i.damage, !reversed, mode));
+		AddSortOption(SortOptions.Defense, _ => NewItemSorting.SortByMode(i => i.defense, !reversed, mode));
 		AddSortOption(SortOptions.Mod, ModCarusel);
-		AddSortOption(SortOptions.Random, _ => NewItemSorting.SortByMode(_ => Main.rand.NextFloat(), _reversed, mode));
+		AddSortOption(SortOptions.Random, _ => NewItemSorting.SortByMode(_ => Main.rand.NextFloat(), reversed, mode));
 		
 		var option = new UITextOption($"{Language.GetTextValue("Mods.BetterChests.Reversed")}: {Language.GetTextValue("CLI.No")}");
 		option.OnLeftClick += (_, _) =>
 		{
-			_reversed = !_reversed;
-			option.SetText($"{Language.GetTextValue("Mods.BetterChests.Reversed")}: {Language.GetTextValue("CLI." + (_reversed ? "Yes" : "No"))}");
+			reversed = !reversed;
+			option.SetText($"{Language.GetTextValue("Mods.BetterChests.Reversed")}: {Language.GetTextValue("CLI." + (reversed ? "Yes" : "No"))}");
 		};
 		list.Add(option);
 	}
@@ -86,6 +86,6 @@ internal class SortOptionsUI : UIState
 		elm.SetText($"{Language.GetTextValue("Mods.BetterChests.SortOptions.Mod.Label")}: {modsWithItems[caruselIndex].Name}");
 
 		// sort items
-		NewItemSorting.SortByMode(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !_reversed, mode);
+		NewItemSorting.SortByMode(x => x.ModItem != null && x.ModItem.Mod.Name == modsWithItems[caruselIndex].Name, !reversed, mode);
 	}
 }

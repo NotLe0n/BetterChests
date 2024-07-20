@@ -11,17 +11,17 @@ namespace BetterChests.UIElements;
 public class UITextOption : UIText
 {
 	public float TextScale { get; set; }
-	public Color NewTextColor { get => _newTextColor; set => TextColor = _newTextColor = value; }
+	public Color NewTextColor { get => newTextColor; set => TextColor = newTextColor = value; }
 	public bool isLarge;
 
-	private Color _newTextColor;
-	private readonly float _firstTextScale;
+	private Color newTextColor;
+	private readonly float firstTextScale;
 
 	public UITextOption(string text, float textScale = 0.75f, bool large = false) : base(text, textScale, large)
 	{
 		NewTextColor = Color.White;
 
-		_firstTextScale = textScale;
+		firstTextScale = textScale;
 		TextScale = textScale;
 		isLarge = large;
 	}
@@ -37,7 +37,7 @@ public class UITextOption : UIText
 		base.Draw(spriteBatch);
 
 		if (IsMouseHovering) {
-			if (_newTextColor == Color.White)
+			if (newTextColor == Color.White)
 				TextColor = Main.OurFavoriteColor;
 
 			if (TextScale <= 1) {
@@ -45,10 +45,10 @@ public class UITextOption : UIText
 			}
 		}
 		else {
-			if (_newTextColor == Color.White)
+			if (newTextColor == Color.White)
 				TextColor = Color.White;
 
-			if (TextScale > _firstTextScale) {
+			if (TextScale > firstTextScale) {
 				TextScale -= 0.05f;
 			}
 		}

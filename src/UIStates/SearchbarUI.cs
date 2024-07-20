@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.Localization;
 using Terraria.UI;
+using System;
 
 namespace BetterChests.UIStates;
 
@@ -18,7 +19,7 @@ internal class SearchbarUI : UIState
 			Height = new(30, 0),
 			MaxLength = 20
 		};
-		searchbox.OnTextChanged += () => NewItemSorting.SortChest(x => x.Name.ToLower().Contains(searchbox.Text.ToLower()), true);
+		searchbox.OnTextChanged += () => NewItemSorting.SortChest(x => x.Name.Contains(searchbox.Text, StringComparison.CurrentCultureIgnoreCase), true);
 		Append(searchbox);
 	}
 }

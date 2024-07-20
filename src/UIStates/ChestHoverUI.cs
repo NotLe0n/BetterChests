@@ -8,16 +8,11 @@ using Terraria.UI;
 
 namespace BetterChests.UIStates;
 
-internal class ChestHoverUI : UIState
+internal class ChestHoverUI(Chest chest) : UIState
 {
-	public readonly Chest chest;
+	public readonly Chest chest = chest;
 
-	public ChestHoverUI(Chest chest)
-	{
-		this.chest = chest;
-	}
-
-	public override void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
 	{
 		base.Draw(spriteBatch);
 
@@ -27,27 +22,27 @@ internal class ChestHoverUI : UIState
 		// all items in the chest
 		Item[] items = chest.item.Where(x => x != null && x.type != ItemID.None).ToArray();
 
-		const int yOffset = 40;
-		const int padding = 20;
-		const int maxSize = 20;
+		const int YOffset = 40;
+		const int Padding = 20;
+		const int MaxSize = 20;
 
 		int collumn = 0;
 		int row = 0;
 		for (int i = 0; i < items.Length; i++) {
 			// set positions (10 items per row)
 			if (i % 10 == 0) {
-				row += maxSize + padding;
+				row += MaxSize + Padding;
 				collumn = 0;
 			}
 
 			Main.instance.LoadItem(items[i].type); // load item before trying to get its texture (Item only gets loaded once)
 			Texture2D itemTexture = TextureAssets.Item[items[i].type].Value; // get item texture
-			Vector2 drawPos = new(Main.MouseScreen.X + collumn, Main.MouseScreen.Y + row + yOffset);
+			Vector2 drawPos = new(Main.MouseScreen.X + collumn, Main.MouseScreen.Y + row + YOffset);
 
 			// draw slot background
-			const float backgroundScale = 0.7f;
-			Vector2 backgroundPos = new(drawPos.X - maxSize + 2, drawPos.Y - maxSize + 2);
-			spriteBatch.DrawWithScale(TextureAssets.InventoryBack.Value, backgroundPos, backgroundScale);
+			const float BackgroundScale = 0.7f;
+			Vector2 backgroundPos = new(drawPos.X - MaxSize + 2, drawPos.Y - MaxSize + 2);
+			spriteBatch.DrawWithScale(TextureAssets.InventoryBack.Value, backgroundPos, BackgroundScale);
 
 			// handle animation frames
 			int frameCount = 1;
@@ -59,8 +54,8 @@ internal class ChestHoverUI : UIState
 
 			// handle draw scale
 			float drawScale = 1f;
-			if (itemTexture.Width > maxSize || itemTexture.Height / frameCount > maxSize) {
-				drawScale = maxSize / (float)(itemFrameRect.Width <= itemFrameRect.Height ?
+			if (itemTexture.Width > MaxSize || itemTexture.Height / frameCount > MaxSize) {
+				drawScale = MaxSize / (float)(itemFrameRect.Width <= itemFrameRect.Height ?
 					itemFrameRect.Height :
 					itemFrameRect.Width);
 			}
@@ -76,7 +71,7 @@ internal class ChestHoverUI : UIState
 			}
 
 			// go to next slot
-			collumn += maxSize + padding;
+			collumn += MaxSize + Padding;
 		}
 	}
 }
