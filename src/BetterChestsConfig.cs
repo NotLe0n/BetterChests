@@ -28,7 +28,7 @@ internal class BetterChestsConfig : ModConfig
 	
 	[DefaultValue(false)]
 	public bool disableSearchbar;
-	
+    
 	// Has to be the bottom most setting. TODO: Fix draw order
 	[JsonDefaultValue(
         """

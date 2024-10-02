@@ -12,14 +12,16 @@ internal class ChestHoverEdits : GlobalTile
 	public override void MouseOver(int i, int j, int type)
 	{
 		int chestID = BetterChests.GetChest(i, j); // ONLY USE WHEN TYPE IS Containers, Containers2 OR Dressers
+        var config = ModContent.GetInstance<BetterChestsConfig>();
+        bool notOwner = OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner);
 
-		if (TileID.Sets.BasicChest[type] && OwnershipSystem.IsNotOwner(chestID, Main.LocalPlayer.name, out string? owner)) {
+		if (!ModContent.GetInstance<BetterChestsMPConfig>().disableChestOwnership && TileID.Sets.BasicChest[type] && notOwner) {
 			Main.instance.MouseText(Language.GetTextValue("Mods.BetterChests.ChestOwned", owner));
 			UISystem.CloseChestHoverUI();
 			return;
 		}
 		
-		if (ModContent.GetInstance<BetterChestsConfig>().disableChestHover)
+		if (config.disableChestHover)
 			return;
 
         if (TileID.Sets.BasicChest[type] && chestID != -1) {

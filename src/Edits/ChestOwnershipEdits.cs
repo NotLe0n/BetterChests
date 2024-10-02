@@ -168,6 +168,11 @@ internal static class ChestOwnershipEdits
 
 	private static void PreventChestOpen(On_Player.orig_TileInteractionsUse orig, Player self, int myx, int myy)
 	{
+        if (ModContent.GetInstance<BetterChestsMPConfig>().disableChestOwnership) {
+            orig(self, myx, myy);
+            return;
+        }
+        
 		if (TileID.Sets.BasicChest[Main.tile[myx, myy].TileType] || Main.tile[myx, myy].TileType == TileID.Dressers) {
 			int chest = BetterChests.GetChest(myx, myy);
 			if (chest != -1 && OwnershipSystem.IsNotOwner(chest, self.name)) {

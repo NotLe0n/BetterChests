@@ -67,6 +67,7 @@ internal class UISystem : ModSystem
 
 	private bool DrawUI()
 	{
+        var config = ModContent.GetInstance<BetterChestsConfig>();
 		if (sortOptionsUserInterface?.CurrentState is SortOptionsUI state) {
 			if (Main.LocalPlayer.chest != -1 && state.mode == SortOptionsMode.Chest) {
 				sortOptionsUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
@@ -81,17 +82,17 @@ internal class UISystem : ModSystem
 			if (confirmationUserInterface?.CurrentState != null) {
 				confirmationUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 			}
-
-			if (searchbarUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+            
+			if (searchbarUserInterface?.CurrentState != null && !config.disableSearchbar) {
 				searchbarUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 			}
 
-			if (quickstackLockInterface?.CurrentState != null && Main.LocalPlayer.chest > 0) {
+			if (quickstackLockInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsMPConfig>().disableChestOwnership && Main.LocalPlayer.chest > 0) {
 				quickstackLockInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 			}
 		}
 
-		if (chestHoverUserInterface?.CurrentState != null && !ModContent.GetInstance<BetterChestsConfig>().disableChestHover) {
+		if (chestHoverUserInterface?.CurrentState != null && !config.disableChestHover) {
 			chestHoverUserInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
 		}
 
@@ -158,7 +159,7 @@ internal class UISystem : ModSystem
 			inst.searchbarUserInterface?.SetState(new SearchbarUI());
 		}
 
-		if (chestID > 0) {
+		if (chestID > 0 && !ModContent.GetInstance<BetterChestsMPConfig>().disableChestOwnership) {
 			inst.quickstackLockInterface?.SetState(new OwnershipLockUI(chestID));
 		}
 	}
