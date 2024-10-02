@@ -14,10 +14,7 @@ public class BetterChests : Mod
 	{
 		// Changes the functionality of buttons
 		ChestButtonEdits.Load();
-
-		// Increases the maximum chest name length
-		ChestNameEdits.Load();
-
+        
 		// allows the user to open already opened chests
 		OpenChestEdits.Load();
 		

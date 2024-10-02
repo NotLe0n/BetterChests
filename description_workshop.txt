@@ -24,7 +24,8 @@ Multiple players can use a chest at the same time now! (might still have some bu
 You can claim chest ownership. This prevents other players from opening or quick stacking into chests which you own.
 
 [h3]Longer Chest Names[/h3]
-Increased the maximum chest name length from 20 to 80. You can finally write longer chest names!
+This feature is now native in tModLoader!
+[strike]Increased the maximum chest name length from 20 to 80. You can finally write longer chest names![/strike]
 [img]https://i.imgur.com/dfqQviY.png[/img]
 
 [h3]Searchbar[/h3]
