@@ -44,12 +44,12 @@ Configs: {
 		disableSearchbar: {
 			Label: Удалить панель поиска
 			Tooltip: Удаляет панель поиска под сундуками.
-		}	
+		}
 	}
-	
+
 	BetterChestsMPConfig: {
 		DisplayName: настройки многопользовательской игры
-		
+
 		disableChestOwnership: {
 			Label: отключить владение сундуком
 			Tooltip: отключает систему владения сундуками

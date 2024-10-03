@@ -46,9 +46,10 @@ Configs: {
 			Tooltip: Entfernt die Suchleiste unter Truhen.
 		}
 	}
+
 	BetterChestsMPConfig: {
 		DisplayName: Better Chests Mehrspieler Einstellungen
-		
+
 		disableChestOwnership: {
 			Label: Truhenbesitz ausschalten
 			Tooltip: Schaltet das Truhenbesitzsystem aus.

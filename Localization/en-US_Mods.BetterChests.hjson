@@ -46,9 +46,10 @@ Configs: {
 			Tooltip: Removes the search bar under chests.
 		}
 	}
+
 	BetterChestsMPConfig: {
 		DisplayName: Better Chests Multiplayer Config
-		
+
 		disableChestOwnership: {
 			Label: Disable Chest Ownership
 			Tooltip: Disables the Chest Ownership system
