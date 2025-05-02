@@ -45,6 +45,21 @@ Configs: {
 			Label: Suchleiste entfernen
 			Tooltip: Entfernt die Suchleiste unter Truhen.
 		}
+
+		disablePings: {
+			// Label: disable Pings
+			// Tooltip: ""
+		}
+
+		pingHue: {
+			// Label: ping Hue
+			// Tooltip: ""
+		}
+
+		pingTime: {
+			// Label: ping Time
+			// Tooltip: ""
+		}
 	}
 
 	BetterChestsMPConfig: {

@@ -1,10 +1,15 @@
 using BetterChests.Edits;
 using System;
 using System.IO;
+using System.Net.NetworkInformation;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace BetterChests;
 
@@ -20,12 +25,15 @@ public class BetterChests : Mod
 		
 		// prevents chest access if it's owned by a different player
 		ChestOwnershipEdits.Load();
+		
+		ItemSlotPingEdit.Load();
 	}
 
 	public const byte ChestUpdatePacketID = 0;
 	public const byte AddChestOwnerPacketID = 1;
 	public const byte RemoveChestOwnerPacketID = 2;
 	public const byte GetAllOwnersPacketID = 3;
+	public const byte SendItemSlotPingPacketID = 4;
 
 	public static bool dontUpdateMe;
 	public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -89,6 +97,26 @@ public class BetterChests : Mod
 
 				break;
 			}
+			case SendItemSlotPingPacketID: {
+				string playerName = reader.ReadString();
+				int chestID = reader.ReadInt32();
+				int slotID = reader.ReadInt32();
+				Color pingColor = reader.ReadRGB();
+				
+				if (Main.netMode == NetmodeID.Server) {
+					GetItemSlotPingPacket(playerName, chestID, slotID, pingColor).Send();
+				}
+				else {
+					var pingSystem = ModContent.GetInstance<PingSystem>();
+					pingSystem.AddPing(new Ping {
+						PlayerName = playerName,
+						ChestID = chestID,
+						SlotIndex = slotID,
+						Color = pingColor
+					});
+				}
+				break;
+			}
 		}
 
 		dontUpdateMe = false;
@@ -121,6 +149,17 @@ public class BetterChests : Mod
 		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
 		packet.Write(RemoveChestOwnerPacketID);
 		packet.Write(chest);
+		return packet;
+	}
+
+	public static ModPacket GetItemSlotPingPacket(string playerName, int chest, int slot, Color pingColor)
+	{
+		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+		packet.Write(SendItemSlotPingPacketID);
+		packet.Write(playerName);
+		packet.Write(chest);
+		packet.Write(slot);
+		packet.WriteRGB(pingColor);
 		return packet;
 	}
 

@@ -45,6 +45,21 @@ Configs: {
 			Label: Удалить панель поиска
 			Tooltip: Удаляет панель поиска под сундуками.
 		}
+
+		disablePings: {
+			// Label: disable Pings
+			// Tooltip: ""
+		}
+
+		pingHue: {
+			// Label: ping Hue
+			// Tooltip: ""
+		}
+
+		pingTime: {
+			// Label: ping Time
+			// Tooltip: ""
+		}
 	}
 
 	BetterChestsMPConfig: {
