@@ -52,6 +52,7 @@ Pinged items get...
 - ... and their containing chest outlined
 To ping an item you have to hold down the ping hotkey (default: Left-Alt, needs to be set first) and right-click the item.
 The duration of pings and your ping color can be changed in the settings. This feature can also be turned off there.
+[img]https://i.imgur.com/gmwHcoy.png[/img]
 
 Special Thanks to:
 [b]direwolf420, darthmorf & jopojelly[/b] for a UIElement!

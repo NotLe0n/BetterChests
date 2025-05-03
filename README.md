@@ -44,3 +44,15 @@ Added a Config option to change the functionality of the "Sort Items" button.
 
 ### Hotkeys
 Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
+
+### Pings
+You can ping items in chests. 
+Pinged items get...
+- ... highlighted in chests
+- ... shown in chat
+- ... displayed on the map
+- ... and their containing chest outlined
+
+To ping an item you have to hold down the ping hotkey (default: Left-Alt, needs to be set first) and right-click the item.\
+The duration of pings and your ping color can be changed in the settings. This feature can also be turned off there.\
+![img](https://i.imgur.com/gmwHcoy.png)
