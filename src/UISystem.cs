@@ -181,4 +181,9 @@ internal class UISystem : ModSystem
 	{
 		ModContent.GetInstance<UISystem>().confirmationUserInterface?.SetState(null);
 	}
+
+	public static void FocusSearchBox()
+	{
+		(ModContent.GetInstance<UISystem>().searchbarUserInterface?.CurrentState as SearchbarUI)?.FocusSearchBox();
+	}
 }

@@ -6,6 +6,7 @@ Keybinds: {
 	"Sort Chest.DisplayName": Items sortieren
 	"Sort Inventory.DisplayName": Inventar sortieren
 	Ping.DisplayName: Ping
+	"Focus search box.DisplayName": Suchleiste fokusieren
 }
 
 Configs: {

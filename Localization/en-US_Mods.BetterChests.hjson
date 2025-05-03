@@ -6,6 +6,7 @@ Keybinds: {
 	"Sort Chest.DisplayName": Sort Chest
 	"Sort Inventory.DisplayName": Sort Inventory
 	Ping.DisplayName: Ping
+	"Focus search box.DisplayName": Focus search box
 }
 
 Configs: {

@@ -2,7 +2,7 @@
 
 ____[c/FFE900:Changes]_____________
 - "Deposit All", "Loot all", "Sort" have a confirmation button now. (separately toggleable in the config)
-- Added a search bar!
+- Added a search bar inside chests!
 - Right clicking on "Sort Items" in a chest or right clicking "Sort Inventory" will open a menu with more sort options.
 - Hovering over a chest shows its contents.
 - Hotkeys for Deposit All, Loot All, Quick Stack, Restock, Sort Chest and Sort Inventory.
@@ -22,6 +22,7 @@ Default sort option and confirmations:
 
 Search bar:
 [c/C4C4C4: Use the search bar to search for items.]
+[c/C4C4C4: There's also hotkey to focus it. Press Escape to unfocus.]
 
 Chest Ownership:
 [c/C4C4C4: Click the lock button under "Rename" to toggle ownership.]

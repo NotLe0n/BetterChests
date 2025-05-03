@@ -9,7 +9,7 @@ namespace BetterChests;
 
 internal class KeybindSystem : ModSystem
 {
-	public ModKeybind? depositAll, lootAll, quickStack, restock, sortChest, sortInventory, ping;
+	public ModKeybind? depositAll, lootAll, quickStack, restock, sortChest, sortInventory, ping, focusSearchBox;
 
 	public override void Load()
 	{
@@ -20,6 +20,7 @@ internal class KeybindSystem : ModSystem
 		sortChest = KeybindLoader.RegisterKeybind(Mod, "Sort Chest", Keys.None);
 		sortInventory = KeybindLoader.RegisterKeybind(Mod, "Sort Inventory", Keys.None);
 		ping = KeybindLoader.RegisterKeybind(Mod, "Ping", Keys.LeftAlt);
+		focusSearchBox = KeybindLoader.RegisterKeybind(Mod, "Focus search box", Keys.None);
 
 		base.Load();
 	}
@@ -33,6 +34,7 @@ internal class KeybindSystem : ModSystem
 		sortChest = null;
 		sortInventory = null;
 		ping = null;
+		focusSearchBox = null;
 
 		base.Unload();
 	}
@@ -64,6 +66,9 @@ internal class KeybindPlayer : ModPlayer
 		}
 		if (Keybinds.sortInventory!.JustPressed) {
 			ItemSorting.SortInventory();
+		}
+		if (Keybinds.focusSearchBox!.JustPressed && !ModContent.GetInstance<BetterChestsConfig>().disableSearchbar) {
+			UISystem.FocusSearchBox();
 		}
 	}
 }

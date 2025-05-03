@@ -30,6 +30,7 @@ This feature is now native in tModLoader!
 
 [h3]Searchbar[/h3]
 A search bar to search for items inside a chest quickly.
+There's also hotkey to focus it. Press Escape to unfocus.
 [img]https://i.imgur.com/p0BWQvU.png[/img]
 
 [h3]Confirmation Buttons[/h3]
