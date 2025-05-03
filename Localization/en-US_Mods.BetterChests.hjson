@@ -5,6 +5,7 @@ Keybinds: {
 	Restock.DisplayName: Restock
 	"Sort Chest.DisplayName": Sort Chest
 	"Sort Inventory.DisplayName": Sort Inventory
+	Ping.DisplayName: Ping
 }
 
 Configs: {
@@ -47,18 +48,18 @@ Configs: {
 		}
 
 		disablePings: {
-			Label: disable Pings
-			Tooltip: ""
+			Label: Disable Pings
+			Tooltip: Disables the item ping functionality
 		}
 
 		pingHue: {
-			Label: ping Hue
-			Tooltip: ""
+			Label: Ping color
+			Tooltip: Sets the color of your pings
 		}
 
 		pingTime: {
-			Label: ping Time
-			Tooltip: ""
+			Label: Ping duration
+			Tooltip: Sets how many seconds pings are visible
 		}
 	}
 

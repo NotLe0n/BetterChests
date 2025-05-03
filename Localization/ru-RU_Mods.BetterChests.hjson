@@ -5,6 +5,7 @@ Keybinds: {
 	Restock.DisplayName: восполнить запасы
 	"Sort Chest.DisplayName": сортировать предметы
 	"Sort Inventory.DisplayName": сортировка инвентаря
+	Ping.DisplayName: пинг
 }
 
 Configs: {
@@ -47,18 +48,18 @@ Configs: {
 		}
 
 		disablePings: {
-			// Label: disable Pings
-			// Tooltip: ""
+			Label: Отключить пинги
+			Tooltip: Отключает функцию пинга
 		}
 
 		pingHue: {
-			// Label: ping Hue
-			// Tooltip: ""
+			Label: Цвет пинга
+			Tooltip: Устанавливает цвет вашего пинга
 		}
 
 		pingTime: {
-			// Label: ping Time
-			// Tooltip: ""
+			Label: Длительность пинга
+			Tooltip: Устанавливает длительность пинга в секундах
 		}
 	}
 

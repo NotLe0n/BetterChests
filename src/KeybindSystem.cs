@@ -9,7 +9,7 @@ namespace BetterChests;
 
 internal class KeybindSystem : ModSystem
 {
-	public ModKeybind? depositAll, lootAll, quickStack, restock, sortChest, sortInventory;
+	public ModKeybind? depositAll, lootAll, quickStack, restock, sortChest, sortInventory, ping;
 
 	public override void Load()
 	{
@@ -19,6 +19,7 @@ internal class KeybindSystem : ModSystem
 		restock = KeybindLoader.RegisterKeybind(Mod, "Restock", Keys.None);
 		sortChest = KeybindLoader.RegisterKeybind(Mod, "Sort Chest", Keys.None);
 		sortInventory = KeybindLoader.RegisterKeybind(Mod, "Sort Inventory", Keys.None);
+		ping = KeybindLoader.RegisterKeybind(Mod, "Ping", Keys.LeftAlt);
 
 		base.Load();
 	}
@@ -31,6 +32,7 @@ internal class KeybindSystem : ModSystem
 		restock = null;
 		sortChest = null;
 		sortInventory = null;
+		ping = null;
 
 		base.Unload();
 	}

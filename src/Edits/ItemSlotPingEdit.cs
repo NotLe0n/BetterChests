@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
@@ -8,10 +9,11 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
+using System;
 
 namespace BetterChests.Edits;
 
-public class ItemSlotPingEdit
+internal static class ItemSlotPingEdit
 {
     public static void Load()
     {
@@ -45,8 +47,11 @@ public class ItemSlotPingEdit
 
 		    highlightTexture = TextureAssets.HighlightMask[typeCache].Value;
 		    highlightColor = ping.Color;
+		    
+		    if (Main.LocalPlayer.chest == ping.ChestID && ping.ChestID > 0) {
+			    ItemSlot.SetGlow(ping.SlotIndex, Main.rgbToHsl(ping.Color).X, true);
+		    }
 	    }
-
     }
 
     private static void PingEdit(On_ItemSlot.orig_RightClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
@@ -58,24 +63,26 @@ public class ItemSlotPingEdit
 	    }
 	    
 	    var pingSystem = ModContent.GetInstance<PingSystem>();
+	    var pingKeyPressed = ModContent.GetInstance<KeybindSystem>().ping!.Current;
 	    
-	    if (context == ItemSlot.Context.ChestItem && Main.keyState.IsKeyDown(Keys.LeftAlt) && Main.mouseRight) {
-		    if (inv[slot].IsAir) {
+	    if (context == ItemSlot.Context.ChestItem && pingKeyPressed) {
+		    if (inv[slot].IsAir || !Main.mouseRight || !Main.mouseRightRelease) {
 			    return;
 		    }
+	
+		    var ping = new Ping {
+			    PlayerName = Main.LocalPlayer.name,
+			    ChestID = Main.LocalPlayer.chest,
+			    SlotIndex = slot,
+			    Color = config.pingHue,
+			    Item = Main.chest[Main.LocalPlayer.chest].item[slot]
+		    };
 		    
-		    if (Main.mouseRightRelease) {
-			    if (Main.netMode == NetmodeID.SinglePlayer) {
-				    pingSystem.AddPing(new Ping {
-					    PlayerName = Main.LocalPlayer.name,
-					    ChestID = Main.LocalPlayer.chest,
-					    SlotIndex = slot,
-					    Color = config.pingHue
-				    });
-			    }
-			    else {
-				    BetterChests.GetItemSlotPingPacket(Main.LocalPlayer.name, Main.LocalPlayer.chest, slot, config.pingHue).Send();
-			    }
+		    if (Main.netMode == NetmodeID.SinglePlayer) {
+			    pingSystem.AddPing(ping);
+		    }
+		    else {
+			    ping.GetPacket().Send();
 		    }
 	    }
         else {

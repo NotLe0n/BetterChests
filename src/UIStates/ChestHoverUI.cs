@@ -8,11 +8,11 @@ using Terraria.UI;
 
 namespace BetterChests.UIStates;
 
-internal class ChestHoverUI(Chest chest) : UIState
+internal class ChestHoverUI(Chest? chest) : UIState
 {
-	public readonly Chest chest = chest;
+	public readonly Chest? chest = chest;
 
-    public override void Draw(SpriteBatch spriteBatch)
+	public override void Draw(SpriteBatch spriteBatch)
 	{
 		base.Draw(spriteBatch);
 

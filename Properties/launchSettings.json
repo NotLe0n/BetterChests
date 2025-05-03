@@ -3,13 +3,13 @@
     "Terraria": {
       "commandName": "Executable",
       "executablePath": "dotnet.exe",
-      "commandLineArgs": "$(tMLPath)",
+      "commandLineArgs": "$(tMLPath) -console",
       "workingDirectory": "$(tMLSteamPath)"
     },
     "TerrariaServer": {
       "commandName": "Executable",
       "executablePath": "dotnet.exe",
-      "commandLineArgs": "$(tMLServerPath)",
+      "commandLineArgs": "$(tMLServerPath) -console",
       "workingDirectory": "$(tMLSteamPath)"
     },
     "tModLoader-linux": {

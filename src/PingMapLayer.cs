@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -16,7 +17,8 @@ public class PingMapLayer : ModMapLayer
 	public override void Draw(ref MapOverlayDrawContext context, ref string text)
 	{
 		var pingSystem = ModContent.GetInstance<PingSystem>();
-		if (pingSystem.Pings == 0) {
+		var config = ModContent.GetInstance<BetterChestsConfig>();
+		if (pingSystem.Pings == 0 || config.disablePings) {
 			return;
 		}
 		
@@ -29,7 +31,7 @@ public class PingMapLayer : ModMapLayer
 			int indexInGroup = sameChestPings.IndexOf(ping);
 
 			// Grid dimensions
-			int gridCols = (int)Math.Ceiling(Math.Sqrt(num));;
+			int gridCols = (int)Math.Ceiling(Math.Sqrt(num));
 			int gridRows = (int)Math.Ceiling(num / (float)gridCols);
 
 			int col = indexInGroup % gridCols;
@@ -37,15 +39,19 @@ public class PingMapLayer : ModMapLayer
 
 			// Calculate offset from center
 			// Configurable padding (in tile-space units)
-			const float padding = 0.6f;
+			const float Padding = 0.6f;
 
 			// Centered offset calculation
-			float totalWidth = (gridCols - 1) * padding;
-			float totalHeight = (gridRows - 1) * padding;
-			float offsetX = (col * padding) - (totalWidth / 2f);
-			float offsetY = (row * padding) - (totalHeight / 2f);
+			float totalWidth = (gridCols - 1) * Padding;
+			float totalHeight = (gridRows - 1) * Padding;
+			float offsetX = (col * Padding) - (totalWidth / 2f);
+			float offsetY = (row * Padding) - (totalHeight / 2f);
+
 			
 			Vector2 chestPos = new Vector2(ping.Chest.x + 1 + offsetX, ping.Chest.y + 1 + offsetY);
+			if (TileID.Sets.BasicDresser[Main.tile[ping.Chest.x, ping.Chest.y].TileType]) {
+				chestPos.X += 0.5f; // shift horizontally to center on 3-wide dresser
+			}
 			
 			int frameCount = 1;
 			Rectangle itemFrameRect = itemTexture.Frame();
