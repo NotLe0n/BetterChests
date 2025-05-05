@@ -1,11 +1,9 @@
 using BetterChests.Edits;
 using System;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace BetterChests;
 
@@ -22,103 +20,14 @@ public class BetterChests : Mod
 		// prevents chest access if it's owned by a different player
 		ChestOwnershipEdits.Load();
 		
+		// allows the user to ping items
 		ItemSlotPingEdit.Load();
 	}
 
-	public const byte ChestUpdatePacketID = 0;
-	public const byte AddChestOwnerPacketID = 1;
-	public const byte RemoveChestOwnerPacketID = 2;
-	public const byte GetAllOwnersPacketID = 3;
-	public const byte SendItemSlotPingPacketID = 4;
 
-	public static bool dontUpdateMe;
 	public override void HandlePacket(BinaryReader reader, int whoAmI)
 	{
-		byte id = reader.ReadByte();
-		switch (id) {
-			case ChestUpdatePacketID:
-				int chest = reader.ReadInt32();
-				int slot = reader.ReadInt32(); // the chest slot that was changed
-				Item item = ItemIO.Receive(reader, true); // item changes
-
-				// only apply changes when in multiplayer, inside a chest and if the update didn't come from this client
-				if (Main.netMode == NetmodeID.MultiplayerClient && Main.player[Main.myPlayer].chest > -1 && Main.player[Main.myPlayer].chest == chest && !dontUpdateMe) {
-					Main.chest[chest].item[slot] = item;
-					OpenChestEdits.serverUpdateRecieved = true;
-				}
-
-				// transmit from Server to all clients because ItemSlot is client side
-				if (Main.netMode == NetmodeID.Server) {
-					var packet = GetPacket();
-					packet.Write(id);
-					packet.Write(chest);
-					packet.Write(slot);
-					ItemIO.Send(item, packet, true);
-					packet.Send();
-				}
-				break;
-			case AddChestOwnerPacketID: {
-				int chestID = reader.ReadInt32();
-				string playerName = reader.ReadString();
-				
-				ModContent.GetInstance<OwnershipSystem>().SetOwner(chestID, playerName);
-				// send to other clients
-				if (Main.netMode == NetmodeID.Server) {
-					GetAddOwnerPacket(chestID, playerName).Send();
-				}
-
-				break;
-			}
-			case RemoveChestOwnerPacketID: {
-				int chestID = reader.ReadInt32();
-
-				ModContent.GetInstance<OwnershipSystem>().RemoveOwner(chestID);
-				// send to other clients
-				if (Main.netMode == NetmodeID.Server) {
-					GetRemoveOwnerPacket(chestID).Send();
-				}
-
-				break;
-			}
-			case GetAllOwnersPacketID: {
-				if (Main.netMode != NetmodeID.Server) {
-					break;
-				}
-				
-				int player = reader.ReadInt32();
-
-				foreach (var kv in ModContent.GetInstance<OwnershipSystem>().GetMap()) {
-					GetAddOwnerPacket(kv.Key, kv.Value).Send(player);
-				}
-
-				break;
-			}
-			case SendItemSlotPingPacketID: {
-				string playerName = reader.ReadString();
-				int chestID = reader.ReadInt32();
-				int slotID = reader.ReadInt32();
-				Color pingColor = reader.ReadRGB();
-				Item renderItem = ItemIO.Receive(reader, readStack: true);
-				var ping = new Ping {
-					PlayerName = playerName,
-					ChestID = chestID,
-					SlotIndex = slotID,
-					Color = pingColor,
-					Item = renderItem ?? Main.chest[chestID].item[slotID]
-				};
-				
-				if (Main.netMode == NetmodeID.Server) {
-					ping.GetPacket().Send();
-				}
-				else {
-					var pingSystem = ModContent.GetInstance<PingSystem>();
-					pingSystem.AddPing(ping);
-				}
-				break;
-			}
-		}
-
-		dontUpdateMe = false;
+		MultiplayerSystem.HandlePacket(reader, whoAmI);
 	}
 
 	public override object Call(params object[] args)
@@ -132,23 +41,6 @@ public class BetterChests : Mod
 			"GetOwnershipMap" => ModContent.GetInstance<OwnershipSystem>().GetMap(),
 			_ => throw new Exception($"Call Error: Function '{function}' not found!")
 		};
-	}
-
-	public static ModPacket GetAddOwnerPacket(int chest, string owner)
-	{
-		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-		packet.Write(AddChestOwnerPacketID);
-		packet.Write(chest);
-		packet.Write(owner);
-		return packet;
-	}
-
-	public static ModPacket GetRemoveOwnerPacket(int chest)
-	{
-		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-		packet.Write(RemoveChestOwnerPacketID);
-		packet.Write(chest);
-		return packet;
 	}
 
 	public static int GetChest(int x, int y)

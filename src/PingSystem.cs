@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Timers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.UI;
 
 namespace BetterChests;
 
@@ -65,17 +62,5 @@ public class Ping
 		{
 			ModContent.GetInstance<PingSystem>().RemovePing(this);
 		};
-	}
-
-	public ModPacket GetPacket()
-	{
-		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-		packet.Write(BetterChests.SendItemSlotPingPacketID);
-		packet.Write(PlayerName);
-		packet.Write(ChestID);
-		packet.Write(SlotIndex);
-		packet.WriteRGB(Color);
-		ItemIO.Send(Item, packet, writeStack: true);
-		return packet;
 	}
 }

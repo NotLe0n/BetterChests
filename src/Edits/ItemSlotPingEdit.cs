@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.UI;
-using System;
 
 namespace BetterChests.Edits;
 
@@ -82,7 +78,7 @@ internal static class ItemSlotPingEdit
 			    pingSystem.AddPing(ping);
 		    }
 		    else {
-			    ping.GetPacket().Send();
+			    MultiplayerSystem.GetItemSlotPingPacket(ping).Send();
 		    }
 	    }
         else {

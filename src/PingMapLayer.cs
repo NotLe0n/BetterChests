@@ -46,7 +46,6 @@ public class PingMapLayer : ModMapLayer
 			float totalHeight = (gridRows - 1) * Padding;
 			float offsetX = (col * Padding) - (totalWidth / 2f);
 			float offsetY = (row * Padding) - (totalHeight / 2f);
-
 			
 			Vector2 chestPos = new Vector2(ping.Chest.x + 1 + offsetX, ping.Chest.y + 1 + offsetY);
 			if (TileID.Sets.BasicDresser[Main.tile[ping.Chest.x, ping.Chest.y].TileType]) {

@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
+using Terraria.UI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BetterChests.Edits;
 
@@ -11,12 +11,12 @@ internal static class OpenChestEdits
 	{
 		On_Chest.IsPlayerInChest += QuickStackIsPlayerInChest;
 		On_Chest.UsingChest += AllowEnterOpenChests;
-		Terraria.UI.On_ChestUI.DrawSlots += SyncChest;
+		On_ChestUI.DrawSlots += SyncChest;
 	}
 
 	private static Item[]? prevItems;
 	public static bool serverUpdateRecieved;
-	private static void SyncChest(Terraria.UI.On_ChestUI.orig_DrawSlots orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+	private static void SyncChest(On_ChestUI.orig_DrawSlots orig, SpriteBatch spriteBatch)
 	{
 		orig(spriteBatch);
 
@@ -40,18 +40,13 @@ internal static class OpenChestEdits
 				changed = true; // item has changed
 
 				// send packet with slot id and item data to server
-				ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-				packet.Write(BetterChests.ChestUpdatePacketID); // message id
-				packet.Write(Main.player[Main.myPlayer].chest);
-				packet.Write(i); // slot id
-				ItemIO.Send(items[i], packet, true); // item data
-				packet.Send();
+				MultiplayerSystem.GetChestUpdatePacket(Main.player[Main.myPlayer].chest, i, items[i]).Send();
 			}
 		}
 
 		if (changed) {
 			prevItems = CloneItemArray(items);
-			BetterChests.dontUpdateMe = true; // don't apply change again
+			MultiplayerSystem.dontUpdateMe = true; // don't apply change again
 		}
 	}
 

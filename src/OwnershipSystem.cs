@@ -68,10 +68,7 @@ public class OwnershipPlayer : ModPlayer
 		if (Main.netMode == NetmodeID.SinglePlayer) {
 			return;
 		}
-		
-		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
-		packet.Write(BetterChests.GetAllOwnersPacketID);
-		packet.Write(Player.whoAmI);
-		packet.Send();
+
+		MultiplayerSystem.GetAllOwnersPacket(Player.whoAmI).Send();
 	}
 }

@@ -42,7 +42,7 @@ public class OwnershipLockUI : UIState
 				system.RemoveOwner(Main.LocalPlayer.chest);
 			}
 			else {
-				BetterChests.GetRemoveOwnerPacket(Main.LocalPlayer.chest).Send();
+				MultiplayerSystem.GetRemoveOwnerPacket(Main.LocalPlayer.chest).Send();
 			}
 		}
 		else {
@@ -52,7 +52,7 @@ public class OwnershipLockUI : UIState
 				system.SetOwner(Main.LocalPlayer.chest, Main.LocalPlayer.name);
 			}
 			else {
-				BetterChests.GetAddOwnerPacket(Main.LocalPlayer.chest, Main.LocalPlayer.name).Send();
+				MultiplayerSystem.GetAddOwnerPacket(Main.LocalPlayer.chest, Main.LocalPlayer.name).Send();
 			}
 		}
 	}
