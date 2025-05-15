@@ -24,7 +24,6 @@ public class BetterChests : Mod
 		ItemSlotPingEdit.Load();
 	}
 
-
 	public override void HandlePacket(BinaryReader reader, int whoAmI)
 	{
 		MultiplayerSystem.HandlePacket(reader, whoAmI);

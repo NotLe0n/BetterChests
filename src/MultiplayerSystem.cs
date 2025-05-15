@@ -20,28 +20,24 @@ public static class MultiplayerSystem
 		SendItemSlotPing
 	}
 	
-	public static bool dontUpdateMe;
 	public static void HandlePacket(BinaryReader reader, int whoAmI)
 	{
 		byte id = reader.ReadByte();
 		switch ((PacketID)id) {
 			case PacketID.ChestUpdate: {
 				int chest = reader.ReadInt32();
-				int slot = reader.ReadInt32(); // the chest slot that was changed
-				Item item = ItemIO.Receive(reader, true); // item changes
+				int slot = reader.ReadInt32();
+				Item item = ItemIO.Receive(reader, true);
+				VectorClock vc = VectorClock.Deserialize(reader);
 
-				// only apply changes when in multiplayer, inside a chest and if the update didn't come from this client
 				if (Main.netMode == NetmodeID.MultiplayerClient && Main.player[Main.myPlayer].chest > -1 &&
-				    Main.player[Main.myPlayer].chest == chest && !dontUpdateMe) {
-					Main.chest[chest].item[slot] = item;
-					OpenChestEdits.serverUpdateRecieved = true;
+				    Main.player[Main.myPlayer].chest == chest) {
+					ChestSyncingSystem.ReceiveChestUpdate(chest, slot, item, vc, -1); // -1 = unknown sender
 				}
 
-				// transmit from Server to all clients because ItemSlot is client side
 				if (Main.netMode == NetmodeID.Server) {
-					GetChestUpdatePacket(chest, slot, item).Send();
+					GetChestUpdatePacket(chest, slot, item, vc).Send();
 				}
-
 				break;
 			}
 			case PacketID.AddChestOwner: {
@@ -106,17 +102,16 @@ public static class MultiplayerSystem
 			default:
 				throw new InvalidOperationException("Unknown PacketID");
 		}
-
-		dontUpdateMe = false;
 	}
 
-	public static ModPacket GetChestUpdatePacket(int chest, int slot, Item item)
+	public static ModPacket GetChestUpdatePacket(int chest, int slot, Item item, VectorClock vc)
 	{
 		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
 		packet.Write((byte)PacketID.ChestUpdate); // message id
 		packet.Write(chest); // chest id
 		packet.Write(slot); // slot id
 		ItemIO.Send(item, packet, true); // item data
+		vc.Serialize(packet); // vector clock
 		return packet;
 	}
 	
