@@ -14,6 +14,8 @@ public static class MultiplayerSystem
 	private enum PacketID : byte
 	{
 		ChestUpdate,
+		ChestClockSyncRequest,
+		ChestClockSync,
 		AddChestOwner,
 		RemoveChestOwner,
 		GetAllOwners,
@@ -24,6 +26,33 @@ public static class MultiplayerSystem
 	{
 		byte id = reader.ReadByte();
 		switch ((PacketID)id) {
+			case PacketID.ChestClockSyncRequest: {
+				int chestID = reader.ReadInt32();
+				int clientID = reader.ReadInt32();
+				
+				// forward
+				if (Main.netMode == NetmodeID.Server) {
+					GetChestClockSyncRequestPacket(chestID, clientID).Send(ignoreClient:whoAmI);
+				}
+				else {
+					ModContent.GetInstance<ChestSyncingSystem>().ReceiveChestClockSyncRequest(chestID, clientID);
+				}
+				break;
+			}
+			case PacketID.ChestClockSync: {
+				int chestID = reader.ReadInt32();
+				int clientID = reader.ReadInt32();
+				VectorClock vc = VectorClock.Deserialize(reader);
+				
+				// forward
+				if (Main.netMode == NetmodeID.Server) {
+					GetChestClockSyncPacket(chestID, clientID, vc).Send(toClient: clientID);
+				}
+				else {
+					ModContent.GetInstance<ChestSyncingSystem>().ReceiveChestClockSync(chestID, clientID, vc);
+				}
+				break;	
+			}
 			case PacketID.ChestUpdate: {
 				int chest = reader.ReadInt32();
 				int slot = reader.ReadInt32();
@@ -32,11 +61,11 @@ public static class MultiplayerSystem
 
 				if (Main.netMode == NetmodeID.MultiplayerClient && Main.player[Main.myPlayer].chest > -1 &&
 				    Main.player[Main.myPlayer].chest == chest) {
-					ChestSyncingSystem.ReceiveChestUpdate(chest, slot, item, vc, -1); // -1 = unknown sender
+					ModContent.GetInstance<ChestSyncingSystem>().ReceiveChestUpdate(chest, slot, item, vc);
 				}
 
 				if (Main.netMode == NetmodeID.Server) {
-					GetChestUpdatePacket(chest, slot, item, vc).Send();
+					GetChestUpdatePacket(chest, slot, item, vc).Send(ignoreClient:whoAmI);
 				}
 				break;
 			}
@@ -103,7 +132,26 @@ public static class MultiplayerSystem
 				throw new InvalidOperationException("Unknown PacketID");
 		}
 	}
-
+	
+	public static ModPacket GetChestClockSyncRequestPacket(int chestID, int clientID)
+	{
+		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+		packet.Write((byte)PacketID.ChestClockSyncRequest); // message id
+		packet.Write(chestID); // chest id
+		packet.Write(clientID); // client id
+		return packet;
+	}
+	
+	public static ModPacket GetChestClockSyncPacket(int chestID, int clientID, VectorClock vc)
+	{
+		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();
+		packet.Write((byte)PacketID.ChestClockSync); // message id
+		packet.Write(chestID); // chest id
+		packet.Write(clientID); // client id
+		vc.Serialize(packet); // vector clock
+		return packet;
+	}
+	
 	public static ModPacket GetChestUpdatePacket(int chest, int slot, Item item, VectorClock vc)
 	{
 		ModPacket packet = ModContent.GetInstance<BetterChests>().GetPacket();

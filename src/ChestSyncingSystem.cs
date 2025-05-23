@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -11,94 +8,87 @@ namespace BetterChests;
 
 public class ChestSyncingSystem : ModSystem
 {
-	private static readonly Dictionary<int, VectorClock> ClientClocks = new();
+	private readonly Dictionary<int, VectorClock> ClientClocks = new(); // key: chest ID
 
-	public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text,
-		int number,
-		float number2, float number3, float number4, int number5, int number6, int number7)
+	public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
 	{
-		if (msgType != MessageID.SyncChestItem) return false;
-		
-		int clientId = Main.myPlayer;
-		if (!ClientClocks.TryGetValue(clientId, out VectorClock? clock)) {
-			clock = new VectorClock();
-			ClientClocks[clientId] = clock;
+		switch (msgType) {
+			case MessageID.RequestChestOpen:
+				int chestID = Chest.FindChest(number, (int)number2);
+				Main.NewText($"Sending ClockSyncRequest with clientID {Main.myPlayer} for chest {chestID}");
+				MultiplayerSystem.GetChestClockSyncRequestPacket(chestID, Main.myPlayer).Send();
+				break;
+			case MessageID.SyncChestItem:
+				if (Main.myPlayer == 255) break; // server sent this
+				SendChestUpdate(Main.myPlayer, number, (int)number2);
+				break;
 		}
-
-		clock.Increment(clientId);
-		MultiplayerSystem.GetChestUpdatePacket(number, (byte)number2, Main.chest[number].item[(byte)number2], clock).Send();
 
 		return false;
 	}
 
-	public static void ReceiveChestUpdate(int chest, int slot, Item item, VectorClock incomingVC, int senderId)
+	private void SendChestUpdate(int whoAmI, int chestID, int slot)
 	{
-		if (!ClientClocks.ContainsKey(Main.myPlayer)) {
-			ClientClocks[Main.myPlayer] = new VectorClock();
+		Item item = Main.chest[chestID].item[slot];
+		if (!ClientClocks.TryGetValue(chestID, out VectorClock? clock)) {
+			clock = new VectorClock();
+			ClientClocks[chestID] = clock;
 		}
 
-		var localVC = ClientClocks[Main.myPlayer];
+		clock.Increment(whoAmI);
+		Main.NewText($"Clocks: [{string.Join(',', ClientClocks.Keys)}], Sent Update: {clock}");
+		MultiplayerSystem.GetChestUpdatePacket(chestID, slot, item, clock).Send();
+	}
 
+	public void ReceiveChestUpdate(int chest, int slot, Item item, VectorClock incomingVC)
+	{
+		if (!ClientClocks.ContainsKey(chest)) {
+			ClientClocks[chest] = new VectorClock();
+		}
+
+		var localVC = ClientClocks[chest];
+		Main.NewText($"Clocks: [{string.Join(',', ClientClocks.Keys)}], Got Update: {localVC}");
 		if (localVC.HappensBefore(incomingVC)) {
 			Main.chest[chest].item[slot] = item;
 			localVC.Merge(incomingVC);
 		}
+		else {
+			Main.NewText($"Didn't happen before: local: {localVC} ;; incoming: {incomingVC} ");
+		}
+	}
+
+	public void ReceiveChestClockSyncRequest(int chestID, int clientID)
+	{
+		Main.NewText($"ReceiveChestClockSyncRequest from {clientID}: {chestID}");
+		if (Main.LocalPlayer.chest == chestID && chestID > -1) {
+			Main.NewText("Send clock sync packet: " + ClientClocks[chestID]);
+			MultiplayerSystem.GetChestClockSyncPacket(chestID, clientID, ClientClocks[chestID]).Send();
+		}
+	}
+
+	public void ReceiveChestClockSync(int chestID, int clientID, VectorClock vc)
+	{
+		Main.NewText($"ReceiveChestClockSync from {clientID}: merge [{chestID}]: {vc}");
+		if (!ClientClocks.TryGetValue(chestID, out var clock)) {
+			ClientClocks[chestID] = vc;
+		}
+		else {
+			clock.Merge(vc);
+		}
+		
+		Main.NewText($"New clock for chest {chestID}: {ClientClocks[chestID]}");
+	}
+
+	public void ResetClock()
+	{
+		ClientClocks.Clear();
 	}
 }
 
-// https://en.wikipedia.org/wiki/Vector_clock
-public class VectorClock
+public class ChestSyncingPlayer : ModPlayer
 {
-	private readonly Dictionary<int, int> clock = new(); // Key: clientID, Value: Change count
-
-	public void Increment(int clientId)
+	public override void OnEnterWorld()
 	{
-		clock.TryAdd(clientId, 0);
-		clock[clientId]++;
-	}
-
-	public void Merge(VectorClock other)
-	{
-		foreach (var kv in other.clock) {
-			clock.TryAdd(kv.Key, 0);
-			clock[kv.Key] = Math.Max(clock[kv.Key], kv.Value);
-		}
-	}
-
-	public bool HappensBefore(VectorClock other)
-	{
-		bool atLeastOneLess = false;
-		
-		foreach (var key in clock.Keys.Union(other.clock.Keys)) {
-			int localVal = clock.GetValueOrDefault(key, 0);
-			int otherVal = other.clock.GetValueOrDefault(key, 0);
-
-			if (localVal > otherVal) return false;
-			if (localVal < otherVal) atLeastOneLess = true;
-		}
-
-		return atLeastOneLess;
-	}
-
-	public void Serialize(BinaryWriter writer)
-	{
-		writer.Write(clock.Count);
-		foreach (var kv in clock) {
-			writer.Write(kv.Key);
-			writer.Write(kv.Value);
-		}
-	}
-
-	public static VectorClock Deserialize(BinaryReader reader)
-	{
-		var vc = new VectorClock();
-		int count = reader.ReadInt32();
-		for (int i = 0; i < count; i++) {
-			int key = reader.ReadInt32();
-			int value = reader.ReadInt32();
-			vc.clock[key] = value;
-		}
-
-		return vc;
+		ModContent.GetInstance<ChestSyncingSystem>().ResetClock();
 	}
 }
